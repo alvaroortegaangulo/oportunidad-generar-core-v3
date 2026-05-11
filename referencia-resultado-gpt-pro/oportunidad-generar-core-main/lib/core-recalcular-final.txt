@@ -1,0 +1,5 @@
+Sub RecalcularCORE()
+    Application.CalculateFullRebuild
+    ActiveWorkbook.ForceFullCalculation = True
+    ActiveWorkbook.FullCalculationOnLoad = True
+End Sub

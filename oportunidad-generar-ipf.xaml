@@ -1,0 +1,528 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="oportunidad_generar_ipf" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data.Common" xmlns:ue="clr-namespace:UiPath.Excel;assembly=UiPath.Excel.Activities" xmlns:ueab="clr-namespace:UiPath.Excel.Activities.Business;assembly=UiPath.Excel.Activities" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="in_RutaPlantillaIPF" Type="InArgument(x:String)" />
+    <x:Property Name="in_RutaIPF" Type="InArgument(x:String)" />
+    <x:Property Name="in_NumeroSF" Type="InArgument(x:String)" />
+    <x:Property Name="in_IPFRequestType" Type="InArgument(x:String)" />
+    <x:Property Name="in_IPFBillType" Type="InArgument(x:String)" />
+    <x:Property Name="in_IPFCompanyIssuer" Type="InArgument(x:String)" />
+    <x:Property Name="in_SFAccountName" Type="InArgument(x:String)" />
+    <x:Property Name="in_SAPCodigoCliente" Type="InArgument(x:String)" />
+    <x:Property Name="in_SAPCodigoPEPWBS" Type="InArgument(x:String)" />
+    <x:Property Name="in_SAPNombreJefeProyecto" Type="InArgument(x:String)" />
+    <x:Property Name="in_IPFMoneda" Type="InArgument(x:String)" />
+    <x:Property Name="in_SAPPedidoSalesOrder" Type="InArgument(x:String)" />
+    <x:Property Name="in_IPFPO" Type="InArgument(x:String)" />
+    <x:Property Name="in_IPFSummaryText" Type="InArgument(x:String)" />
+    <x:Property Name="in_IPFTextNarrative" Type="InArgument(x:String)" />
+    <x:Property Name="in_IPFImporteNeto" Type="InArgument(x:String)" />
+    <x:Property Name="in_IPFComentariosFacturacion" Type="InArgument(x:String)" />
+    <x:Property Name="out_NumeroSFLeido" Type="OutArgument(x:String)" />
+  </x:Members>
+  <VisualBasic.Settings>
+    <x:Null />
+  </VisualBasic.Settings>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Globalization</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text.RegularExpressions</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>UiPath.Excel</x:String>
+      <x:String>UiPath.Excel.Activities</x:String>
+      <x:String>UiPath.Excel.Activities.Business</x:String>
+      <x:String>UiPath.Platform.ResourceHandling</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Collections</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.TypeConverter</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.Common</AssemblyReference>
+      <AssemblyReference>System.Linq</AssemblyReference>
+      <AssemblyReference>System.ObjectModel</AssemblyReference>
+      <AssemblyReference>System.Private.CoreLib</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Workflow</AssemblyReference>
+      <AssemblyReference>UiPath.Platform</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="oportunidad-generar-ipf" sap2010:Annotation.AnnotationText="Submódulo IPF separado de CORE. Copia la plantilla recibida, valida listas de la propia plantilla y rellena Invoice Request con datos confirmados. No inventa narrativa, hitos ni importes.">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="rutaPlantillaIPFTrabajo" />
+      <Variable x:TypeArguments="x:String" Name="rutaIPFTrabajo" />
+      <Variable x:TypeArguments="x:String" Name="carpetaIPFTrabajo" />
+      <Variable x:TypeArguments="x:String" Name="numeroSFTrabajo" />
+      <Variable x:TypeArguments="x:String" Name="requestTypeTrabajo" />
+      <Variable x:TypeArguments="x:String" Name="billTypeTrabajo" />
+      <Variable x:TypeArguments="x:String" Name="companyIssuerTrabajo" />
+      <Variable x:TypeArguments="x:String" Name="accountNameTrabajo" />
+      <Variable x:TypeArguments="x:String" Name="codigoClienteSAPTrabajo" />
+      <Variable x:TypeArguments="x:String" Name="codigoPEPTrabajo" />
+      <Variable x:TypeArguments="x:String" Name="nombreJefeProyectoTrabajo" />
+      <Variable x:TypeArguments="x:String" Name="monedaTrabajo" />
+      <Variable x:TypeArguments="x:String" Name="pedidoSalesOrderTrabajo" />
+      <Variable x:TypeArguments="x:String" Name="poTrabajo" />
+      <Variable x:TypeArguments="x:String" Name="summaryTextTrabajo" />
+      <Variable x:TypeArguments="x:String" Name="textNarrativeTrabajo" />
+      <Variable x:TypeArguments="x:String" Name="importeNetoTrabajo" />
+      <Variable x:TypeArguments="x:String" Name="comentariosFacturacionTrabajo" />
+      <Variable x:TypeArguments="x:Boolean" Name="existePlantillaIPFTrabajo" />
+      <Variable x:TypeArguments="x:Boolean" Name="existeCarpetaIPFTrabajo" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_ListaRequestTypeIPF" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_ListaBillTypeIPF" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_ListaCurrencyIPF" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_ListaCompanyIssuerIPF" />
+      <Variable x:TypeArguments="x:String" Name="ipfRequestTypeValor" />
+      <Variable x:TypeArguments="x:String" Name="ipfBillTypeValor" />
+      <Variable x:TypeArguments="x:String" Name="ipfCompanyIssuerValor" />
+      <Variable x:TypeArguments="x:String" Name="ipfCustomerValor" />
+      <Variable x:TypeArguments="x:String" Name="ipfSoldToValor" />
+      <Variable x:TypeArguments="x:String" Name="ipfWBSValor" />
+      <Variable x:TypeArguments="x:String" Name="ipfRequestedByValor" />
+      <Variable x:TypeArguments="x:String" Name="ipfCurrencyValor" />
+      <Variable x:TypeArguments="x:String" Name="ipfSalesOrderValor" />
+      <Variable x:TypeArguments="x:String" Name="ipfPOValor" />
+      <Variable x:TypeArguments="x:String" Name="ipfLineaPOValor" />
+      <Variable x:TypeArguments="x:String" Name="ipfSummaryTextValor" />
+      <Variable x:TypeArguments="x:String" Name="ipfTextNarrativeValor" />
+      <Variable x:TypeArguments="x:Object" Name="ipfImporteNetoValor" />
+      <Variable x:TypeArguments="x:String" Name="ipfComentariosValor" />
+      <Variable x:TypeArguments="x:Boolean" Name="ipfRequestTypeError" />
+      <Variable x:TypeArguments="x:Boolean" Name="ipfBillTypeError" />
+      <Variable x:TypeArguments="x:Boolean" Name="ipfCompanyIssuerError" />
+      <Variable x:TypeArguments="x:Boolean" Name="ipfCustomerError" />
+      <Variable x:TypeArguments="x:Boolean" Name="ipfSoldToError" />
+      <Variable x:TypeArguments="x:Boolean" Name="ipfWBSError" />
+      <Variable x:TypeArguments="x:Boolean" Name="ipfRequestedByError" />
+      <Variable x:TypeArguments="x:Boolean" Name="ipfCurrencyError" />
+      <Variable x:TypeArguments="x:Boolean" Name="ipfSalesOrderError" />
+      <Variable x:TypeArguments="x:Boolean" Name="ipfImporteNetoError" />
+    </Sequence.Variables>
+    <TryCatch DisplayName="Control de ejecución IPF" sap2010:Annotation.AnnotationText="Agrupa los errores técnicos del IPF y los devuelve al proceso padre. Los datos funcionales faltantes no bloquean; en S12 se escribirán como vacío o texto corto rojo según plantilla.">
+      <TryCatch.Try>
+        <Sequence DisplayName="Generar IPF de oportunidad">
+          <Sequence DisplayName="00 Preparar datos locales para pruebas y ejecución" sap2010:Annotation.AnnotationText="Objetivo: pasar los argumentos IPF a variables locales. Entradas: contrato público recibido del proceso padre. Salida: variables de trabajo preparadas para validación y escritura.">
+            <ui:MultipleAssign DisplayName="Inicializar variables locales IPF desde argumentos">
+              <ui:MultipleAssign.AssignOperations>
+                <scg:List x:TypeArguments="ui:AssignOperation" Capacity="20">
+                  <ui:AssignOperation>
+                    <ui:AssignOperation.To>
+                      <OutArgument x:TypeArguments="x:String">[rutaPlantillaIPFTrabajo]</OutArgument>
+                    </ui:AssignOperation.To>
+                    <ui:AssignOperation.Value>
+                      <InArgument x:TypeArguments="x:String">[in_RutaPlantillaIPF]</InArgument>
+                    </ui:AssignOperation.Value>
+                  </ui:AssignOperation>
+                  <ui:AssignOperation>
+                    <ui:AssignOperation.To>
+                      <OutArgument x:TypeArguments="x:String">[rutaIPFTrabajo]</OutArgument>
+                    </ui:AssignOperation.To>
+                    <ui:AssignOperation.Value>
+                      <InArgument x:TypeArguments="x:String">[in_RutaIPF]</InArgument>
+                    </ui:AssignOperation.Value>
+                  </ui:AssignOperation>
+                  <ui:AssignOperation>
+                    <ui:AssignOperation.To>
+                      <OutArgument x:TypeArguments="x:String">[numeroSFTrabajo]</OutArgument>
+                    </ui:AssignOperation.To>
+                    <ui:AssignOperation.Value>
+                      <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(in_NumeroSF), String.Empty, in_NumeroSF.Trim())]</InArgument>
+                    </ui:AssignOperation.Value>
+                  </ui:AssignOperation>
+                  <ui:AssignOperation>
+                    <ui:AssignOperation.To>
+                      <OutArgument x:TypeArguments="x:String">[requestTypeTrabajo]</OutArgument>
+                    </ui:AssignOperation.To>
+                    <ui:AssignOperation.Value>
+                      <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(in_IPFRequestType), "Invoice", in_IPFRequestType.Trim())]</InArgument>
+                    </ui:AssignOperation.Value>
+                  </ui:AssignOperation>
+                  <ui:AssignOperation>
+                    <ui:AssignOperation.To>
+                      <OutArgument x:TypeArguments="x:String">[billTypeTrabajo]</OutArgument>
+                    </ui:AssignOperation.To>
+                    <ui:AssignOperation.Value>
+                      <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(in_IPFBillType), "Fixed", in_IPFBillType.Trim())]</InArgument>
+                    </ui:AssignOperation.Value>
+                  </ui:AssignOperation>
+                  <ui:AssignOperation>
+                    <ui:AssignOperation.To>
+                      <OutArgument x:TypeArguments="x:String">[companyIssuerTrabajo]</OutArgument>
+                    </ui:AssignOperation.To>
+                    <ui:AssignOperation.Value>
+                      <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(in_IPFCompanyIssuer), String.Empty, in_IPFCompanyIssuer.Trim())]</InArgument>
+                    </ui:AssignOperation.Value>
+                  </ui:AssignOperation>
+                  <ui:AssignOperation>
+                    <ui:AssignOperation.To>
+                      <OutArgument x:TypeArguments="x:String">[accountNameTrabajo]</OutArgument>
+                    </ui:AssignOperation.To>
+                    <ui:AssignOperation.Value>
+                      <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(in_SFAccountName), String.Empty, in_SFAccountName.Trim())]</InArgument>
+                    </ui:AssignOperation.Value>
+                  </ui:AssignOperation>
+                  <ui:AssignOperation>
+                    <ui:AssignOperation.To>
+                      <OutArgument x:TypeArguments="x:String">[codigoClienteSAPTrabajo]</OutArgument>
+                    </ui:AssignOperation.To>
+                    <ui:AssignOperation.Value>
+                      <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(in_SAPCodigoCliente), String.Empty, in_SAPCodigoCliente.Trim())]</InArgument>
+                    </ui:AssignOperation.Value>
+                  </ui:AssignOperation>
+                  <ui:AssignOperation>
+                    <ui:AssignOperation.To>
+                      <OutArgument x:TypeArguments="x:String">[codigoPEPTrabajo]</OutArgument>
+                    </ui:AssignOperation.To>
+                    <ui:AssignOperation.Value>
+                      <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(in_SAPCodigoPEPWBS), String.Empty, in_SAPCodigoPEPWBS.Trim())]</InArgument>
+                    </ui:AssignOperation.Value>
+                  </ui:AssignOperation>
+                  <ui:AssignOperation>
+                    <ui:AssignOperation.To>
+                      <OutArgument x:TypeArguments="x:String">[nombreJefeProyectoTrabajo]</OutArgument>
+                    </ui:AssignOperation.To>
+                    <ui:AssignOperation.Value>
+                      <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(in_SAPNombreJefeProyecto), String.Empty, in_SAPNombreJefeProyecto.Trim())]</InArgument>
+                    </ui:AssignOperation.Value>
+                  </ui:AssignOperation>
+                  <ui:AssignOperation>
+                    <ui:AssignOperation.To>
+                      <OutArgument x:TypeArguments="x:String">[monedaTrabajo]</OutArgument>
+                    </ui:AssignOperation.To>
+                    <ui:AssignOperation.Value>
+                      <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(in_IPFMoneda), "EUR", in_IPFMoneda.Trim())]</InArgument>
+                    </ui:AssignOperation.Value>
+                  </ui:AssignOperation>
+                  <ui:AssignOperation>
+                    <ui:AssignOperation.To>
+                      <OutArgument x:TypeArguments="x:String">[pedidoSalesOrderTrabajo]</OutArgument>
+                    </ui:AssignOperation.To>
+                    <ui:AssignOperation.Value>
+                      <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(in_SAPPedidoSalesOrder), String.Empty, in_SAPPedidoSalesOrder.Trim())]</InArgument>
+                    </ui:AssignOperation.Value>
+                  </ui:AssignOperation>
+                  <ui:AssignOperation>
+                    <ui:AssignOperation.To>
+                      <OutArgument x:TypeArguments="x:String">[poTrabajo]</OutArgument>
+                    </ui:AssignOperation.To>
+                    <ui:AssignOperation.Value>
+                      <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(in_IPFPO), String.Empty, in_IPFPO.Trim())]</InArgument>
+                    </ui:AssignOperation.Value>
+                  </ui:AssignOperation>
+                  <ui:AssignOperation>
+                    <ui:AssignOperation.To>
+                      <OutArgument x:TypeArguments="x:String">[summaryTextTrabajo]</OutArgument>
+                    </ui:AssignOperation.To>
+                    <ui:AssignOperation.Value>
+                      <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(in_IPFSummaryText), String.Empty, in_IPFSummaryText.Trim())]</InArgument>
+                    </ui:AssignOperation.Value>
+                  </ui:AssignOperation>
+                  <ui:AssignOperation>
+                    <ui:AssignOperation.To>
+                      <OutArgument x:TypeArguments="x:String">[textNarrativeTrabajo]</OutArgument>
+                    </ui:AssignOperation.To>
+                    <ui:AssignOperation.Value>
+                      <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(in_IPFTextNarrative), String.Empty, in_IPFTextNarrative.Trim())]</InArgument>
+                    </ui:AssignOperation.Value>
+                  </ui:AssignOperation>
+                  <ui:AssignOperation>
+                    <ui:AssignOperation.To>
+                      <OutArgument x:TypeArguments="x:String">[importeNetoTrabajo]</OutArgument>
+                    </ui:AssignOperation.To>
+                    <ui:AssignOperation.Value>
+                      <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(in_IPFImporteNeto), String.Empty, in_IPFImporteNeto.Trim())]</InArgument>
+                    </ui:AssignOperation.Value>
+                  </ui:AssignOperation>
+                  <ui:AssignOperation>
+                    <ui:AssignOperation.To>
+                      <OutArgument x:TypeArguments="x:String">[comentariosFacturacionTrabajo]</OutArgument>
+                    </ui:AssignOperation.To>
+                    <ui:AssignOperation.Value>
+                      <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(in_IPFComentariosFacturacion), String.Empty, in_IPFComentariosFacturacion.Trim())]</InArgument>
+                    </ui:AssignOperation.Value>
+                  </ui:AssignOperation>
+                </scg:List>
+              </ui:MultipleAssign.AssignOperations>
+            </ui:MultipleAssign>
+          </Sequence>
+          <ui:LogMessage DisplayName="Registrar inicio del módulo IPF" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Inicio oportunidad-generar-ipf | NumeroSF=&quot; + numeroSFTrabajo + &quot; | IPF destino=&quot; + rutaIPFTrabajo]" />
+          <Sequence DisplayName="01 Validar entradas técnicas IPF" sap2010:Annotation.AnnotationText="Objetivo: comprobar solo las condiciones técnicas que bloquean la generación. Los datos funcionales de cabecera y facturación pueden venir vacíos y se escriben como texto rojo o vacío según el mapa IPF.">
+            <If DisplayName="Validar plantilla IPF informada" Condition="[String.IsNullOrWhiteSpace(rutaPlantillaIPFTrabajo)]">
+              <If.Then>
+                <Throw DisplayName="Error plantilla IPF no informada" Exception="[New Exception(&quot;in_RutaPlantillaIPF no está informada.&quot;)]" />
+              </If.Then>
+            </If>
+            <ui:FileExistsX DisplayName="Comprobar existencia de plantilla IPF" Exists="[existePlantillaIPFTrabajo]" Path="[rutaPlantillaIPFTrabajo]" />
+            <If DisplayName="Validar existencia de plantilla IPF" Condition="[Not existePlantillaIPFTrabajo]">
+              <If.Then>
+                <Throw DisplayName="Error plantilla IPF inexistente" Exception="[New Exception(&quot;No existe la plantilla IPF indicada: &quot; + rutaPlantillaIPFTrabajo)]" />
+              </If.Then>
+            </If>
+            <If DisplayName="Validar ruta IPF informada" Condition="[String.IsNullOrWhiteSpace(rutaIPFTrabajo)]">
+              <If.Then>
+                <Throw DisplayName="Error ruta IPF no informada" Exception="[New Exception(&quot;in_RutaIPF no está informada.&quot;)]" />
+              </If.Then>
+            </If>
+            <Assign DisplayName="Obtener carpeta destino del IPF">
+              <Assign.To>
+                <OutArgument x:TypeArguments="x:String">[carpetaIPFTrabajo]</OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="x:String">[System.IO.Path.GetDirectoryName(rutaIPFTrabajo)]</InArgument>
+              </Assign.Value>
+            </Assign>
+            <If DisplayName="Validar carpeta destino informada" Condition="[String.IsNullOrWhiteSpace(carpetaIPFTrabajo)]">
+              <If.Then>
+                <Throw DisplayName="Error carpeta destino IPF no informada" Exception="[New Exception(&quot;in_RutaIPF debe incluir una carpeta destino completa: &quot; + rutaIPFTrabajo)]" />
+              </If.Then>
+            </If>
+            <ui:FolderExistsX DisplayName="Comprobar existencia de carpeta destino IPF" Exists="[existeCarpetaIPFTrabajo]" Path="[carpetaIPFTrabajo]" />
+            <If DisplayName="Validar existencia de carpeta destino IPF" Condition="[Not existeCarpetaIPFTrabajo]">
+              <If.Then>
+                <Throw DisplayName="Error carpeta destino IPF inexistente" Exception="[New Exception(&quot;La carpeta destino del IPF no existe. Debe crearla el proceso padre: &quot; + carpetaIPFTrabajo)]" />
+              </If.Then>
+            </If>
+          </Sequence>
+          <Sequence DisplayName="02 Copiar plantilla IPF a ruta destino" sap2010:Annotation.AnnotationText="Objetivo: crear el IPF de trabajo desde la plantilla recibida por el proceso padre. Salida: libro IPF listo para escritura S12.">
+            <ui:CopyFile ContinueOnError="{x:Null}" DisplayName="Copiar plantilla IPF a ruta destino" Overwrite="True" Path="[rutaPlantillaIPFTrabajo]" Destination="[rutaIPFTrabajo]" />
+          </Sequence>
+          <Sequence DisplayName="03 Leer listas IPF" sap2010:Annotation.AnnotationText="Objetivo: leer las listas oficiales de la plantilla para validar Request Type, Bill Type, Company Issuer y Currency sin codificar valores ocultos. Entradas: hoja Lists del IPF copiado. Salida: tablas de listas para la utilidad de normalización.">
+            <ui:ReadRange AddHeaders="False" DataTable="[dt_ListaRequestTypeIPF]" DisplayName="Leer lista Request Type" Range="B3:B5" SheetName="Lists" WorkbookPath="[rutaIPFTrabajo]" />
+            <ui:ReadRange AddHeaders="False" DataTable="[dt_ListaBillTypeIPF]" DisplayName="Leer lista Bill Type" Range="C3:C8" SheetName="Lists" WorkbookPath="[rutaIPFTrabajo]" />
+            <ui:ReadRange AddHeaders="False" DataTable="[dt_ListaCurrencyIPF]" DisplayName="Leer lista Currency" Range="D3:D7" SheetName="Lists" WorkbookPath="[rutaIPFTrabajo]" />
+            <ui:ReadRange AddHeaders="False" DataTable="[dt_ListaCompanyIssuerIPF]" DisplayName="Leer lista Company Issuer" Range="Q5:Q43" SheetName="Lists" WorkbookPath="[rutaIPFTrabajo]" />
+          </Sequence>
+          <Sequence DisplayName="04 Preparar valores IPF" sap2010:Annotation.AnnotationText="Objetivo: normalizar listas, inferir Company Issuer por WBS cuando proceda y preparar los textos cortos de revisión. No abre Excel ni escribe celdas; la escritura queda en la secuencia 05.">
+            <ui:InvokeCode ContinueOnError="{x:Null}" DisplayName="Utilidad S12 - normalizar listas y valores IPF" Language="CSharp" Code="// Objetivo: validar listas IPF y preparar valores finales de Invoice Request.&#xD;&#xA;// Entradas: listas de plantilla y datos SAP/Salesforce/IPF aportados por el padre.&#xD;&#xA;// Salidas: valores normalizados y flags de rojo por celda IPF.&#xD;&#xA;// Regla: se usan valores por defecto solo cuando la plantilla los admite; los faltantes funcionales quedan marcados.&#xD;&#xA;// No hace: no escribe Excel ni inventa narrativa, hitos o importes.&#xD;&#xA;string Texto(object valor)&#xD;&#xA;{&#xD;&#xA;    if (valor == null || valor == System.DBNull.Value)&#xD;&#xA;    {&#xD;&#xA;        return string.Empty;&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    return System.Convert.ToString(valor).Trim();&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;// Las listas se leen desde la plantilla para respetar las validaciones oficiales.&#xD;&#xA;System.Collections.Generic.List&lt;string&gt; LeerLista(System.Data.DataTable tabla)&#xD;&#xA;{&#xD;&#xA;    var valores = new System.Collections.Generic.List&lt;string&gt;();&#xD;&#xA;&#xD;&#xA;    if (tabla == null)&#xD;&#xA;    {&#xD;&#xA;        return valores;&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    foreach (System.Data.DataRow fila in tabla.Rows)&#xD;&#xA;    {&#xD;&#xA;        foreach (object celda in fila.ItemArray)&#xD;&#xA;        {&#xD;&#xA;            string texto = Texto(celda);&#xD;&#xA;&#xD;&#xA;            if (&#xD;&#xA;                !string.IsNullOrWhiteSpace(texto)&#xD;&#xA;                &amp;&amp; !System.Linq.Enumerable.Contains(&#xD;&#xA;                    valores,&#xD;&#xA;                    texto,&#xD;&#xA;                    System.StringComparer.OrdinalIgnoreCase&#xD;&#xA;                )&#xD;&#xA;            )&#xD;&#xA;            {&#xD;&#xA;                valores.Add(texto);&#xD;&#xA;            }&#xD;&#xA;        }&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    return valores;&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;string BuscarEnLista(System.Collections.Generic.IEnumerable&lt;string&gt; lista, string valor)&#xD;&#xA;{&#xD;&#xA;    foreach (string candidato in lista)&#xD;&#xA;    {&#xD;&#xA;        if (string.Equals(candidato, valor, System.StringComparison.OrdinalIgnoreCase))&#xD;&#xA;        {&#xD;&#xA;            return candidato;&#xD;&#xA;        }&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    return string.Empty;&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;string ValorLista(&#xD;&#xA;    string entrada,&#xD;&#xA;    System.Collections.Generic.List&lt;string&gt; lista,&#xD;&#xA;    string defecto,&#xD;&#xA;    out bool error&#xD;&#xA;)&#xD;&#xA;{&#xD;&#xA;    string texto = Texto(entrada);&#xD;&#xA;    error = false;&#xD;&#xA;&#xD;&#xA;    if (string.IsNullOrWhiteSpace(texto))&#xD;&#xA;    {&#xD;&#xA;        return defecto;&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    string encontrado = BuscarEnLista(lista, texto);&#xD;&#xA;&#xD;&#xA;    if (!string.IsNullOrWhiteSpace(encontrado))&#xD;&#xA;    {&#xD;&#xA;        return encontrado;&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    error = true;&#xD;&#xA;    return defecto;&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;string InferirCompanyIssuer(string valorEntrada, string wbsEntrada)&#xD;&#xA;{&#xD;&#xA;    string texto = (Texto(valorEntrada) + &quot; &quot; + Texto(wbsEntrada)).ToUpperInvariant();&#xD;&#xA;&#xD;&#xA;    if (string.IsNullOrWhiteSpace(texto))&#xD;&#xA;    {&#xD;&#xA;        return string.Empty;&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    if (texto.Contains(&quot;ROSETTA&quot;) || texto.Contains(&quot;ZEZ&quot;) || texto.Contains(&quot;EZZ&quot;))&#xD;&#xA;    {&#xD;&#xA;        return &quot;Global Rosetta&quot;;&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    if (&#xD;&#xA;        texto.Contains(&quot;CONNECTIS&quot;)&#xD;&#xA;        || texto.Contains(&quot;ZEV&quot;)&#xD;&#xA;        || texto.Contains(&quot;ICT&quot;)&#xD;&#xA;        || texto.Contains(&quot; ZV&quot;)&#xD;&#xA;    )&#xD;&#xA;    {&#xD;&#xA;        return &quot;Connectis ICT Services SAU&quot;;&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    return string.Empty;&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;string ValorCompanyIssuer(&#xD;&#xA;    string entrada,&#xD;&#xA;    string wbs,&#xD;&#xA;    System.Collections.Generic.List&lt;string&gt; lista,&#xD;&#xA;    out bool error&#xD;&#xA;)&#xD;&#xA;{&#xD;&#xA;    string texto = Texto(entrada);&#xD;&#xA;    error = false;&#xD;&#xA;&#xD;&#xA;    if (!string.IsNullOrWhiteSpace(texto))&#xD;&#xA;    {&#xD;&#xA;        string encontrado = BuscarEnLista(lista, texto);&#xD;&#xA;&#xD;&#xA;        if (!string.IsNullOrWhiteSpace(encontrado))&#xD;&#xA;        {&#xD;&#xA;            return encontrado;&#xD;&#xA;        }&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    string inferido = InferirCompanyIssuer(texto, wbs);&#xD;&#xA;&#xD;&#xA;    if (!string.IsNullOrWhiteSpace(inferido))&#xD;&#xA;    {&#xD;&#xA;        string encontradoInferido = BuscarEnLista(lista, inferido);&#xD;&#xA;&#xD;&#xA;        if (!string.IsNullOrWhiteSpace(encontradoInferido))&#xD;&#xA;        {&#xD;&#xA;            return encontradoInferido;&#xD;&#xA;        }&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    error = true;&#xD;&#xA;    return &quot;Company issuer no disponible&quot;;&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;string DatoObligatorio(string valor, string textoError, out bool error)&#xD;&#xA;{&#xD;&#xA;    string texto = Texto(valor);&#xD;&#xA;    error = string.IsNullOrWhiteSpace(texto);&#xD;&#xA;    return error ? textoError : texto;&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;object ImporteNeto(string valor, out bool error)&#xD;&#xA;{&#xD;&#xA;    string texto = Texto(valor);&#xD;&#xA;    error = false;&#xD;&#xA;&#xD;&#xA;    if (string.IsNullOrWhiteSpace(texto))&#xD;&#xA;    {&#xD;&#xA;        return string.Empty;&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    double numero;&#xD;&#xA;&#xD;&#xA;    if (&#xD;&#xA;        double.TryParse(&#xD;&#xA;            texto,&#xD;&#xA;            System.Globalization.NumberStyles.Any,&#xD;&#xA;            System.Globalization.CultureInfo.GetCultureInfo(&quot;es-ES&quot;),&#xD;&#xA;            out numero&#xD;&#xA;        )&#xD;&#xA;        || double.TryParse(&#xD;&#xA;            texto,&#xD;&#xA;            System.Globalization.NumberStyles.Any,&#xD;&#xA;            System.Globalization.CultureInfo.InvariantCulture,&#xD;&#xA;            out numero&#xD;&#xA;        )&#xD;&#xA;    )&#xD;&#xA;    {&#xD;&#xA;        return numero;&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    string normalizado = texto.Replace(&quot;.&quot;, string.Empty).Replace(&quot;,&quot;, &quot;.&quot;);&#xD;&#xA;&#xD;&#xA;    if (&#xD;&#xA;        double.TryParse(&#xD;&#xA;            normalizado,&#xD;&#xA;            System.Globalization.NumberStyles.Any,&#xD;&#xA;            System.Globalization.CultureInfo.InvariantCulture,&#xD;&#xA;            out numero&#xD;&#xA;        )&#xD;&#xA;    )&#xD;&#xA;    {&#xD;&#xA;        return numero;&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    error = true;&#xD;&#xA;    return &quot;Importe no válido&quot;;&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;var requestTypes = LeerLista(arg_dtRequestTypes);&#xD;&#xA;var billTypes = LeerLista(arg_dtBillTypes);&#xD;&#xA;var currencies = LeerLista(arg_dtCurrencies);&#xD;&#xA;var companyIssuers = LeerLista(arg_dtCompanyIssuers);&#xD;&#xA;&#xD;&#xA;bool errorTemporal;&#xD;&#xA;&#xD;&#xA;// A partir de aquí se resuelven valores finales y marcas de formato rojo.&#xD;&#xA;arg_RequestTypeValor = ValorLista(&#xD;&#xA;    arg_RequestTypeEntrada,&#xD;&#xA;    requestTypes,&#xD;&#xA;    &quot;Invoice&quot;,&#xD;&#xA;    out errorTemporal&#xD;&#xA;);&#xD;&#xA;arg_RequestTypeError = errorTemporal;&#xD;&#xA;&#xD;&#xA;arg_BillTypeValor = ValorLista(arg_BillTypeEntrada, billTypes, &quot;Fixed&quot;, out errorTemporal);&#xD;&#xA;arg_BillTypeError = errorTemporal;&#xD;&#xA;&#xD;&#xA;arg_CurrencyValor = ValorLista(arg_CurrencyEntrada, currencies, &quot;EUR&quot;, out errorTemporal);&#xD;&#xA;arg_CurrencyError = errorTemporal;&#xD;&#xA;&#xD;&#xA;arg_CompanyIssuerValor = ValorCompanyIssuer(&#xD;&#xA;    arg_CompanyIssuerEntrada,&#xD;&#xA;    arg_WBSEntrada,&#xD;&#xA;    companyIssuers,&#xD;&#xA;    out errorTemporal&#xD;&#xA;);&#xD;&#xA;arg_CompanyIssuerError = errorTemporal;&#xD;&#xA;&#xD;&#xA;arg_CustomerValor = DatoObligatorio(&#xD;&#xA;    arg_CustomerEntrada,&#xD;&#xA;    &quot;Cliente no disponible&quot;,&#xD;&#xA;    out errorTemporal&#xD;&#xA;);&#xD;&#xA;arg_CustomerError = errorTemporal;&#xD;&#xA;&#xD;&#xA;arg_SoldToValor = DatoObligatorio(&#xD;&#xA;    arg_SoldToEntrada,&#xD;&#xA;    &quot;Sold-to no disponible&quot;,&#xD;&#xA;    out errorTemporal&#xD;&#xA;);&#xD;&#xA;arg_SoldToError = errorTemporal;&#xD;&#xA;&#xD;&#xA;arg_WBSValor = DatoObligatorio(arg_WBSEntrada, &quot;WBS no disponible&quot;, out errorTemporal);&#xD;&#xA;arg_WBSError = errorTemporal;&#xD;&#xA;&#xD;&#xA;arg_RequestedByValor = DatoObligatorio(&#xD;&#xA;    arg_RequestedByEntrada,&#xD;&#xA;    &quot;Solicitante no disponible&quot;,&#xD;&#xA;    out errorTemporal&#xD;&#xA;);&#xD;&#xA;arg_RequestedByError = errorTemporal;&#xD;&#xA;&#xD;&#xA;arg_SalesOrderValor = DatoObligatorio(&#xD;&#xA;    arg_SalesOrderEntrada,&#xD;&#xA;    &quot;Sales Order no disponible&quot;,&#xD;&#xA;    out errorTemporal&#xD;&#xA;);&#xD;&#xA;arg_SalesOrderError = errorTemporal;&#xD;&#xA;&#xD;&#xA;arg_POValor = Texto(arg_POEntrada);&#xD;&#xA;arg_LineaPOValor = string.IsNullOrWhiteSpace(arg_POValor)&#xD;&#xA;    ? string.Empty&#xD;&#xA;    : &quot;Pedido : &quot; + arg_POValor;&#xD;&#xA;arg_SummaryTextValor = Texto(arg_SummaryTextEntrada);&#xD;&#xA;arg_TextNarrativeValor = Texto(arg_TextNarrativeEntrada);&#xD;&#xA;arg_ComentariosValor = Texto(arg_ComentariosEntrada);&#xD;&#xA;arg_ImporteNetoValor = ImporteNeto(arg_ImporteNetoEntrada, out errorTemporal);&#xD;&#xA;arg_ImporteNetoError = errorTemporal;&#xD;&#xA;">              <ui:InvokeCode.Arguments>
+                <scg:Dictionary x:TypeArguments="x:String, Argument">
+                  <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtRequestTypes">[dt_ListaRequestTypeIPF]</InArgument>
+                  <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtBillTypes">[dt_ListaBillTypeIPF]</InArgument>
+                  <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtCurrencies">[dt_ListaCurrencyIPF]</InArgument>
+                  <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtCompanyIssuers">[dt_ListaCompanyIssuerIPF]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="arg_RequestTypeEntrada">[requestTypeTrabajo]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="arg_BillTypeEntrada">[billTypeTrabajo]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="arg_CompanyIssuerEntrada">[companyIssuerTrabajo]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="arg_CustomerEntrada">[accountNameTrabajo]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="arg_SoldToEntrada">[codigoClienteSAPTrabajo]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="arg_WBSEntrada">[codigoPEPTrabajo]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="arg_RequestedByEntrada">[nombreJefeProyectoTrabajo]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="arg_CurrencyEntrada">[monedaTrabajo]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="arg_SalesOrderEntrada">[pedidoSalesOrderTrabajo]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="arg_POEntrada">[poTrabajo]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="arg_SummaryTextEntrada">[summaryTextTrabajo]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="arg_TextNarrativeEntrada">[textNarrativeTrabajo]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="arg_ImporteNetoEntrada">[importeNetoTrabajo]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="arg_ComentariosEntrada">[comentariosFacturacionTrabajo]</InArgument>
+                  <OutArgument x:TypeArguments="x:String" x:Key="arg_RequestTypeValor">[ipfRequestTypeValor]</OutArgument>
+                  <OutArgument x:TypeArguments="x:String" x:Key="arg_BillTypeValor">[ipfBillTypeValor]</OutArgument>
+                  <OutArgument x:TypeArguments="x:String" x:Key="arg_CompanyIssuerValor">[ipfCompanyIssuerValor]</OutArgument>
+                  <OutArgument x:TypeArguments="x:String" x:Key="arg_CustomerValor">[ipfCustomerValor]</OutArgument>
+                  <OutArgument x:TypeArguments="x:String" x:Key="arg_SoldToValor">[ipfSoldToValor]</OutArgument>
+                  <OutArgument x:TypeArguments="x:String" x:Key="arg_WBSValor">[ipfWBSValor]</OutArgument>
+                  <OutArgument x:TypeArguments="x:String" x:Key="arg_RequestedByValor">[ipfRequestedByValor]</OutArgument>
+                  <OutArgument x:TypeArguments="x:String" x:Key="arg_CurrencyValor">[ipfCurrencyValor]</OutArgument>
+                  <OutArgument x:TypeArguments="x:String" x:Key="arg_SalesOrderValor">[ipfSalesOrderValor]</OutArgument>
+                  <OutArgument x:TypeArguments="x:String" x:Key="arg_POValor">[ipfPOValor]</OutArgument>
+                  <OutArgument x:TypeArguments="x:String" x:Key="arg_LineaPOValor">[ipfLineaPOValor]</OutArgument>
+                  <OutArgument x:TypeArguments="x:String" x:Key="arg_SummaryTextValor">[ipfSummaryTextValor]</OutArgument>
+                  <OutArgument x:TypeArguments="x:String" x:Key="arg_TextNarrativeValor">[ipfTextNarrativeValor]</OutArgument>
+                  <OutArgument x:TypeArguments="x:Object" x:Key="arg_ImporteNetoValor">[ipfImporteNetoValor]</OutArgument>
+                  <OutArgument x:TypeArguments="x:String" x:Key="arg_ComentariosValor">[ipfComentariosValor]</OutArgument>
+                  <OutArgument x:TypeArguments="x:Boolean" x:Key="arg_RequestTypeError">[ipfRequestTypeError]</OutArgument>
+                  <OutArgument x:TypeArguments="x:Boolean" x:Key="arg_BillTypeError">[ipfBillTypeError]</OutArgument>
+                  <OutArgument x:TypeArguments="x:Boolean" x:Key="arg_CompanyIssuerError">[ipfCompanyIssuerError]</OutArgument>
+                  <OutArgument x:TypeArguments="x:Boolean" x:Key="arg_CustomerError">[ipfCustomerError]</OutArgument>
+                  <OutArgument x:TypeArguments="x:Boolean" x:Key="arg_SoldToError">[ipfSoldToError]</OutArgument>
+                  <OutArgument x:TypeArguments="x:Boolean" x:Key="arg_WBSError">[ipfWBSError]</OutArgument>
+                  <OutArgument x:TypeArguments="x:Boolean" x:Key="arg_RequestedByError">[ipfRequestedByError]</OutArgument>
+                  <OutArgument x:TypeArguments="x:Boolean" x:Key="arg_CurrencyError">[ipfCurrencyError]</OutArgument>
+                  <OutArgument x:TypeArguments="x:Boolean" x:Key="arg_SalesOrderError">[ipfSalesOrderError]</OutArgument>
+                  <OutArgument x:TypeArguments="x:Boolean" x:Key="arg_ImporteNetoError">[ipfImporteNetoError]</OutArgument>
+                </scg:Dictionary>
+              </ui:InvokeCode.Arguments>
+            </ui:InvokeCode>
+          </Sequence>
+          <Sequence DisplayName="05 Escribir IPF con actividades Excel" sap2010:Annotation.AnnotationText="Objetivo: rellenar Invoice Request con datos confirmados y limpiar los ejemplos de plantilla. Los obligatorios faltantes se marcan en rojo; narrativa, comentarios e importe solo se escriben si llegan informados.">
+            <ueab:ExcelProcessScopeX DisplayName="Abrir Excel para escribir IPF">
+              <ueab:ExcelProcessScopeX.Body>
+                <ActivityAction x:TypeArguments="ui:IExcelProcess">
+                  <ActivityAction.Argument>
+                    <DelegateInArgument x:TypeArguments="ui:IExcelProcess" Name="ExcelProcessIPFS12" />
+                  </ActivityAction.Argument>
+                  <ueab:ExcelApplicationCard Password="{x:Null}" ReadFormatting="{x:Null}" AutoSave="True" DisplayName="Usar IPF para Invoice Request" ResizeWindow="None" WorkbookPath="[rutaIPFTrabajo]">
+                    <ueab:ExcelApplicationCard.Body>
+                      <ActivityAction x:TypeArguments="ue:IWorkbookQuickHandle">
+                        <ActivityAction.Argument>
+                          <DelegateInArgument x:TypeArguments="ue:IWorkbookQuickHandle" Name="ExcelIPF" />
+                        </ActivityAction.Argument>
+                        <Sequence DisplayName="Rellenar Invoice Request">
+                          <ueab:ClearRangeX DisplayName="Vaciar dirección de facturación no confirmada C18:C24" TargetRange="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Range(&quot;C18:C24&quot;)]" />
+                          <ueab:ClearRangeX DisplayName="Vaciar narrativa ejemplo C29:F38" TargetRange="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Range(&quot;C29:F38&quot;)]" />
+                          <ueab:ClearRangeX DisplayName="Vaciar comentarios ejemplo F47:G57" TargetRange="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Range(&quot;F47:G57&quot;)]" />
+                          <ueab:WriteCellX Cell="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Cell(&quot;C3&quot;)]" DisplayName="Escribir Request Type C3" Value="[ipfRequestTypeValor]" />
+                          <If DisplayName="Marcar Request Type rojo si entrada no válida" Condition="[ipfRequestTypeError]">
+                            <If.Then>
+                              <ueab:FormatRangeX DisplayName="Aplicar rojo a Request Type C3" Range="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Range(&quot;C3&quot;)]">
+                                <ueab:FormatRangeX.Font>
+                                  <ui:FontOptions Color="Red" FillColor="Transparent" FontFamilyName="Calibri" Size="11" Style="Regular" UnderlineStyle="None" />
+                                </ueab:FormatRangeX.Font>
+                              </ueab:FormatRangeX>
+                            </If.Then>
+                          </If>
+                          <ueab:WriteCellX Cell="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Cell(&quot;C6&quot;)]" DisplayName="Escribir Bill Type C6" Value="[ipfBillTypeValor]" />
+                          <If DisplayName="Marcar Bill Type rojo si entrada no válida" Condition="[ipfBillTypeError]">
+                            <If.Then>
+                              <ueab:FormatRangeX DisplayName="Aplicar rojo a Bill Type C6" Range="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Range(&quot;C6&quot;)]">
+                                <ueab:FormatRangeX.Font>
+                                  <ui:FontOptions Color="Red" FillColor="Transparent" FontFamilyName="Calibri" Size="11" Style="Regular" UnderlineStyle="None" />
+                                </ueab:FormatRangeX.Font>
+                              </ueab:FormatRangeX>
+                            </If.Then>
+                          </If>
+                          <ueab:WriteCellX Cell="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Cell(&quot;C8&quot;)]" DisplayName="Escribir Company Issuer C8" Value="[ipfCompanyIssuerValor]" />
+                          <If DisplayName="Marcar Company Issuer rojo si falta" Condition="[ipfCompanyIssuerError]">
+                            <If.Then>
+                              <ueab:FormatRangeX DisplayName="Aplicar rojo a Company Issuer C8" Range="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Range(&quot;C8&quot;)]">
+                                <ueab:FormatRangeX.Font>
+                                  <ui:FontOptions Color="Red" FillColor="Transparent" FontFamilyName="Calibri" Size="11" Style="Regular" UnderlineStyle="None" />
+                                </ueab:FormatRangeX.Font>
+                              </ueab:FormatRangeX>
+                            </If.Then>
+                          </If>
+                          <ueab:WriteCellX Cell="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Cell(&quot;C11&quot;)]" DisplayName="Escribir Customer C11" Value="[ipfCustomerValor]" />
+                          <If DisplayName="Marcar Customer rojo si falta" Condition="[ipfCustomerError]">
+                            <If.Then>
+                              <ueab:FormatRangeX DisplayName="Aplicar rojo a Customer C11" Range="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Range(&quot;C11&quot;)]">
+                                <ueab:FormatRangeX.Font>
+                                  <ui:FontOptions Color="Red" FillColor="Transparent" FontFamilyName="Calibri" Size="11" Style="Regular" UnderlineStyle="None" />
+                                </ueab:FormatRangeX.Font>
+                              </ueab:FormatRangeX>
+                            </If.Then>
+                          </If>
+                          <ueab:WriteCellX Cell="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Cell(&quot;F11&quot;)]" DisplayName="Escribir Sold-to F11" Value="[ipfSoldToValor]" />
+                          <If DisplayName="Marcar Sold-to rojo si falta" Condition="[ipfSoldToError]">
+                            <If.Then>
+                              <ueab:FormatRangeX DisplayName="Aplicar rojo a Sold-to F11" Range="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Range(&quot;F11&quot;)]">
+                                <ueab:FormatRangeX.Font>
+                                  <ui:FontOptions Color="Red" FillColor="Transparent" FontFamilyName="Calibri" Size="11" Style="Regular" UnderlineStyle="None" />
+                                </ueab:FormatRangeX.Font>
+                              </ueab:FormatRangeX>
+                            </If.Then>
+                          </If>
+                          <ueab:WriteCellX Cell="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Cell(&quot;F14&quot;)]" DisplayName="Escribir PO F14 si existe" Value="[ipfPOValor]" />
+                          <ueab:WriteCellX Cell="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Cell(&quot;C16&quot;)]" DisplayName="Escribir Requested by C16" Value="[ipfRequestedByValor]" />
+                          <If DisplayName="Marcar Requested by rojo si falta" Condition="[ipfRequestedByError]">
+                            <If.Then>
+                              <ueab:FormatRangeX DisplayName="Aplicar rojo a Requested by C16" Range="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Range(&quot;C16&quot;)]">
+                                <ueab:FormatRangeX.Font>
+                                  <ui:FontOptions Color="Red" FillColor="Transparent" FontFamilyName="Calibri" Size="11" Style="Regular" UnderlineStyle="None" />
+                                </ueab:FormatRangeX.Font>
+                              </ueab:FormatRangeX>
+                            </If.Then>
+                          </If>
+                          <ueab:WriteCellX Cell="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Cell(&quot;F16&quot;)]" DisplayName="Escribir Currency F16" Value="[ipfCurrencyValor]" />
+                          <If DisplayName="Marcar Currency rojo si entrada no válida" Condition="[ipfCurrencyError]">
+                            <If.Then>
+                              <ueab:FormatRangeX DisplayName="Aplicar rojo a Currency F16" Range="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Range(&quot;F16&quot;)]">
+                                <ueab:FormatRangeX.Font>
+                                  <ui:FontOptions Color="Red" FillColor="Transparent" FontFamilyName="Calibri" Size="11" Style="Regular" UnderlineStyle="None" />
+                                </ueab:FormatRangeX.Font>
+                              </ueab:FormatRangeX>
+                            </If.Then>
+                          </If>
+                          <ueab:WriteCellX Cell="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Cell(&quot;C26&quot;)]" DisplayName="Escribir Summary Text C26 si existe" Value="[ipfSummaryTextValor]" />
+                          <ueab:WriteCellX Cell="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Cell(&quot;C30&quot;)]" DisplayName="Escribir línea PO narrativa C30 si existe" Value="[ipfLineaPOValor]" />
+                          <ueab:WriteCellX Cell="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Cell(&quot;C32&quot;)]" DisplayName="Escribir Text Narrative C32 si existe" Value="[ipfTextNarrativeValor]" />
+                          <ueab:WriteCellX Cell="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Cell(&quot;F32&quot;)]" DisplayName="Escribir importe neto F32 si existe" Value="[ipfImporteNetoValor]" />
+                          <If DisplayName="Marcar importe neto rojo si formato no válido" Condition="[ipfImporteNetoError]">
+                            <If.Then>
+                              <ueab:FormatRangeX DisplayName="Aplicar rojo a importe neto F32" Range="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Range(&quot;F32&quot;)]">
+                                <ueab:FormatRangeX.Font>
+                                  <ui:FontOptions Color="Red" FillColor="Transparent" FontFamilyName="Calibri" Size="11" Style="Regular" UnderlineStyle="None" />
+                                </ueab:FormatRangeX.Font>
+                              </ueab:FormatRangeX>
+                            </If.Then>
+                          </If>
+                          <ueab:WriteCellX Cell="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Cell(&quot;D46&quot;)]" DisplayName="Escribir Sales Order D46" Value="[ipfSalesOrderValor]" />
+                          <If DisplayName="Marcar Sales Order rojo si falta" Condition="[ipfSalesOrderError]">
+                            <If.Then>
+                              <ueab:FormatRangeX DisplayName="Aplicar rojo a Sales Order D46" Range="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Range(&quot;D46&quot;)]">
+                                <ueab:FormatRangeX.Font>
+                                  <ui:FontOptions Color="Red" FillColor="Transparent" FontFamilyName="Calibri" Size="11" Style="Regular" UnderlineStyle="None" />
+                                </ueab:FormatRangeX.Font>
+                              </ueab:FormatRangeX>
+                            </If.Then>
+                          </If>
+                          <ueab:WriteCellX Cell="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Cell(&quot;D47&quot;)]" DisplayName="Escribir WBS D47" Value="[ipfWBSValor]" />
+                          <If DisplayName="Marcar WBS rojo si falta" Condition="[ipfWBSError]">
+                            <If.Then>
+                              <ueab:FormatRangeX DisplayName="Aplicar rojo a WBS D47" Range="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Range(&quot;D47&quot;)]">
+                                <ueab:FormatRangeX.Font>
+                                  <ui:FontOptions Color="Red" FillColor="Transparent" FontFamilyName="Calibri" Size="11" Style="Regular" UnderlineStyle="None" />
+                                </ueab:FormatRangeX.Font>
+                              </ueab:FormatRangeX>
+                            </If.Then>
+                          </If>
+                          <ueab:WriteCellX Cell="[ExcelIPF.Sheet(&quot;Invoice Request&quot;).Cell(&quot;F47&quot;)]" DisplayName="Escribir comentarios facturación F47 si existen" Value="[ipfComentariosValor]" />
+                          <ueab:SaveExcelFileX DisplayName="Guardar IPF" Workbook="[ExcelIPF]" />
+                        </Sequence>
+                      </ActivityAction>
+                    </ueab:ExcelApplicationCard.Body>
+                  </ueab:ExcelApplicationCard>
+                </ActivityAction>
+              </ueab:ExcelProcessScopeX.Body>
+            </ueab:ExcelProcessScopeX>
+          </Sequence>
+          <Sequence DisplayName="06 Devolver salida y registrar fin">
+            <Assign DisplayName="Devolver NumeroSF al proceso padre">
+              <Assign.To>
+                <OutArgument x:TypeArguments="x:String">[out_NumeroSFLeido]</OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="x:String">[numeroSFTrabajo]</InArgument>
+              </Assign.Value>
+            </Assign>
+            <ui:LogMessage DisplayName="Registrar fin OK IPF S12" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;OK - IPF generado en: &quot; + rutaIPFTrabajo + &quot; | NumeroSF=&quot; + numeroSFTrabajo + &quot; | RequestType=&quot; + ipfRequestTypeValor + &quot; | BillType=&quot; + ipfBillTypeValor + &quot; | Moneda=&quot; + ipfCurrencyValor]" />
+          </Sequence>
+        </Sequence>
+      </TryCatch.Try>
+      <TryCatch.Catches>
+        <Catch x:TypeArguments="s:Exception">
+          <ActivityAction x:TypeArguments="s:Exception">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="s:Exception" Name="excepcion" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Gestionar error del submódulo IPF">
+              <ui:LogMessage DisplayName="Registrar error del módulo IPF" Level="[UiPath.Core.Activities.LogLevel.Error]" Message="[&quot;ERROR oportunidad-generar-ipf | Plantilla=&quot; + rutaPlantillaIPFTrabajo + &quot; | IPF=&quot; + rutaIPFTrabajo + &quot; | Detalle=&quot; + excepcion.Message]" />
+              <Rethrow DisplayName="Relanzar excepción al proceso padre" />
+            </Sequence>
+          </ActivityAction>
+        </Catch>
+      </TryCatch.Catches>
+    </TryCatch>
+  </Sequence>
+</Activity>

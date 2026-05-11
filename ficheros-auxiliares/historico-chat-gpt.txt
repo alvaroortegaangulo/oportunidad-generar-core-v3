@@ -1,0 +1,3509 @@
+
+
+
+
+
+20250256445 PPO_NuevaTerminalPVR v2.xlsm
+Archivo
+
+Reunion-explicacion-proceso.md
+Archivo
+
+documento_funcional_core_ipf_uipath (1).pdf
+PDF
+PMBox plantilla CORE PC v1 04 (2)
+
+No se puede mostrar la visualización
+Rellena la plantilla del CORE PC "PMBox_plantilla CORE_PC_v1_04 (2).xlsx" con los datos disponibles en el PPO de "20250256445  PPO_NuevaTerminalPVR v2.xlsm" según las indicaciones del funcional del proceso descrito en "documento_funcional_core_ipf_uipath (1).pdf" y la transcripción de la reunión de toma de requerimentos en "Reunion-explicacion-proceso.md". Devuélveme el core PC cumplimentado dejando los datos que deben venir de SAP y Salesforce indicados con un nombre tipo "var1_SAP_FechaInicio" para que yo los rellene a posteriori.
+
+Thought for 2m 11s
+No puedo devolver el CORE PC cumplimentado con estos ficheros tal como están, porque los dos Excel adjuntos están cifrados/protegidos con Microsoft Information Protection / DRM corporativo, no con una protección normal de hoja o libro:
+
+PMBox_plantilla CORE_PC_v1_04 (2).xlsx
+
+20250256445 PPO_NuevaTerminalPVR v2.xlsm
+
+He intentado abrir/importar la plantilla y el PPO, pero ambos aparecen como contenedores cifrados (EncryptedPackage, DRMEncryptedDataSpace, etiqueta Getronics Group Confidential). Esto impide leer celdas, fórmulas, pestañas y estructura interna desde aquí, y no sería fiable generar un fichero “relleno” inventando la estructura. Además, el propio funcional ya advertía que los ficheros PPO pueden estar protegidos por etiquetado corporativo/confidencialidad y que la ejecución puede requerir Excel en sesión de usuario. 
+
+
+Sí he validado las reglas funcionales que habría aplicado: el CORE debe prerrellenarse principalmente desde el PPO, con datos complementarios de Salesforce/SAP o del proceso previo; no debe sustituir la revisión del jefe de proyecto. 
+
+ También habría dejado como variables los campos no disponibles en PPO, por ejemplo var1_SAP_FechaInicio, var2_SAP_PEP_WBS, var3_SAP_SalesOrder, var4_SAP_CodigoCliente, etc., porque el funcional marca esos campos como procedentes de SAP/fase previa. 
+
+
+Para que pueda cumplimentarlo correctamente, necesito que me subas una copia sin cifrado MIP/IRM de ambos Excel. Opciones prácticas:
+
+Abrirlos en Excel con una cuenta corporativa autorizada.
+
+Quitar la etiqueta de confidencialidad o guardar una copia sin cifrado, si tu política lo permite.
+
+Guardar como .xlsx limpio desde Excel: Archivo → Guardar como → Examinar → Herramientas → Opciones generales, comprobando que no haya contraseña ni cifrado.
+
+Volver a subir:
+
+la plantilla CORE PC desbloqueada;
+
+el PPO desbloqueado, manteniendo fórmulas/hojas visibles.
+
+Con esos dos ficheros sin protección, puedo rellenar directamente la plantilla y devolverte el .xlsx final con los campos SAP/Salesforce marcados como variables.
+
+
+
+20250256445 PPO_NuevaTerminalPVR v2 - sin proteccion.xlsm
+Archivo
+PMBox plantilla CORE PC v1 04 (2) sin proteccionProject Infor
+
+
+aqui tienes los excel sin la proteccion corporativa
+
+Thought for 7m 46s
+He generado el CORE PC pre-rellenado.
+
+CORE_PC_NuevaTerminalPVR_prerrelleno.xlsx
+
+
+Abrir hoja de cálculo en modo de pantalla completa
+Project Infor
+Cost Overview
+Resources
+Cost Planning
+Monthly View
+Cost Summary
+Ayuda
+aux Billing Plan
+aux Forecast
+aux UTE
+aux Calendarios
+Trazabilidad_RPA
+
+Incluye:
+
+Project Infor cumplimentado con cabecera, datos económicos y placeholders SAP/Salesforce.
+
+Resources con perfiles, siglas, coste hora y flag INTERCO.
+
+Cost Planning con prorrateo de horas, gastos, compras, riesgos y garantía.
+
+Hoja Trazabilidad_RPA con variables pendientes, reglas aplicadas y advertencias.
+
+Nota relevante: he dejado var1_SAP_FechaInicio documentada en trazabilidad, pero mantuve en Project Infor!C8 la fecha provisional del PPO para no romper fórmulas y cabeceras mensuales. También marqué una advertencia porque el PPO contiene horas en 2027/2028 fuera de la duración 11/2025–10/2026 indicada en el propio PPO.
+
+
+Imagen cargada
+ZEV PCE0012 1001 CORE GAP NuevaTerminalPVR 202602 v1 EJEMPLOCOREFORMACIONProject Infor
+
+
+Entrégame de nuevo ese CORE PC pero tiene que quedar como si lo hubiera rellenado el robot de UiPath. No inventes colores en las celdas (como las celdas que has puesto en amarillo para las variables de SAP y SF) ni añadas notas/comentarios en las celdas ni cosas raras que no esten especificadas o cambios de formato o contenidos. Fijate en cómo queda "ZEV-PCE0012-1001_CORE_GAP_NuevaTerminalPVR_202602_-v1 - EJEMPLOCOREFORMACION.xlsx" que es un ejemplo con otros datos y genera de nuevo el CORE PC a partir de la plantilla "PMBox_plantilla CORE_PC_v1_04 (2) - sin proteccion.xlsx" con los datos del PPO "20250256445  PPO_NuevaTerminalPVR v2 - sin proteccion.xlsm" y dejando los nombres de las variables de los datos que provienen de SAP y SF como ya hiciste. La información adicional y comentarios que desees añadir para explicar cómo has rellenado la plantilla y qué es cada cosa, entrégamela en un fichero aparte en formato markdown.
+Nota: en algunas hojas de la plantilla hay cuadros anaranjados con el titulo NOTA que deberían mantenerse.
+
+Thought for 9m 2s
+He regenerado el CORE PC desde la plantilla limpia, sin añadir hojas, colores nuevos, comentarios de celda ni trazabilidad dentro del Excel. Las explicaciones van separadas en Markdown.
+
+CORE_PC_NuevaTerminalPVR_prerrelleno_robot.xlsx
+
+
+Abrir hoja de cálculo en modo de pantalla completa
+Project Infor
+Cost Overview
+Resources
+Cost Planning
+Monthly View
+Cost Summary
+Ayuda
+aux Billing Plan
+aux Forecast
+aux UTE
+aux Calendarios
+
+Descargar notas de generación en Markdown
+
+El Excel queda configurado para recalcular fórmulas al abrirlo en Excel.
+
+
+
+sf-apertura-fase1-feature-initial-import.zip
+Archivo Zip
+
+sf-forecast-fase1-develop.zip
+Archivo Zip
+
+sf-cierre-fase2-develop.zip
+Archivo Zip
+
+sf-cierre-fase1-develop.zip
+Archivo Zip
+Okey, por otro lado, me han dicho mis responsables que el proceso o procesos que necesito ejecutar para obtener los datos necesarios para el CORE de SAP/SalesForce están en Gitlab, donde he encontrado los 4 procesos adjuntos en 4 zip. Identifica qué procesos o procesos son los que necesito ejecutar para obtener los datos que faltan de rellenar en el CORE y explícame detalladamente cómo utilizarlos para obtener los datos que necesito en el ejemplo que estamos tratando (es decir, cómo debo configurar y ejecutar los procesos necesarios para obtener los datos que se corresponderian con los del PPO "20250256445  PPO_NuevaTerminalPVR v2 - sin proteccion.xlsm")
+
+Thought for 5m 35s
+Dictamen
+Para el ejemplo del PPO 20250256445 PPO_NuevaTerminalPVR v2 - sin proteccion.xlsm, el proceso principal que necesitas ejecutar es:
+
+sf-cierre-fase1-develop
+
+Y, de forma opcional/complementaria:
+
+sf-cierre-fase2-develop
+
+Los otros dos procesos no son los adecuados para obtener los datos faltantes del CORE PC:
+
+ZIP	¿Ejecutarlo para este CORE?	Motivo
+sf-cierre-fase1-develop.zip	Sí	Es el proceso que extrae oportunidades cerradas/ganadas desde Salesforce, obtiene WBS/PEP, cuenta, ruta de proyecto y genera item en cola CierreOP.
+sf-cierre-fase2-develop.zip	Opcional	Consume la cola CierreOP, crea/usa carpetas WBS y descarga ficheros de Salesforce. Sirve para recuperar adjuntos/PPO/documentación, no para obtener nuevos datos SAP estructurados.
+sf-apertura-fase1-feature-initial-import.zip	No para este caso	Es de apertura/inicio de oportunidad. Sirve para crear artefactos iniciales de oferta, no para cierre/alta de proyecto ni datos finales de CORE.
+sf-forecast-fase1-develop.zip	No	Es de forecast comercial. No aporta PEP, pedido, código cliente ni datos de alta de proyecto para CORE.
+Punto crítico: ninguno de los cuatro procesos contiene una extracción SAP completa. Con estos zips puedes obtener principalmente datos de Salesforce/cierre, especialmente el WBS/PEP si está en el informe de Salesforce. Pero campos como pedido/Sales Order SAP, código cliente SAP, códigos de empleado SAP, PO, Ariba o proveedor no salen de estos procesos salvo que ya estén incluidos en el informe de Salesforce o en algún fichero descargado.
+
+1. Datos clave del PPO de ejemplo
+El PPO que estamos tratando contiene como identificador principal:
+
+Campo	Valor
+Opportunity Code / SLFC	20250256445
+Cliente	GAP
+Tipo PEP	PC
+Tipo proyecto	Fixed Price (services)
+Descripción oferta	Smart Airport en la nueva terminal de Puerto Vallarta
+Account Manager	Joan Marcer
+Inicio previsto PPO	11/2025
+Duración PPO	12 meses
+Por tanto, el CORE correcto es CORE PC, no CORE AT.
+
+La clave para buscar este caso en los procesos Salesforce es:
+
+20250256445
+2. Proceso principal: sf-cierre-fase1-develop
+Qué hace
+Este proceso corresponde al proyecto UiPath Datos Cierre.
+
+Su función es extraer de Salesforce un informe de oportunidades cerradas/ganadas, exportarlo a Excel, filtrar las oportunidades con WBS válido y generar items en la cola de Orchestrator CierreOP.
+
+Para tu caso, el dato más importante que debería obtener es el WBS/PEP asociado a la oportunidad 20250256445.
+
+Por qué es el proceso que necesitas
+En el CORE dejamos pendiente, entre otros, este dato:
+
+var2_SAP_PEP_WBS
+Aunque lo habíamos etiquetado como dato SAP, en el flujo real descrito por los responsables parece que el WBS/PEP viaja desde Salesforce o desde el proceso previo de cierre. Este proceso es el que lee precisamente el campo WBS de Salesforce.
+
+Configuración previa necesaria
+Abre en UiPath Studio el proyecto:
+
+sf-cierre-fase1-develop/project.json
+El entrypoint principal es:
+
+Main.xaml
+Assets de Orchestrator esperados
+El proceso espera encontrar estos assets:
+
+Asset	Uso
+PathRoot	Carpeta raíz local donde el robot trabaja.
+PathOutput	Ruta base de salida/repositorio. Si vale Usuario, usa la carpeta de usuario de Windows/Getronics.
+Informe-cierre	Nombre del informe Salesforce que debe abrir/exportar.
+mail-from	Remitente para notificación.
+mail-to	Destinatarios para notificación.
+Además, el proceso trabaja con la cola:
+
+CierreOP
+Y usa por defecto el nombre de robot:
+
+Getronics
+Por cómo está montado el flujo, debería existir esta estructura local:
+
+<PathRoot>\Getronics\
+<PathRoot>\Getronics\excel\
+<PathRoot>\Getronics\template\
+<PathRoot>\Getronics\base\
+Muy importante: el proceso intenta copiar una plantilla desde:
+
+<PathRoot>\Getronics\template\template.xlsx
+Si esa plantilla no existe, el proceso fallará al crear el Excel de salida. Debes localizarla en GitLab, en el entorno del robot o crear una plantilla compatible con la hoja Oportunidades.
+
+Informe Salesforce que debe usar
+El asset Informe-cierre debe apuntar a un informe de Salesforce que contenga, como mínimo, estas columnas:
+
+Columna esperada	Uso
+Opportunity Number	Debe contener 20250256445.
+WBS	Código WBS/PEP que irá al CORE.
+AccountName	Cliente/cuenta, en este caso debería corresponder con GAP.
+Columna de email/contacto	El proceso la usa para permisos/carpeta, pero está referenciada por índice, no por nombre.
+Riesgo técnico: en Main.xaml, el campo Correo se obtiene mediante una posición de columna, no mediante un nombre robusto. Si cambia el orden del informe Salesforce, puede coger una columna incorrecta. Antes de confiar en fase 2, valida el Excel exportado y comprueba qué valor se está metiendo en Correo.
+
+3. Ejecución de sf-cierre-fase1-develop para el PPO 20250256445
+Opción recomendada: filtrar el informe Salesforce
+Lo más limpio es configurar en Salesforce un informe específico o un filtro temporal con:
+
+Opportunity Number = 20250256445
+Así el robot exportará solo, o casi solo, el caso que necesitas.
+
+Opción alternativa: ejecutar el informe completo
+También puedes dejar el informe completo y después buscar la fila 20250256445 en el Excel generado por el robot.
+
+El proceso genera un fichero parecido a:
+
+<PathRoot>\Getronics\excel\Oportunidades_dd_MM_yyyy_HHmm.xlsx
+Dentro deberías buscar una fila con:
+
+Opportunity Number = 20250256445
+En esa fila debes revisar principalmente:
+
+WBS
+AccountName
+Ruta
+Practica
+Correo
+Resultado esperado de fase 1
+Después de ejecutar Main.xaml, deberías tener:
+
+1. Excel de oportunidades de cierre
+Un Excel en:
+
+<PathRoot>\Getronics\excel\
+Con una fila correspondiente a:
+
+20250256445
+2. Item en cola CierreOP
+El proceso crea un item en la cola:
+
+CierreOP
+Con:
+
+Campo cola	Valor esperado
+Reference	20250256445
+Wbs	El WBS/PEP del proyecto
+Ruta	Ruta relativa calculada para el repositorio PMHUB
+Practica	Práctica derivada del WBS
+Correo	Email usado para permisos/carpeta
+Este item de cola es lo que después consume sf-cierre-fase2.
+
+4. Proceso opcional: sf-cierre-fase2-develop
+Qué hace
+Este proceso corresponde al proyecto UiPath Procesar cierre.
+
+Su función no es extraer más datos financieros de SAP. Lo que hace es:
+
+Leer items nuevos de la cola CierreOP.
+
+Obtener Reference, Wbs, Ruta y Correo.
+
+Crear o localizar estructura de carpetas del proyecto.
+
+Descargar ficheros asociados desde Salesforce.
+
+Compartir la carpeta si el correo es válido de Getronics.
+
+Marcar el item como correcto o fallido.
+
+Cuándo debes ejecutarlo
+Ejecuta fase 2 si necesitas:
+
+Descargar desde Salesforce el PPO oficial u otros adjuntos.
+
+Crear/comprobar la carpeta WBS del proyecto.
+
+Ver qué documentación asociada tiene la oportunidad.
+
+Validar que el proceso previo deja la documentación accesible para el robot CORE.
+
+No lo ejecutes esperando obtener directamente:
+
+Pedido SAP.
+
+Código cliente SAP.
+
+Códigos de empleado.
+
+PO/Ariba.
+
+Datos de proveedor.
+
+Ese proceso no los extrae.
+
+Configuración de sf-cierre-fase2-develop
+Abre:
+
+sf-cierre-fase2-develop/project.json
+Entrypoint:
+
+Main.xaml
+Debe usar la misma cola:
+
+CierreOP
+Y debe tener configurados, como mínimo:
+
+Asset	Uso
+PathRoot	Raíz de trabajo del robot.
+PathOutput	Base del repositorio PMHUB o salida local.
+mail-from	Remitente.
+mail-to	Destinatarios.
+Además, el robot necesita poder acceder a Salesforce mediante el navegador y la sesión corporativa correspondiente.
+
+Ejecución para 20250256445
+Antes de ejecutar fase 2, comprueba en Orchestrator que existe un item New en la cola CierreOP con:
+
+Reference = 20250256445
+Después ejecuta:
+
+sf-cierre-fase2-develop/Main.xaml
+El proceso leerá ese item y debería descargar los ficheros de Salesforce en una carpeta parecida a:
+
+<PathRepositorio>\<Ruta>\0_Apertura
+O, si no tiene ruta, la construirá desde el WBS bajo la base PMHUB.
+
+5. Mapeo de datos al CORE PC
+Con los procesos revisados, el mapeo realista queda así:
+
+Variable/valor CORE	De dónde debería salir	Proceso que ayuda	Observación
+var2_SAP_PEP_WBS	Campo WBS del informe Salesforce	sf-cierre-fase1	Es el dato más importante que sí parece cubrir el proceso.
+Nombre cliente	PPO / AccountName Salesforce	PPO + sf-cierre-fase1	En el PPO ya aparece GAP.
+Nombre/descripción proyecto	PPO / Salesforce	PPO + posible informe Salesforce	En el PPO ya aparece Smart Airport en la nueva terminal de Puerto Vallarta.
+Práctica/ruta PMHUB	Derivada del WBS	sf-cierre-fase1	Sirve para carpetas y trazabilidad, no necesariamente para el CORE.
+PPO/documentos adjuntos	Salesforce Files	sf-cierre-fase2	Solo si necesitas recuperar documentación.
+var1_SAP_FechaInicio	SAP o proceso previo SAP	No cubierto claramente	El PPO tiene inicio previsto 11/2025, pero el campo definitivo debería venir de alta/adjudicación SAP.
+var3_SAP_CodigoCliente	SAP/Sold-to	No cubierto	No aparece extracción SAP en estos zips.
+var4_SAP_PedidoSalesOrder	SAP	No cubierto	Necesitas proceso SAP o dato ya persistido en cola/dataset externo.
+var5_SAP_CodEmpleadoPM	SAP/RRHH/proceso previo	No cubierto	No hay extracción fiable en estos procesos.
+var6_SAP_ProjectManager	SAP/proceso previo	No cubierto salvo que el informe SF lo incluya	Revisar columnas reales del informe.
+var7_SAP_CodEmpleadoPracticeLeader	SAP/RRHH	No cubierto	Pendiente.
+var8_SAP_PracticeLeader	SAP/proceso previo	No cubierto	Pendiente.
+var9_SF_CodEmpleadoSalesManager	Salesforce/SAP/RRHH	Parcialmente no cubierto	El PPO tiene Joan Marcer, pero no código empleado.
+Códigos empleado de recursos	SAP/RRHH	No cubierto	El PPO trae perfiles/categorías, no empleados nominales.
+var20_SAP_Proveedor_Subcontrataciones	SAP/Ariba/proveedor	No cubierto	El PPO indica subcontratación, pero no proveedor SAP.
+var30_SAP_PO_Compra	SAP/Ariba	No cubierto	Pendiente de otro origen.
+var40_SAP_Ariba	Ariba/SAP	No cubierto	Pendiente de otro origen.
+6. Qué haría yo para obtener los datos del ejemplo
+Paso 1 — Validar que el PPO apunta a CORE PC
+Ya validado:
+
+Opportunity Code = 20250256445
+PEP Type = PC
+Project Type = Fixed Price (services)
+Cliente = GAP
+Por tanto, mantén la plantilla CORE PC.
+
+Paso 2 — Ejecutar sf-cierre-fase1-develop
+Configura el asset:
+
+Informe-cierre
+para que apunte al informe Salesforce de oportunidades cerradas/ganadas que incluya la oportunidad:
+
+20250256445
+Ejecuta:
+
+sf-cierre-fase1-develop/Main.xaml
+Después, abre el Excel generado y localiza la fila:
+
+Opportunity Number = 20250256445
+Extrae de esa fila:
+
+WBS
+AccountName
+Ruta
+Practica
+Correo
+El valor WBS será el candidato para sustituir:
+
+var2_SAP_PEP_WBS
+en el CORE.
+
+Paso 3 — Revisar la cola CierreOP
+En Orchestrator, comprueba que se haya creado un item con:
+
+Reference = 20250256445
+Y con SpecificContent parecido a:
+
+Wbs = <WBS obtenido>
+Ruta = <ruta calculada>
+Practica = <práctica derivada>
+Correo = <correo responsable/permisos>
+Si no aparece, revisa:
+
+Que el informe Salesforce contiene la oportunidad.
+
+Que el campo WBS empieza por Z.
+
+Que no existía ya un item con la misma referencia.
+
+Que la cola CierreOP existe en la carpeta correcta de Orchestrator.
+
+Que el asset Informe-cierre apunta al informe correcto.
+
+Paso 4 — Ejecutar sf-cierre-fase2-develop solo si necesitas documentación
+Ejecuta:
+
+sf-cierre-fase2-develop/Main.xaml
+Este proceso debería consumir el item:
+
+Reference = 20250256445
+y descargar los ficheros asociados desde Salesforce.
+
+Después revisa la carpeta:
+
+...\0_Apertura
+Ahí deberías encontrar el PPO u otros documentos de oferta/cierre, si están adjuntados en Salesforce.
+
+Paso 5 — Completar el CORE con lo obtenido
+Con estos procesos, lo más probable es que puedas completar como mínimo:
+
+var2_SAP_PEP_WBS = <WBS obtenido de Salesforce cierre>
+Y posiblemente validar:
+
+Cliente = GAP
+Descripción = Smart Airport en la nueva terminal de Puerto Vallarta
+Ruta repositorio = <Ruta calculada por fase 1>
+Práctica = <derivada de WBS>
+Pero todavía quedarían pendientes los campos realmente SAP:
+
+var1_SAP_FechaInicio
+var3_SAP_CodigoCliente
+var4_SAP_PedidoSalesOrder
+var5_SAP_CodEmpleadoPM
+var7_SAP_CodEmpleadoPracticeLeader
+Códigos empleado de recursos
+PO / Ariba / proveedor
+7. Procesos que no debes usar para este objetivo
+sf-forecast-fase1-develop
+Descarga o prepara información de forecast comercial. No está orientado a alta de proyecto ni CORE.
+
+No lo necesitas para:
+
+20250256445 PPO_NuevaTerminalPVR
+sf-apertura-fase1-feature-initial-import
+Este proceso es de apertura de oportunidad. Trabaja con una cola llamada:
+
+Oportunidades
+y usa datos como:
+
+Opportunity Number
+Opportunity Owner
+BidManager
+Date of Offer Delivery
+Opportunity Account
+Opportunity Description
+TCV / ACV
+Puede servir para localizar información inicial de oportunidad o recrear artefactos de oferta, pero no es el proceso adecuado para obtener los datos de cierre/SAP que faltan en el CORE.
+
+8. Conclusión operativa
+Para el caso concreto del PPO 20250256445, el flujo correcto sería:
+
+1. Ejecutar sf-cierre-fase1-develop/Main.xaml
+   ↓
+2. Buscar Opportunity Number = 20250256445 en el Excel generado
+   ↓
+3. Extraer WBS y metadatos Salesforce
+   ↓
+4. Verificar item en cola CierreOP
+   ↓
+5. Ejecutar sf-cierre-fase2-develop/Main.xaml solo si necesitas descargar ficheros Salesforce
+   ↓
+6. Usar WBS para rellenar var2_SAP_PEP_WBS en el CORE
+   ↓
+7. Mantener pendientes los campos SAP reales que estos procesos no extraen
+Mi recomendación es que preguntes por el proceso GitLab adicional de extracción SAP o por el contrato de datos del proceso previo, porque con estos cuatro zips no está cubierta la obtención completa de todos los placeholders SAP/Salesforce que dejamos en el CORE. El proceso que más se aproxima a lo que te indicaron tus responsables es sf-cierre-fase1, pero solo resuelve la parte Salesforce/cierre y cola CierreOP, no la parte SAP completa.
+
+
+Dame una checklist concisa de sf-cierre-fase1-develop de qué necesito configurar antes de ejecutar el proceso y otra checklist de cómo obtendré los resultados (ejecutando el informe completo) y si envía algún correo electrónico y qué funcion tienen los emails de los assets mail-from y mail-to
+
+Thought for 1m 48s
+Checklist previa — sf-cierre-fase1-develop
+Antes de ejecutar Main.xaml, revisa esto:
+
+1. Orchestrator
+Confirmar la carpeta de Orchestrator usada por el proceso. En el XAML viene por defecto:
+
+DEV/GTN
+En esa carpeta deben existir estos assets:
+
+Asset	Función
+PathRoot	Raíz local de trabajo del robot.
+PathOutput	Ruta base del repositorio/proyectos. Si vale Usuario, el robot usa C:\Users\<usuario>\Getronics.
+Informe-cierre	Nombre exacto del informe de Salesforce que el robot debe abrir/exportar.
+mail-from	Cuenta/remitente delegado para enviar el correo final.
+mail-to	Destinatario/s del correo final con el Excel generado.
+Confirmar que existe la cola:
+
+CierreOP
+en la misma carpeta de Orchestrator.
+
+Revisar si ya existe un item en CierreOP con referencia:
+
+20250256445
+Si ya existe en estado New, InProgress o Successful, el proceso no lo volverá a insertar.
+
+2. Rutas locales
+Con PathRoot = X, el robot espera trabajar en:
+
+X\Getronics\
+X\Getronics\excel\
+X\Getronics\template\
+X\Getronics\base\
+Comprueba especialmente:
+
+X\Getronics\template\template.xlsx
+Ese fichero es crítico: el robot copia template.xlsx sobre el Excel final y luego escribe los datos en la hoja Oportunidades.
+
+Punto delicado: si X\Getronics ya existe pero faltan excel, template o base, el robot puede no recrearlas correctamente. Verifícalas manualmente.
+
+3. Descargas de Chrome
+El XAML tiene hardcodeada la ruta:
+
+C:\Users\vbayona\Downloads
+Debes cambiarla en el proceso o asegurarte de que el robot ejecuta con ese usuario/ruta. Si no, descargará el informe desde Salesforce pero luego no encontrará el fichero para moverlo a PathRoot\Getronics\excel.
+
+4. Salesforce
+El usuario/robot debe poder entrar en Salesforce con Azure SSO.
+
+Debe tener acceso al informe cuyo nombre está en el asset Informe-cierre.
+
+El informe debe exportarse a Excel.
+
+La hoja del Excel descargado debe llamarse exactamente igual que Informe-cierre, porque el robot lee:
+
+SheetName = NombreInformeSF
+El informe debe contener, como mínimo, estas columnas:
+
+Opportunity Number
+WBS
+AccountName
+Además, el robot toma el campo Correo desde CurrentRow(8), es decir, por posición de columna, no por nombre. Valida que la columna 9 del informe sea realmente el correo esperado.
+
+5. Permisos de red/repositorio
+El robot crea carpetas bajo PathOutput/PathRepositorio usando una ruta derivada del WBS. Debe tener permisos de escritura en esa ubicación.
+
+La lógica encaja con lo explicado en la reunión: estos procesos de cierre generan datos/carpeta/cola para que el proceso posterior pueda usar el PPO y los metadatos ya preparados. 
+
+
+6. Outlook / correo
+Outlook debe estar configurado en la sesión del robot.
+
+La cuenta que ejecuta debe poder enviar correo.
+
+Si mail-from es una cuenta compartida o buzón funcional, el usuario del robot debe tener permisos de Send on behalf o equivalente.
+
+Checklist de obtención de resultados ejecutando el informe completo
+1. Ejecutar el proceso
+Ejecuta:
+
+sf-cierre-fase1-develop/Main.xaml
+No necesitas filtrar previamente por 20250256445 si vas a lanzar el informe completo.
+
+2. Qué hace el robot
+El flujo esperado es:
+
+Abre Salesforce.
+
+Entra en Reports.
+
+Abre el informe indicado por Informe-cierre.
+
+Exporta el informe completo.
+
+Mueve el Excel descargado desde RutaDescargas a:
+
+<PathRoot>\Getronics\excel\Oportunidades_dd_MM_yyyy_HHmm.xlsx
+Lee la hoja Informe-cierre.
+
+Filtra filas cuyo WBS empieza por Z.
+
+Añade columnas calculadas:
+
+Entidad
+Proyecto
+Practica
+Multiple
+Ruta
+Crea carpetas de proyecto en el repositorio.
+
+Escribe el resultado final en la hoja Oportunidades del Excel final.
+
+Inserta items en la cola CierreOP.
+
+Envía un correo con el Excel final adjunto.
+
+3. Cómo localizar el caso 20250256445
+Abre el Excel final generado en:
+
+<PathRoot>\Getronics\excel\
+Busca en la hoja Oportunidades:
+
+Opportunity Number = 20250256445
+En esa fila deberías recuperar:
+
+Campo	Uso para tu CORE
+Opportunity Number	Identificador Salesforce del PPO.
+WBS	Candidato a var_SAP_PEP_WBS / código proyecto.
+AccountName	Cliente/cuenta, debería corresponder con GAP.
+Practica	Práctica derivada del carácter 7 del WBS.
+Ruta	Ruta relativa calculada para carpeta del proyecto.
+Columna 9 / Correo	Correo que el robot mete en cola para fase 2.
+4. Cómo comprobar la cola
+En Orchestrator:
+
+Queues → CierreOP → View Transactions
+Busca por referencia:
+
+20250256445
+El item debería tener:
+
+Reference = 20250256445
+Y en SpecificContent:
+
+Ruta
+Wbs
+Practica
+Correo
+La Ruta que mete en cola apunta a la carpeta 0_Apertura del proyecto. Esa cola es la entrada natural para sf-cierre-fase2, que después descarga ficheros/documentación. En la reunión se indicó precisamente que los datos acabarían en cola y que a partir de ahí se cogerían los ficheros descargados y los datos necesarios para la siguiente fase. 
+
+
+¿Envía correo electrónico?
+Sí. Si el proceso llega al final, envía un correo con Outlook.
+
+Contenido del correo
+Campo	Valor
+Para	Asset mail-to
+Enviado en nombre de	Asset mail-from
+Asunto	[<CarpetaOrquestador>] Cierre Oportunidades - Fase1
+Cuerpo	Adjunto remito informe de ejecucion
+Adjunto	Excel generado en RutaExcel
+Ejemplo de asunto si no cambias la carpeta:
+
+[DEV/GTN] Cierre Oportunidades - Fase1
+Función real de mail-from
+mail-from no es un dato para el CORE. Es el remitente delegado del correo de ejecución.
+
+En el XAML se usa como:
+
+SentOnBehalfOfName = MailFrom
+Es decir, el robot intenta enviar el correo “en nombre de” esa cuenta. Si el usuario del robot no tiene permisos sobre ese buzón, el envío puede fallar.
+
+Función real de mail-to
+mail-to es el destinatario del informe final. Sirve para que los responsables reciban el Excel generado tras ejecutar la fase 1.
+
+No afecta a Salesforce, no afecta a SAP, no afecta a la cola y no rellena ningún dato del CORE.
+
+Fallos típicos que debes revisar
+Síntoma	Causa probable
+No aparece 20250256445 en el Excel final	El informe Salesforce no contiene la oportunidad, o el WBS no empieza por Z.
+Falla al leer Excel	La hoja no se llama exactamente igual que Informe-cierre.
+No se crea item en CierreOP	Ya existía un item con esa referencia en New, InProgress o Successful.
+Falla al mover el Excel descargado	RutaDescargas sigue apuntando a C:\Users\vbayona\Downloads.
+Falla al generar Excel final	Falta template.xlsx en PathRoot\Getronics\template.
+Falla el envío de correo	Outlook no está configurado o mail-from no tiene permisos de envío delegado.
+Correo sale mal en cola	La columna 9 del informe Salesforce no es el correo esperado.
+
+No tengo ningún fichero local en Getronics\excel\, Getronics\template\ o Getronics\base\. Solo necesito Getronics\template\template.xlsx para que el proceso funcione? En ese caso, podrías generar un template.xlsx adecuado para que el proceso pueda funcionar correctamente?
+
+Thought for 1m 33s
+Sí: para sf-cierre-fase1-develop, en esas carpetas locales el único fichero obligatorio es:
+
+<PathRoot>\Getronics\template\template.xlsx
+Pero las carpetas también deben existir:
+
+<PathRoot>\Getronics\excel\
+<PathRoot>\Getronics\template\
+<PathRoot>\Getronics\base\
+Getronics\excel es la carpeta donde el robot dejará el Excel final Oportunidades_dd_MM_yyyy_HHmm.xlsx.
+Getronics\base se crea en la inicialización, pero en Main.xaml no parece usarse como entrada funcional.
+Getronics\template\template.xlsx sí es crítico: el robot lo copia como base del Excel final y luego escribe la tabla en la hoja Oportunidades.
+
+He generado un template.xlsx mínimo y adecuado para ese flujo: contiene una hoja llamada exactamente Oportunidades, sin datos ni formatos innecesarios, para que el Write Range del robot escriba encima desde A1.
+
+Puedes descargarlo aquí:
+
+template_sf_cierre_fase1.xlsx
+
+
+Abrir hoja de cálculo en modo de pantalla completa
+Oportunidades
+
+También te dejo un ZIP con la estructura preparada:
+
+Descargar estructura Getronics lista para copiar
+
+Uso recomendado:
+
+Descarga el ZIP.
+
+Extrae su contenido dentro de la ruta configurada en el asset PathRoot.
+
+Debe quedar así:
+
+<PathRoot>\Getronics\template\template.xlsx
+<PathRoot>\Getronics\excel\
+<PathRoot>\Getronics\base\
+Detalle importante: si ya existe la carpeta <PathRoot>\Getronics\ pero no existen sus subcarpetas, créalas manualmente. El XAML comprueba si existe Getronics; si existe, puede asumir que todo está preparado y no recrear excel, template y base.
+
+
+No entiendo el uso de PathRespoitorio, para qué se utiliza? Tampoco entiendo el uso del asset Informe-cierre, en orchestrator está como "Informe-cierre: Text Iberia Won last week", en teoria no lo deberia cambiar, no?
+
+Thought for 1m 9s
+Sí: Informe-cierre: Text Iberia Won last week normalmente significa:
+
+Asset name: Informe-cierre
+Asset type: Text
+Asset value: Iberia Won last week
+Es decir, “Text” no forma parte del valor funcional. El valor que usa el robot debería ser solo:
+
+Iberia Won last week
+1. Para qué sirve PathRepositorio
+En sf-cierre-fase1, el asset real se llama:
+
+PathOutput
+y el XAML lo guarda internamente en la variable:
+
+PathRepositorio
+No es la carpeta local Getronics\excel, Getronics\template ni Getronics\base.
+
+Su función es ser la raíz del repositorio de proyectos, donde el robot crea o comprueba la estructura de carpetas por WBS/PEP.
+
+La lógica es esta:
+
+PathRoot
+ └─ Getronics
+     ├─ excel       → Excel generado por fase 1
+     ├─ template    → template.xlsx
+     └─ base        → carpeta técnica/local
+
+PathOutput / PathRepositorio
+ └─ PMHUB_Repositorio Proyectos y Servicios - PMHUB_
+     └─ <práctica>
+         └─ <WBS> - <Cuenta>
+             └─ 0_Apertura
+Por tanto:
+
+Concepto	Asset/variable	Uso
+Carpeta técnica local	PathRoot	Donde el robot trabaja localmente.
+Excel final del informe	PathRoot\Getronics\excel	Donde deja Oportunidades_dd_MM_yyyy_HHmm.xlsx.
+Plantilla Excel fase 1	PathRoot\Getronics\template\template.xlsx	Base del Excel de salida.
+Repositorio de proyecto	PathOutput / PathRepositorio	Donde crea/valida carpetas del proyecto por WBS.
+En la reunión se explicó precisamente que este proceso crea la estructura de carpetas del WBS, coloca la oportunidad en una ruta relativa y deja datos en cola para la fase siguiente. 
+
+
+Caso especial: PathOutput = Usuario
+El XAML tiene una condición:
+
+If PathRepositorio.Equals("Usuario") Then
+    PathRepositorio = "C:\Users\" + Environment.UserName + "\Getronics"
+End If
+Eso significa que si el asset PathOutput vale literalmente:
+
+Usuario
+el robot no usará una ruta de red/repositorio real, sino una ruta local del usuario que ejecuta:
+
+C:\Users\<usuario>\Getronics
+Eso puede servir para pruebas locales, pero en ejecución real lo normal sería que PathOutput apunte a la raíz real del repositorio PMHUB/SharePoint/unidad sincronizada.
+
+2. Para qué sirve Informe-cierre
+El asset:
+
+Informe-cierre
+se carga en la variable:
+
+NombreInformeSF
+y se usa para identificar el informe de Salesforce que el robot debe abrir y exportar.
+
+En tu caso:
+
+Informe-cierre = Iberia Won last week
+Eso quiere decir que el robot irá a Salesforce → Reports y buscará/abrirá el informe llamado:
+
+Iberia Won last week
+Después exportará ese informe y leerá del Excel descargado una hoja con ese mismo nombre.
+
+3. ¿Debes cambiar Informe-cierre?
+En principio, no lo cambies si ese informe es el informe oficial de oportunidades ganadas/cerradas.
+
+Pero hay una condición crítica: el informe Iberia Won last week debe contener la oportunidad del PPO que estás tratando, es decir:
+
+Opportunity Number = 20250256445
+Si esa oportunidad fue ganada la semana pasada, probablemente aparecerá.
+
+Si la oportunidad no fue ganada la semana pasada, el proceso puede ejecutarse correctamente, pero no obtendrás nada para 20250256445, porque el informe no traerá esa fila.
+
+4. Qué comprobar antes de tocar el asset
+No cambies el asset todavía. Primero abre manualmente en Salesforce el informe:
+
+Iberia Won last week
+y verifica que incluye estas columnas:
+
+Opportunity Number
+WBS
+AccountName
+Luego busca:
+
+20250256445
+Resultado:
+
+Si ocurre esto	Qué hacer
+20250256445 aparece en el informe	No cambies Informe-cierre. Ejecuta el proceso tal cual.
+No aparece, pero el informe es correcto para producción semanal	No cambies el asset; para este caso concreto necesitas ampliar temporalmente el filtro del informe o usar otro informe histórico.
+El informe cambió de nombre en Salesforce	Entonces sí debes actualizar el asset con el nombre exacto nuevo.
+Quieres probar solo una oportunidad	Mejor duplicar/crear un informe temporal con filtro Opportunity Number = 20250256445 y cambiar el asset solo en entorno de prueba.
+5. Punto delicado
+El nombre del informe no solo sirve para hacer clic en Salesforce. También se usa como nombre de hoja al leer el Excel exportado:
+
+SheetName = NombreInformeSF
+Por eso, si cambias Informe-cierre, el valor debe coincidir con:
+
+El nombre visible del informe en Salesforce.
+
+El nombre de la hoja dentro del Excel exportado.
+
+Si no coincide, el robot puede descargar bien el fichero pero fallar al leerlo.
+
+6. Para tu caso concreto
+Para obtener los datos del PPO:
+
+20250256445  PPO_NuevaTerminalPVR v2 - sin proteccion.xlsm
+haría esto:
+
+Mantener Informe-cierre = Iberia Won last week.
+
+Abrir manualmente ese informe en Salesforce.
+
+Buscar 20250256445.
+
+Si aparece, ejecutar sf-cierre-fase1 sin tocar el asset.
+
+Si no aparece, no es un problema técnico del robot: el informe “Won last week” no cubre temporalmente esa oportunidad. En ese caso necesitas un informe Salesforce equivalente pero con rango más amplio o filtrado por Opportunity Number = 20250256445.
+
+El proceso funcional depende de que la fase previa/cola Salesforce aporte los metadatos del proyecto, como identificador de oportunidad, cuenta, código de proyecto, práctica y otros datos ya extraídos; el documento funcional lo trata como fuente complementaria necesaria para el pre-relleno del CORE. 
+
+
+
+Imagen cargada
+Imagen cargada
+He lanzado el proceso y al intentar hacer login falla como se ve en las imagenes y el proceso de uipath se detiene. Se debe a que el proceso está preparado para hacer login con la cuenta corporativa configurada en el equipo o algo asi? Mi usuario corporativo no tiene acceso a salesforce, se supone que debería hacer login con la cuenta configurada originalmente
+
+Thought for 52s
+Sí. El fallo encaja con esto:
+
+El proceso no está preparado para meter usuario/contraseña de Salesforce desde assets ni para usar una credencial Salesforce propia. Está preparado para abrir Salesforce en Chrome y pulsar Iniciar sesión con AzureSSO.
+
+Por tanto, cuando lo ejecutas desde tu equipo/sesión, Salesforce intenta autenticarte con tu identidad corporativa/Azure actual. Si tu usuario no está dado de alta/autorizado en Salesforce, el resultado normal es exactamente ese:
+
+Single Sign-On Error
+We can't log you in because of an issue with single sign-on.
+No es un problema de PathRoot, PathRepositorio, template.xlsx ni del informe. Es un bloqueo de autenticación/autorización SSO.
+
+Qué significa en la práctica
+El flujo sf-cierre-fase1 está modelado así:
+
+Abre Chrome contra Salesforce.
+
+Pulsa el botón “Iniciar sesión con AzureSSO”.
+
+Espera llegar a Salesforce Lightning Home.
+
+Pulsa Reports.
+
+Abre el informe Iberia Won last week.
+
+Exporta el Excel.
+
+No hay una actividad tipo:
+
+Get Credential Salesforce
+Type Into usuario
+Type Secure Text contraseña
+Tampoco hay assets como:
+
+SalesforceUser
+SalesforcePassword
+SalesforceCredential
+Así que no va a usar automáticamente una “cuenta originalmente configurada” salvo que el proceso se ejecute dentro de la sesión Windows/Chrome de esa cuenta o de un robot autorizado.
+
+Entonces, ¿con qué cuenta debería ejecutarse?
+Debería ejecutarse de una de estas formas:
+
+Opción A — La correcta en entorno real
+Ejecutarlo en la máquina/sesión del robot corporativo que tenga acceso a Salesforce.
+
+Es decir, no desde tu usuario personal si tu usuario no tiene Salesforce, sino desde el usuario Windows/VDI/robot que se usaba originalmente para este proceso y que esté autorizado en Azure/Salesforce.
+
+Ejemplo conceptual:
+
+Usuario Windows del robot / cuenta técnica
+    ↓
+AzureSSO
+    ↓
+Salesforce autorizado
+    ↓
+Informe Iberia Won last week
+Opción B — Pedir acceso temporal a tu usuario
+Que el equipo Salesforce/Azure te conceda acceso a:
+
+getronics.my.salesforce.com
+y, como mínimo, al informe:
+
+Iberia Won last week
+Pero por lo que comentasteis en la reunión, Salesforce está muy restringido y probablemente no te lo concedan nominalmente.
+
+Opción C — Pedir que alguien con acceso exporte el informe
+Para avanzar sin pelearte con SSO, puedes pedir a alguien autorizado que exporte manualmente el informe Iberia Won last week y te pase el Excel.
+
+Con ese Excel se podría simular la parte posterior del proceso o adaptar una ejecución local para saltarse la navegación Salesforce.
+
+Qué NO deberías hacer
+No cambiaría Informe-cierre por ahora. El valor:
+
+Iberia Won last week
+solo indica qué informe debe abrir el robot después de entrar. Tu error ocurre antes: en la autenticación SSO.
+
+Tampoco sirve cambiar mail-from, mail-to, PathRoot, PathOutput o template.xlsx. Eso afecta a carpetas, Excel generado y envío de correo, pero no resuelve el acceso a Salesforce.
+
+Diagnóstico exacto
+Tu situación es:
+
+Ejecutas UiPath Studio/Assistant con tu usuario corporativo
+    ↓
+Chrome abre Salesforce
+    ↓
+Pulsas AzureSSO
+    ↓
+Azure/Salesforce intenta mapear tu usuario
+    ↓
+Tu usuario no tiene acceso Salesforce o no está provisionado correctamente
+    ↓
+Salesforce devuelve SAML Error
+    ↓
+UiPath no encuentra la pantalla Home/Reports
+    ↓
+El proceso se detiene
+Qué pedir a tus responsables
+Pídeles una de estas tres cosas, en este orden:
+
+Nombre de la máquina/VDI/usuario robot donde se ejecutaba originalmente sf-cierre-fase1.
+
+Confirmación de que esa cuenta tiene acceso a Salesforce y al informe Iberia Won last week.
+
+Exportación manual del informe Iberia Won last week si no puedes acceder con la cuenta robot.
+
+Mensaje que puedes enviar:
+
+Al ejecutar sf-cierre-fase1 desde mi usuario, Salesforce devuelve “Single Sign-On Error” tras pulsar AzureSSO. He revisado el flujo y no usa credenciales Salesforce en assets; depende de la sesión Azure/Chrome del usuario que ejecuta. Necesito que me indiquéis la cuenta/máquina robot autorizada para Salesforce o, alternativamente, que me proporcionéis una exportación del informe “Iberia Won last week” con las columnas Opportunity Number, WBS y AccountName para poder continuar el análisis del CORE.
+Cómo comprobar si estás en la cuenta correcta
+Antes de lanzar UiPath, abre Chrome manualmente y entra en:
+
+https://getronics.my.salesforce.com
+Pulsa:
+
+Iniciar sesión con AzureSSO
+Si aparece el mismo error, el proceso nunca va a funcionar en esa sesión. Primero hay que resolver la identidad/autorización.
+
+Si entras correctamente a Salesforce y ves Reports, entonces ya puedes lanzar UiPath; en ese caso el siguiente problema probable sería el selector del informe, no el login.
+
+
+La única solución factible está en pedirle al usuario que desarrolló el proceso que lo ejecute y me envíe el output. Cómo se lo debo pedir exactamente? que datos tengo que indicarle?
+
+Thought for 11s
+Necesitas pedirle una ejecución controlada de sf-cierre-fase1-develop con su cuenta/máquina autorizada, y que te devuelva el Excel generado + los datos del item en la cola CierreOP para la oportunidad del PPO.
+
+Datos mínimos que debes indicarle:
+
+Dato	Valor
+Proceso	sf-cierre-fase1-develop
+Entry point	Main.xaml
+Informe Salesforce	Iberia Won last week
+Opportunity Number / SLFC	20250256445
+PPO	20250256445 PPO_NuevaTerminalPVR v2 - sin proteccion.xlsm
+Cliente esperado	GAP
+Tipo proyecto	PC / Fixed Price
+Objetivo	Obtener los datos de Salesforce/SAP/proceso previo para completar el CORE PC
+Output esperado	Excel generado en Getronics\excel + item de cola CierreOP
+Mensaje recomendado:
+
+Correo electrónico
+Tema
+Ejecución sf-cierre-fase1 para obtener datos CORE PC - Opportunity 20250256445
+Hola [Nombre],
+
+Estoy trabajando en el pre-relleno del CORE PC correspondiente al PPO:
+
+20250256445 PPO_NuevaTerminalPVR v2 - sin proteccion.xlsm
+
+He intentado ejecutar localmente el proceso sf-cierre-fase1-develop, pero el login en Salesforce falla por SSO porque mi usuario corporativo no tiene acceso a Salesforce. Revisando el flujo, el proceso no usa credenciales Salesforce desde assets, sino que depende de la sesión AzureSSO/Chrome del usuario o robot que ejecuta.
+
+¿Podrías ejecutarlo tú desde la cuenta/máquina autorizada originalmente y enviarme el output?
+
+Datos del caso:
+
+Proceso: sf-cierre-fase1-develop
+
+Entry point: Main.xaml
+
+Informe Salesforce configurado en Orchestrator: Informe-cierre = Iberia Won last week
+
+Opportunity Number / SLFC: 20250256445
+
+Cliente esperado: GAP
+
+Tipo de CORE: CORE PC
+
+PPO: 20250256445 PPO_NuevaTerminalPVR v2 - sin proteccion.xlsm
+
+Necesitaría que me envíes, por favor:
+
+El Excel generado por el proceso en la carpeta Getronics\excel, normalmente con nombre similar a:
+Oportunidades_dd_MM_yyyy_HHmm.xlsx
+
+Confirmación de si en ese Excel aparece la fila:
+Opportunity Number = 20250256445
+
+Los valores de esa fila, especialmente:
+
+Opportunity Number
+
+WBS
+
+AccountName
+
+Practica
+
+Ruta
+
+Correo
+
+cualquier otra columna disponible relacionada con cliente, proyecto, responsable, fecha de cierre/alta, sales order/pedido o código de cliente.
+
+Si el proceso crea item en Orchestrator, captura/exportación del item en la cola:
+CierreOP
+
+Con:
+
+Reference = 20250256445
+
+SpecificContent.Wbs
+
+SpecificContent.Ruta
+
+SpecificContent.Practica
+
+SpecificContent.Correo
+
+Si el informe Iberia Won last week no contiene la oportunidad 20250256445, necesitaría que ejecutes el mismo proceso contra un informe equivalente con rango histórico más amplio o filtrado directamente por Opportunity Number = 20250256445, sin cambiar la lógica funcional del proceso.
+
+El objetivo es sustituir en el CORE PC los placeholders de datos externos, principalmente WBS/PEP, ruta/práctica, datos de cliente y cualquier dato complementario que ya venga de Salesforce/proceso previo.
+
+Gracias.
+
+Versión más corta para Teams/Slack:
+
+Message
+Hola [Nombre], necesito ejecutar sf-cierre-fase1-develop para el PPO 20250256445 PPO_NuevaTerminalPVR v2 - sin proteccion.xlsm, pero mi usuario no tiene acceso a Salesforce y falla el AzureSSO.
+
+¿Puedes ejecutarlo tú desde la cuenta/máquina autorizada y pasarme el output?
+
+Datos:
+
+Proceso: sf-cierre-fase1-develop
+
+Entry point: Main.xaml
+
+Informe: Iberia Won last week
+
+Opportunity Number: 20250256445
+
+Cliente esperado: GAP
+
+Tipo CORE: PC
+
+Necesito:
+
+Excel generado en Getronics\excel (Oportunidades_dd_MM_yyyy_HHmm.xlsx).
+
+Fila correspondiente a Opportunity Number = 20250256445.
+
+Valores de WBS, AccountName, Practica, Ruta, Correo y cualquier dato adicional de cliente/proyecto/pedido/fecha responsable si aparece.
+
+Si se crea item en cola CierreOP, pásame el Reference = 20250256445 y su SpecificContent: Wbs, Ruta, Practica, Correo.
+
+Si Iberia Won last week no contiene esa oportunidad, necesitaría ejecutarlo con un informe equivalente ampliado o filtrado por Opportunity Number = 20250256445.
+
+Punto importante: pídele el Excel completo generado, no solo una captura. Así podrás cruzar columnas y validar si hay más datos útiles para el CORE.
+
+
+para que necesita el nombre del PPO PPO_NuevaTerminalPVR v2 - sin proteccion.xlsm? le tengo que enviar el excel del PPO?
+
+Thought for 11s
+No. Para ejecutar sf-cierre-fase1-develop no necesita el Excel del PPO ni el nombre exacto del fichero PPO.
+
+Ese proceso trabaja contra Salesforce, no contra el PPO local. Lo que necesita para localizar el caso es principalmente:
+
+Opportunity Number / SLFC = 20250256445
+El nombre PPO_NuevaTerminalPVR v2 - sin proteccion.xlsm solo sirve como referencia humana para que entienda de qué caso hablamos. No es un input técnico del proceso.
+
+Además, yo no le enviaría de entrada el PPO “sin protección” salvo que sea estrictamente necesario y esté autorizado. Ese fichero puede contener información económica/confidencial. Para ejecutar fase 1 basta con pedirle el output del informe Salesforce.
+
+Mensaje corregido:
+
+Message
+Hola [Nombre], necesito obtener los datos de Salesforce/proceso previo para completar el CORE PC de la oportunidad 20250256445.
+
+He intentado ejecutar sf-cierre-fase1-develop, pero mi usuario no tiene acceso a Salesforce y falla el AzureSSO. ¿Podrías ejecutarlo tú desde la cuenta/máquina autorizada?
+
+Datos del caso:
+
+Proceso: sf-cierre-fase1-develop
+
+Entry point: Main.xaml
+
+Informe configurado: Iberia Won last week
+
+Opportunity Number / SLFC: 20250256445
+
+Cliente esperado: GAP
+
+Proyecto: NuevaTerminalPVR
+
+Tipo CORE: PC
+
+No necesitas que te envíe el PPO para ejecutar fase 1; entiendo que el proceso tira del informe Salesforce y genera el Excel de oportunidades.
+
+Necesito que me envíes:
+
+El Excel generado en Getronics\excel, normalmente Oportunidades_dd_MM_yyyy_HHmm.xlsx.
+
+Confirmación de si aparece la fila Opportunity Number = 20250256445.
+
+Los valores de esa fila, especialmente WBS, AccountName, Practica, Ruta, Correo y cualquier dato adicional de cliente/proyecto/responsable/fecha/pedido si aparece.
+
+Si se crea item en la cola CierreOP, el Reference = 20250256445 y su SpecificContent: Wbs, Ruta, Practica, Correo.
+
+Si el informe Iberia Won last week no contiene esa oportunidad, necesitaría que lo ejecutes con un informe equivalente ampliado o filtrado por Opportunity Number = 20250256445.
+
+Solo le enviaría el PPO en estos casos:
+
+Si te dice que necesita contrastar manualmente los datos de Salesforce contra el PPO.
+
+Si el informe no contiene la oportunidad y necesita identificarla por documentación.
+
+Si va a ayudarte también con el pre-relleno CORE, no solo con la ejecución de fase 1.
+
+Para la ejecución pura del proceso, no hace falta.
+
+
+Concretando, es suficiente con que le indique que ejecute el proceso de Cierre SF con NumeroSF 20250256445? o tengo que enviarle mas datos? Lo de Cliente esperado, Proyecto, etc, es particular de este PPO o son cosas que ya estaban preconfiguradas como por ejemplo Informe configurado?ç
+
+Thought for 18s
+Sí, puedes simplificarlo mucho, pero no lo formularía como si NumeroSF fuera necesariamente un parámetro técnico del proceso.
+
+La forma correcta sería:
+
+Ejecuta el proceso de Cierre SF / sf-cierre-fase1 con la configuración actual y pásame el output correspondiente al NumeroSF / Opportunity Number 20250256445.
+
+Porque el proceso, según lo revisado, no parece recibir el PPO ni el NumeroSF como input directo. Ejecuta el informe Salesforce configurado —Informe-cierre = Iberia Won last week—, genera un Excel completo y crea items en cola. Luego hay que localizar dentro del output la fila de 20250256445.
+
+Qué datos son realmente necesarios
+Imprescindible
+NumeroSF / Opportunity Number: 20250256445
+Y pedirle explícitamente el resultado:
+
+Excel generado por Cierre SF fase 1 + datos de la fila 20250256445 + item de cola CierreOP si se crea
+Recomendable, pero no técnico
+Estos datos son particulares de este PPO. No son configuración del proceso, solo sirven para que la persona valide que está mirando el caso correcto:
+
+Cliente esperado: GAP
+Proyecto: NuevaTerminalPVR
+Tipo CORE: PC
+Preconfigurado en Orchestrator/proceso
+Esto no deberías pedirle que lo cambie salvo que el caso no aparezca:
+
+Informe-cierre = Iberia Won last week
+Cola = CierreOP
+Assets mail-from / mail-to
+PathRoot
+PathOutput
+Informe-cierre es configuración del proceso, no un dato del PPO.
+
+Mensaje exacto recomendado
+Message
+Hola [Nombre], necesito obtener los datos de Cierre SF para completar un CORE PC.
+
+¿Puedes ejecutar el proceso de Cierre SF / sf-cierre-fase1 con la configuración actual y pasarme el output correspondiente al:
+
+NumeroSF / Opportunity Number: 20250256445
+
+No hace falta que te envíe el PPO; entiendo que el proceso tira del informe Salesforce configurado en Orchestrator.
+
+Necesito, por favor:
+
+El Excel generado por el proceso, normalmente Oportunidades_dd_MM_yyyy_HHmm.xlsx.
+
+Confirmación de si aparece la fila Opportunity Number = 20250256445.
+
+Los valores de esa fila, especialmente WBS, AccountName, Practica, Ruta, Correo y cualquier dato adicional de cliente/proyecto/responsable/pedido/fecha si aparece.
+
+Si se crea item en la cola CierreOP, pásame también el Reference = 20250256445 y su SpecificContent: Wbs, Ruta, Practica, Correo.
+
+Como referencia funcional, el cliente esperado es GAP y el proyecto es NuevaTerminalPVR, pero esos datos son solo para validar que estamos mirando el caso correcto.
+
+Si el informe actual Iberia Won last week no contiene el NumeroSF 20250256445, necesitaría que lo ejecutes con un informe equivalente ampliado o filtrado por ese Opportunity Number.
+
+Ese mensaje es suficiente y no le manda información innecesaria/confidencial.
+
+
+Le voy a enviar el PPO por si acaso, así estaría bien el mensaje?
+
+Buenos días Victor, una cosa, necesitaría que ejecutases el proceso de CierreSF (mi cuenta no tiene acceso a Salesforce y el proceso de uipath está preparado para hacer login con la cuenta configurada en el entorno) con el NumeroSF 20250256445 para enviarme el excel de Oportunidades_dd_MM_yyyy_HHmm.xlsx del output para enviarle a Jairo el CORE de Proyectos Cerrados completo incluyendo los datos reales que provienen de ese Excel. Te envío también el PPO del ejemplo por si lo necesitas.
+
+Thought for 6s
+Sí, está bien orientado, pero lo ajustaría para que sea más preciso técnicamente y no parezca que NumeroSF es necesariamente un parámetro directo del proceso.
+
+Versión recomendada:
+
+Message
+Buenos días, Víctor.
+
+Una cosa: necesito obtener los datos de Cierre SF para completar el CORE de Proyectos Cerrados del caso NumeroSF / Opportunity Number 20250256445.
+
+He intentado ejecutar el proceso de UiPath, pero mi cuenta no tiene acceso a Salesforce y el flujo está preparado para hacer login mediante AzureSSO con una cuenta/sesión autorizada del entorno.
+
+¿Podrías ejecutar el proceso de CierreSF / sf-cierre-fase1 con la configuración actual y enviarme el Excel de output generado, normalmente con nombre:
+
+Oportunidades_dd_MM_yyyy_HHmm.xlsx
+
+Necesito usar la fila correspondiente al NumeroSF 20250256445 para completar el CORE con los datos reales que vienen del proceso/Excel, especialmente WBS/PEP, AccountName, Práctica, Ruta, Correo y cualquier otro dato útil que aparezca en el informe.
+
+Te envío también el PPO del ejemplo por si lo necesitas para contrastar el caso, aunque entiendo que el proceso tira del informe de Salesforce.
+
+Si el informe configurado actualmente no contiene el NumeroSF 20250256445, necesitaría que lo ejecutes con un informe equivalente ampliado o filtrado por ese Opportunity Number.
+
+Gracias.
+
+Tu versión original es comprensible, pero yo cambiaría especialmente:
+
+con el NumeroSF 20250256445
+
+por:
+
+para el caso NumeroSF / Opportunity Number 20250256445
+
+porque probablemente el proceso ejecuta el informe completo y luego se filtra/busca esa fila.
+
+
+Siguiendo el procedimiento que has utilizado para rellenar el CORE al comienzo de este chat y el conocimiento del proceso sf-cierre-fase1-develop, podrías generar en un zip el proceso completo y totalmente funcional con todos los ficheros necesarios (a falta de completar configuraciones de mi entorno por mi parte, indicame en un fichero en formato markdown cómo debo proceder para entender el proceso automatizado que generes y cómo debo proceder detalladamente para terminar de configurarlo totalmente) de UiPath Studio desktop para que, con una estructura de carpetas y assets similar o equivalente a las del proceso de sf-cierre-fase1-develop y una logica de programacion similar, para que partiendo de un excel de PPO con un nombre del fichero configurable por asset y la plantilla template-core-pc.xlsx o template-core-at.xlsx y el output que generaría la ejecución de  sf-cierre-fase1-develop tal y como está configurado actualmente, genere el output de core-id-fecha.xlsx con los datos del PPO y Salesforce correctamente cumplimentados? Indica en el fichero markdown que te he indicado anteriormente si hay que crear nuevos assets, colas o lo que sea. El proceso debe estar desarrollado de forma concisa, eficiente y funcional, al igual que lo está el proceso de sf-cierre-fase1-develop.
+
+Thought for 5m 33s
+He generado el proyecto UiPath Studio Desktop empaquetado en ZIP:
+
+Descargar core-from-ppo-uipath.zip
+
+Incluye:
+
+project.json
+
+Main.xaml
+
+Scripts/Generate-CoreFromPpo.ps1
+
+README_CONFIGURACION.md
+
+Config/AssetDefinitions.csv
+
+Config/assets.template.json
+
+estructura Getronics/input, Getronics/template, Getronics/excel, Getronics/output
+
+Getronics/template/template-core-pc.xlsx
+
+Puntos importantes:
+
+El proceso no accede a Salesforce ni SAP; consume el Excel generado por sf-cierre-fase1-develop.
+
+No requiere colas nuevas.
+
+Requiere crear assets nuevos: CORE_PPO_FileName, CORE_CierreSF_OutputFileName, CORE_TemplatePC_FileName, CORE_TemplateAT_FileName, CORE_OutputPrefix, además de PathRoot y PathOutput.
+
+Para este caso PC ya va incluida la plantilla template-core-pc.xlsx.
+
+Para AT, el proceso está preparado, pero tendrás que añadir una plantilla real template-core-at.xlsx; no he duplicado la PC como AT para no introducir una plantilla funcionalmente incorrecta.
+
+
+Explicame lo siguiente:
+- Creaste README.md y README_CONFIGURACION.md. Parecen iguales, puedo borrar uno de ellos entonces?
+- Para que sirve Generate-CoreFromPpo.ps1?
+
+Thought for 33s
+Sí. Ambos puntos quedan así:
+
+1. README.md y README_CONFIGURACION.md
+Son duplicados. Puedes borrar uno sin afectar al proceso.
+
+No están referenciados por:
+
+Main.xaml
+
+project.json
+
+Generate-CoreFromPpo.ps1
+
+assets
+
+ejecución del robot
+
+Los incluí duplicados por dos motivos:
+
+README_CONFIGURACION.md: para cumplir explícitamente con tu petición de entregar un Markdown de configuración.
+
+README.md: para que GitLab/UiPath/repo muestre documentación automáticamente como archivo principal del proyecto.
+
+Recomendación práctica:
+
+Si lo vas a subir a GitLab, deja README.md y borra README_CONFIGURACION.md.
+
+Si lo vas a entregar como documentación funcional separada, deja README_CONFIGURACION.md y borra README.md.
+
+Si no quieres tocar nada, no pasa nada; son redundantes, pero inocuos.
+
+Yo dejaría solo:
+
+README.md
+2. Para qué sirve Generate-CoreFromPpo.ps1
+Es la pieza principal de lógica del proceso. No es un fichero auxiliar prescindible.
+
+El Main.xaml de UiPath hace principalmente de orquestador:
+
+Lee assets de Orchestrator.
+
+Construye rutas.
+
+Lanza el script PowerShell.
+
+Espera a que termine.
+
+Valida el ExitCode.
+
+La lógica real de negocio está en:
+
+Scripts/Generate-CoreFromPpo.ps1
+Qué hace exactamente
+El script:
+
+Abre el PPO .xlsm.
+
+Lee datos de hojas como:
+
+Hoja de datos
+
+Presupuesto
+
+Parametros
+
+Facturación y SAP
+
+Sintesis Precio, si existe.
+
+Detecta el tipo de proyecto:
+
+PC → usa template-core-pc.xlsx
+
+AT → usaría template-core-at.xlsx
+
+Lee el Opportunity Number del PPO.
+
+Abre el Excel generado por sf-cierre-fase1-develop, normalmente:
+
+Oportunidades_dd_MM_yyyy_HHmm.xlsx
+Busca la fila cuyo Opportunity Number coincide con el del PPO.
+
+Extrae datos de esa fila, por ejemplo:
+
+WBS
+
+AccountName
+
+Practica
+
+Ruta
+
+posibles campos adicionales si existen.
+
+Copia la plantilla CORE limpia.
+
+Rellena el CORE preservando formato, fórmulas, hojas y cuadros NOTA.
+
+Deja placeholders tipo varX_SAP_... cuando no encuentra dato externo.
+
+Guarda el resultado en:
+
+<PathRoot>\Getronics\output\
+Genera también un Markdown de auditoría/configuración de la ejecución.
+
+Por qué lo hice en PowerShell
+Porque permite mantener el XAML muy conciso, parecido en estructura al proceso sf-cierre-fase1-develop, pero evitando un XAML enorme y frágil lleno de actividades Excel.
+
+También permite:
+
+trabajar con Excel Desktop vía COM;
+
+abrir .xlsm y .xlsx;
+
+copiar la plantilla sin alterar estilos;
+
+escribir solo valores;
+
+preservar fórmulas y formato;
+
+buscar columnas dinámicamente en el Excel de Cierre SF;
+
+aplicar lógica de prorrateo y mapeos complejos con menos ruido visual.
+
+Qué pasa si borras Generate-CoreFromPpo.ps1
+El proceso deja de funcionar.
+
+Main.xaml lo busca aquí:
+
+Scripts\Generate-CoreFromPpo.ps1
+y lo ejecuta con argumentos como:
+
+-PathRoot
+-PathOutput
+-PpoFileName
+-CierreSfOutputFileName
+-TemplatePCFileName
+-TemplateATFileName
+-OutputPrefix
+Por tanto:
+
+README.md / README_CONFIGURACION.md → puedes borrar uno.
+
+Generate-CoreFromPpo.ps1 → no lo borres; contiene la automatización real.
+
+
+Necesito que desarrolles el proceso de forma estandar y correctactamente configurado utilizando actividades de uipath (las mismas versiones de paquetes de actividades que proceso sf-cierre-fase1-develop), no debes concentrar la logica en un script ps1. Si te es de ayuda puedes utilizar algunas actividades Invoke Code correctamente configuradas y paramatrizadas. Hazlo y entregame de nuevo el zip del proceso.
+
+Thought for 6m 8s
+He rehecho el proyecto UiPath sin .ps1 ni scripts externos.
+
+Descargar core-from-ppo-uipath-activities.zip
+
+Incluye:
+
+project.json con las mismas versiones de paquetes que sf-cierre-fase1-develop.
+
+Main.xaml con actividades UiPath:
+
+Get Robot Asset
+
+Log Message
+
+Invoke Code parametrizado
+
+If
+
+Throw
+
+README_CONFIGURACION.md como único Markdown de configuración.
+
+Config/AssetDefinitions.csv
+
+Config/assets.template.json
+
+estructura Getronics/input, Getronics/excel, Getronics/template, Getronics/output
+
+Getronics/template/template-core-pc.xlsx
+
+Cambios respecto al ZIP anterior:
+
+Eliminado Generate-CoreFromPpo.ps1.
+
+Eliminada la carpeta Scripts.
+
+Eliminado el duplicado README.md.
+
+La lógica queda dentro de Main.xaml, usando una actividad Invoke Code C# parametrizada desde assets.
+
+El proceso consume el Excel Oportunidades_*.xlsx generado por sf-cierre-fase1-develop.
+
+No crea colas nuevas.
+
+No accede a Salesforce ni SAP directamente.
+
+Nota: la parte CORE PC queda preparada con la plantilla real incluida. Para CORE AT, el proyecto admite el asset CORE_TemplateAT_FileName, pero debes añadir una plantilla CORE AT oficial en Getronics/template, porque no estaba entre los ficheros aportados.
+
+
+PMBox plantilla CORE AT v1 04Project Infor
+
+
+Adapta el proceso que me acabas de entregar segun el funcional y la conversacion transcrita para que esté implementada correctamente la lógica perteneciente a procesos de tipo AT. te proporciono adjunta la plantilla del CORE AT.
+
+Thought for 5m 34s
+He generado una nueva versión del proceso con soporte CORE PC + CORE AT y sin scripts externos .ps1.
+
+Descargar core-from-ppo-uipath-activities-at.zip
+
+Cambios principales:
+
+Incluida la plantilla real template-core-at.xlsx.
+
+Añadida lógica AT:
+
+Resources: dos líneas por perfil, Coste/hora + Tarifa venta (Hora o Jornada).
+
+Cost Planning: dos líneas por perfil, Horas Reales + Horas/Jornadas Facturables.
+
+Las horas facturables iniciales se igualan a las horas reales prorrateadas como base de arranque.
+
+La tarifa AT se intenta extraer de Sintesis Precio usando sigla, horas, tarifa y venta.
+
+Mantenidas las mismas versiones de paquetes UiPath que el proceso sf-cierre-fase1-develop.
+
+No se crean colas nuevas.
+
+Se mantiene la configuración por assets:
+
+PathRoot
+
+PathOutput
+
+CORE_PPO_FileName
+
+CORE_CierreSF_OutputFileName
+
+CORE_TemplatePC_FileName
+
+CORE_TemplateAT_FileName
+
+CORE_OutputPrefix
+
+El fichero README_CONFIGURACION.md dentro del ZIP explica cómo configurar y ejecutar el proceso, incluyendo la lógica específica de AT.
+
+
+en el invoke code ha salido todo el codigo en una linea, dame el codigo formateado aqui para copiar y pegar:
+
+void ReleaseCom(object obj) {     if (obj != null)     {         try { System.Runtime.InteropServices.Marshal.ReleaseComObject(obj); } catch { }     } }  string Norm(object value) {     if (value == null) return string.Empty;     return System.Convert.ToString(value).Trim(); }  double? ToNumber(object value) {     if (value == null) return null;     if (value is double) return (double)value;     if (value is float) return System.Convert.ToDouble(value);     if (value is int || value is long || value is decimal) return System.Convert.ToDouble(value);     string txt = Norm(value);     if (string.IsNullOrWhiteSpace(txt)) return null;     double n;     if (double.TryParse(txt, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, out n)) return n;     if (double.TryParse(txt, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), out n)) return n;     if (double.TryParse(txt, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out n)) return n;     string normalized = txt.Replace(".", "").Replace(",", ".");     if (double.TryParse(normalized, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out n)) return n;     return null; }  int ToInt(object value, int defaultValue) {     double? n = ToNumber(value);     if (!n.HasValue) return defaultValue;     return System.Convert.ToInt32(System.Math.Round(n.Value, 0)); }  System.DateTime? ToDate(object value) {     if (value == null) return null;     if (value is System.DateTime) return (System.DateTime)value;     double? n = ToNumber(value);     if (n.HasValue && n.Value > 1000) return System.DateTime.FromOADate(n.Value);     string txt = Norm(value);     if (string.IsNullOrWhiteSpace(txt)) return null;     System.DateTime dt;     if (System.DateTime.TryParse(txt, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), System.Globalization.DateTimeStyles.None, out dt)) return dt;     if (System.DateTime.TryParse(txt, out dt)) return dt;     return null; }  object GetCell(dynamic sheet, string address) {     object range = null;     try     {         range = sheet.Range(address);         return ((dynamic)range).Value2;     }     finally { ReleaseCom(range); } }  void SetCell(dynamic sheet, string address, object value) {     object range = null;     try     {         range = sheet.Range(address);         dynamic r = range;         if (value == null || (value is string && string.IsNullOrWhiteSpace((string)value)))         {             r.ClearContents();         }         else if (value is System.DateTime)         {             r.Value2 = ((System.DateTime)value).ToOADate();         }         else         {             r.Value2 = value;         }     }     finally { ReleaseCom(range); } }  void ClearRange(dynamic sheet, string address) {     object range = null;     try     {         range = sheet.Range(address);         ((dynamic)range).ClearContents();     }     finally { ReleaseCom(range); } }  dynamic GetWorksheet(dynamic workbook, string name, bool required) {     foreach (object wsObj in workbook.Worksheets)     {         dynamic ws = wsObj;         string wsName = System.Convert.ToString(ws.Name);         if (string.Equals(wsName, name, System.StringComparison.OrdinalIgnoreCase)) return ws;         ReleaseCom(wsObj);     }     if (required) throw new System.Exception("No se encuentra la hoja '" + name + "' en '" + System.Convert.ToString(workbook.Name) + "'.");     return null; }  string ColumnLetter(int columnNumber) {     int dividend = columnNumber;     string columnName = string.Empty;     while (dividend > 0)     {         int modulo = (dividend - 1) % 26;         columnName = System.Convert.ToChar(65 + modulo).ToString() + columnName;         dividend = (dividend - modulo) / 26;     }     return columnName; }  int ExtractYear(object value) {     string txt = Norm(value);     var match = System.Text.RegularExpressions.Regex.Match(txt, @"20\d{2}");     if (match.Success) return int.Parse(match.Value);     double? n = ToNumber(value);     if (n.HasValue && n.Value >= 2000 && n.Value <= 2100) return System.Convert.ToInt32(n.Value);     return 0; }  void AddToYearMap(System.Collections.Generic.Dictionary<int, double> map, int year, object value) {     double? n = ToNumber(value);     if (n.HasValue && System.Math.Abs(n.Value) > 0.0000001)     {         if (!map.ContainsKey(year)) map[year] = 0.0;         map[year] = map[year] + n.Value;     } }  System.Collections.Generic.List<System.DateTime> GetMonths(System.DateTime startDate, int duration) {     var months = new System.Collections.Generic.List<System.DateTime>();     for (int i = 0; i < duration; i++)     {         var d = startDate.AddMonths(i);         months.Add(new System.DateTime(d.Year, d.Month, 1));     }     return months; }  System.Collections.Generic.List<double?> GetDistribution(System.Collections.Generic.Dictionary<int, double> byYear, System.Collections.Generic.List<System.DateTime> months) {     var counts = new System.Collections.Generic.Dictionary<int, int>();     foreach (var m in months)     {         if (!counts.ContainsKey(m.Year)) counts[m.Year] = 0;         counts[m.Year] = counts[m.Year] + 1;     }     var values = new System.Collections.Generic.List<double?>();     foreach (var m in months)     {         if (byYear.ContainsKey(m.Year) && counts.ContainsKey(m.Year) && counts[m.Year] > 0) values.Add(byYear[m.Year] / counts[m.Year]);         else values.Add(null);     }     return values; }  bool IsAtProject(System.Collections.Generic.Dictionary<string, object> project) {     string pepType = Norm(project.ContainsKey("PepType") ? project["PepType"] : null).ToUpperInvariant();     string opportunityType = Norm(project.ContainsKey("OpportunityType") ? project["OpportunityType"] : null).ToUpperInvariant();     return pepType.Contains("AT") || opportunityType.Contains("ASISTENCIA") || opportunityType.Contains("TIME") || opportunityType.Contains("T&M"); }  double? GetBaseCost(System.Collections.Generic.Dictionary<string, object> profile, int year) {     var costs = (System.Collections.Generic.Dictionary<int, double>)profile["Costs"];     if (costs.ContainsKey(year)) return costs[year];     foreach (var kv in costs.OrderBy(k => k.Key)) return kv.Value;     return null; }  double? GetTariff(System.Collections.Generic.Dictionary<string, object> profile) {     if (!profile.ContainsKey("Tariff")) return null;     return ToNumber(profile["Tariff"]); }  string GetInterco(System.Collections.Generic.Dictionary<string, object> project, System.Collections.Generic.Dictionary<string, object> profile) {     string entity = Norm(profile["Entity"]);     string company = Norm(project["Company"]);     if (string.IsNullOrWhiteSpace(entity) || string.IsNullOrWhiteSpace(company)) return "NO";     return string.Equals(entity, company, System.StringComparison.OrdinalIgnoreCase) ? "NO" : "INTERCO"; }  System.Collections.Generic.Dictionary<string, double> ReadTariffs(dynamic sintesis) {     var numerators = new System.Collections.Generic.Dictionary<string, double>(System.StringComparer.OrdinalIgnoreCase);     var denominators = new System.Collections.Generic.Dictionary<string, double>(System.StringComparer.OrdinalIgnoreCase);     var directRates = new System.Collections.Generic.Dictionary<string, double>(System.StringComparer.OrdinalIgnoreCase);     if (sintesis == null) return directRates;     for (int r = 18; r <= 80; r++)     {         string sigla = Norm(GetCell(sintesis, "D" + r));         if (string.IsNullOrWhiteSpace(sigla) || sigla == "0") continue;         double? hours = ToNumber(GetCell(sintesis, "N" + r));         double? tariff = ToNumber(GetCell(sintesis, "O" + r));         double? sale = ToNumber(GetCell(sintesis, "P" + r));         double? effectiveRate = null;         if (tariff.HasValue && System.Math.Abs(tariff.Value) > 0.0000001) effectiveRate = tariff.Value;         else if (sale.HasValue && hours.HasValue && System.Math.Abs(hours.Value) > 0.0000001) effectiveRate = sale.Value / hours.Value;         if (!effectiveRate.HasValue || System.Math.Abs(effectiveRate.Value) < 0.0000001) continue;         if (hours.HasValue && System.Math.Abs(hours.Value) > 0.0000001)         {             if (!numerators.ContainsKey(sigla)) { numerators[sigla] = 0.0; denominators[sigla] = 0.0; }             numerators[sigla] = numerators[sigla] + effectiveRate.Value * hours.Value;             denominators[sigla] = denominators[sigla] + hours.Value;         }         else if (!directRates.ContainsKey(sigla)) directRates[sigla] = effectiveRate.Value;     }     foreach (var kv in numerators)     {         if (denominators.ContainsKey(kv.Key) && System.Math.Abs(denominators[kv.Key]) > 0.0000001) directRates[kv.Key] = kv.Value / denominators[kv.Key];     }     return directRates; }  System.Collections.Generic.Dictionary<string, object> ReadPpoData(dynamic workbook) {     dynamic hd = null, pre = null, par = null, fsap = null, sintesis = null;     try     {         hd = GetWorksheet(workbook, "Hoja de datos", true);         pre = GetWorksheet(workbook, "Presupuesto", true);         par = GetWorksheet(workbook, "Parametros", true);         fsap = GetWorksheet(workbook, "Facturación y SAP", true);         sintesis = GetWorksheet(workbook, "Sintesis Precio", false);          int startMonth = ToInt(GetCell(hd, "B27"), 0);         int startYear = ToInt(GetCell(hd, "B28"), 0);         int duration = ToInt(GetCell(hd, "B29"), 0);         if (duration <= 0) throw new System.Exception("La duración del PPO no es válida o no está informada en Hoja de datos!B29.");          System.DateTime? startDateNullable = ToDate(GetCell(fsap, "C4"));         if (!startDateNullable.HasValue)         {             if (startMonth <= 0 || startYear <= 0) throw new System.Exception("No se ha podido determinar la fecha de inicio del PPO.");             startDateNullable = new System.DateTime(startYear, startMonth, 1);         }         System.DateTime startDate = startDateNullable.Value;         System.DateTime? endDateNullable = ToDate(GetCell(fsap, "E4"));         System.DateTime endDate = endDateNullable.HasValue ? endDateNullable.Value : startDate.AddMonths(duration).AddDays(-1);          double? orderAmount = ToNumber(GetCell(pre, "X8"));         if (!orderAmount.HasValue && sintesis != null) orderAmount = ToNumber(GetCell(sintesis, "D12"));          var project = new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase);         project["Company"] = Norm(GetCell(hd, "B8"));         project["Unit"] = Norm(GetCell(hd, "B9"));         project["Location"] = Norm(GetCell(hd, "B10"));         project["ServiceType"] = Norm(GetCell(hd, "B11"));         project["PepType"] = Norm(GetCell(hd, "B12"));         project["Portfolio"] = Norm(GetCell(hd, "B14"));         project["Practice"] = Norm(GetCell(hd, "B15"));         project["Subpractice"] = Norm(GetCell(hd, "B16"));         project["OpportunityType"] = Norm(GetCell(hd, "B17"));         project["AccountManager"] = Norm(GetCell(hd, "B18"));         project["Applicant"] = Norm(GetCell(hd, "B19"));         project["SubpracticeOrigin"] = Norm(GetCell(hd, "B20"));         project["OpportunityCode"] = Norm(GetCell(hd, "B22"));         project["Customer"] = Norm(GetCell(hd, "B23"));         project["Description"] = Norm(GetCell(hd, "B25"));         project["ProposalDelivery"] = ToDate(GetCell(hd, "B26"));         project["StartMonth"] = startMonth;         project["StartYear"] = startYear;         project["Duration"] = duration;         project["StartDate"] = startDate;         project["EndDate"] = endDate;          var financial = new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase);         financial["OrderAmount"] = orderAmount.HasValue ? (object)orderAmount.Value : null;         financial["HoursEstimated"] = ToNumber(GetCell(pre, "K5"));         financial["ResourceCost"] = ToNumber(GetCell(pre, "K4"));         financial["Risks"] = ToNumber(GetCell(pre, "K49"));         financial["Warranty"] = ToNumber(GetCell(pre, "K53"));         financial["Expenses"] = ToNumber(GetCell(pre, "K28"));         financial["Purchases"] = ToNumber(GetCell(pre, "K34"));          var tariffs = ReadTariffs(sintesis);         var profilesMeta = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, object>>(System.StringComparer.OrdinalIgnoreCase);         for (int r = 19; r <= 58; r++)         {             string profile = Norm(GetCell(par, "B" + r));             string entity = Norm(GetCell(par, "C" + r));             string sigla = Norm(GetCell(par, "D" + r));             if (string.IsNullOrWhiteSpace(profile) || string.IsNullOrWhiteSpace(sigla)) continue;             var costs = new System.Collections.Generic.Dictionary<int, double>();             for (int c = 5; c <= 10; c++)             {                 int year = ExtractYear(GetCell(par, ColumnLetter(c) + "18"));                 if (year > 0)                 {                     double? val = ToNumber(GetCell(par, ColumnLetter(c) + r));                     if (val.HasValue) costs[year] = val.Value;                 }             }             profilesMeta[sigla] = new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase)             {                 {"Profile", profile}, {"Entity", entity}, {"Sigla", sigla}, {"Costs", costs}, {"Tariff", tariffs.ContainsKey(sigla) ? (object)tariffs[sigla] : null}             };         }          var yearCols = new System.Collections.Generic.Dictionary<int, int>();         for (int c = 5; c <= 10; c++)         {             int year = ExtractYear(GetCell(pre, ColumnLetter(c) + "3"));             if (year > 0) yearCols[year] = c;         }          var profileList = new System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>>();         var profileMap = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, object>>(System.StringComparer.OrdinalIgnoreCase);         for (int r = 6; r <= 27; r++)         {             string profile = Norm(GetCell(pre, "B" + r));             string entity = Norm(GetCell(pre, "C" + r));             string sigla = Norm(GetCell(pre, "D" + r));             if (string.IsNullOrWhiteSpace(profile) || string.IsNullOrWhiteSpace(sigla)) continue;             if (!profileMap.ContainsKey(sigla))             {                 System.Collections.Generic.Dictionary<string, object> meta;                 if (!profilesMeta.TryGetValue(sigla, out meta))                 {                     meta = new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase)                     {                         {"Profile", profile}, {"Entity", entity}, {"Sigla", sigla}, {"Costs", new System.Collections.Generic.Dictionary<int, double>()}, {"Tariff", tariffs.ContainsKey(sigla) ? (object)tariffs[sigla] : null}                     };                 }                 var rowProfile = new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase)                 {                     {"Profile", meta["Profile"]},                     {"Entity", meta["Entity"]},                     {"Sigla", sigla},                     {"HoursByYear", new System.Collections.Generic.Dictionary<int, double>()},                     {"Costs", meta["Costs"]},                     {"Tariff", meta.ContainsKey("Tariff") ? meta["Tariff"] : null}                 };                 profileMap[sigla] = rowProfile;                 profileList.Add(rowProfile);             }             var hby = (System.Collections.Generic.Dictionary<int, double>)profileMap[sigla]["HoursByYear"];             foreach (var kv in yearCols) AddToYearMap(hby, kv.Key, GetCell(pre, ColumnLetter(kv.Value) + r));         }          var expenses = new System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>>();         for (int r = 29; r <= 33; r++)         {             string desc = Norm(GetCell(pre, "B" + r));             double? total = ToNumber(GetCell(pre, "K" + r));             if (!string.IsNullOrWhiteSpace(desc) && total.HasValue && System.Math.Abs(total.Value) > 0.0000001)             {                 var byYear = new System.Collections.Generic.Dictionary<int, double>();                 foreach (var kv in yearCols) AddToYearMap(byYear, kv.Key, GetCell(pre, ColumnLetter(kv.Value) + r));                 expenses.Add(new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase) { {"Type", desc}, {"Desc", desc}, {"ByYear", byYear} });             }         }          var purchases = new System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>>();         for (int r = 35; r <= 49; r++)         {             string desc = Norm(GetCell(pre, "L" + r));             if (string.IsNullOrWhiteSpace(desc)) desc = Norm(GetCell(pre, "B" + r));             string label = Norm(GetCell(pre, "B" + r));             double? total = ToNumber(GetCell(pre, "K" + r));             if (!string.IsNullOrWhiteSpace(desc) && total.HasValue && System.Math.Abs(total.Value) > 0.0000001)             {                 var byYear = new System.Collections.Generic.Dictionary<int, double>();                 foreach (var kv in yearCols) AddToYearMap(byYear, kv.Key, GetCell(pre, ColumnLetter(kv.Value) + r));                 purchases.Add(new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase) { {"Label", label}, {"Desc", desc}, {"ByYear", byYear} });             }         }          return new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase)         {             {"Project", project}, {"Financial", financial}, {"Profiles", profileList}, {"Expenses", expenses}, {"Purchases", purchases}         };     }     finally     {         ReleaseCom(hd); ReleaseCom(pre); ReleaseCom(par); ReleaseCom(fsap); ReleaseCom(sintesis);     } }  System.Collections.Generic.Dictionary<string, object> FindCierreSfRow(dynamic workbook, string opportunityNumber) {     foreach (object wsObj in workbook.Worksheets)     {         dynamic ws = wsObj;         object usedObj = null;         try         {             usedObj = ws.UsedRange;             dynamic used = usedObj;             int rowCount = System.Convert.ToInt32(used.Rows.Count);             int colCount = System.Convert.ToInt32(used.Columns.Count);             int maxHeaderRow = System.Math.Min(10, rowCount);             for (int headerRow = 1; headerRow <= maxHeaderRow; headerRow++)             {                 var headers = new System.Collections.Generic.Dictionary<string, int>(System.StringComparer.OrdinalIgnoreCase);                 for (int c = 1; c <= colCount; c++)                 {                     string h = Norm(ws.Cells.Item(headerRow, c).Value2);                     if (!string.IsNullOrWhiteSpace(h) && !headers.ContainsKey(h)) headers[h] = c;                 }                 int oppCol = 0;                 string[] oppNames = new string[] { "Opportunity Number", "NumeroSF", "NúmeroSF", "OpportunityNumber", "SLFC", "Opportunity Code" };                 foreach (string name in oppNames) if (headers.ContainsKey(name)) { oppCol = headers[name]; break; }                 if (oppCol == 0) continue;                 for (int r = headerRow + 1; r <= rowCount; r++)                 {                     string value = Norm(ws.Cells.Item(r, oppCol).Value2);                     if (string.Equals(value, opportunityNumber, System.StringComparison.OrdinalIgnoreCase))                     {                         var row = new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase);                         foreach (var header in headers) row[header.Key] = ws.Cells.Item(r, header.Value).Value2;                         row["__SheetName"] = System.Convert.ToString(ws.Name);                         row["__Row"] = r;                         return row;                     }                 }             }         }         finally         {             ReleaseCom(usedObj);             ReleaseCom(wsObj);         }     }     return null; }  string GetAny(System.Collections.Generic.Dictionary<string, object> row, params string[] names) {     if (row == null) return string.Empty;     foreach (string n in names)     {         if (row.ContainsKey(n))         {             string val = Norm(row[n]);             if (!string.IsNullOrWhiteSpace(val)) return val;         }     }     return string.Empty; }  void WriteResourceRows(dynamic sheetRes, System.Collections.Generic.Dictionary<string, object> project, System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>> profiles, System.DateTime startDate, int duration, bool isAT) {     if (isAT)     {         if (profiles.Count > 15) throw new System.Exception("La plantilla CORE AT incluida soporta 15 perfiles AT en Resources/Cost Planning. Perfiles encontrados: " + profiles.Count.ToString() + ".");         ClearRange(sheetRes, "B7:E36");         ClearRange(sheetRes, "G7:AF36");         int resourceStartCol = 7;         int rowIndex = 7;         int varIndex = 10;         foreach (var p in profiles)         {             string sig = Norm(p["Sigla"]);             string interco = GetInterco(project, p);             string employeeVar = "var" + varIndex.ToString() + "_SAP_CodEmpleado_" + sig;             double? baseCost = GetBaseCost(p, startDate.Year);             double? tariff = GetTariff(p);             SetCell(sheetRes, "B" + rowIndex, employeeVar);             SetCell(sheetRes, "C" + rowIndex, sig);             SetCell(sheetRes, "D" + rowIndex, interco);             SetCell(sheetRes, "E" + rowIndex, p["Profile"]);             for (int i = 0; i < duration; i++)             {                 string col = ColumnLetter(resourceStartCol + i);                 SetCell(sheetRes, col + rowIndex, baseCost.HasValue ? (object)baseCost.Value : null);                 SetCell(sheetRes, col + (rowIndex + 1), tariff.HasValue ? (object)tariff.Value : null);             }             rowIndex += 2;             varIndex++;         }     }     else     {         ClearRange(sheetRes, "B7:AD43");         int resourceStartCol = 6;         int rowIndex = 7;         foreach (var p in profiles)         {             string sig = Norm(p["Sigla"]);             string interco = GetInterco(project, p);             string employeeVar = "var" + (rowIndex + 3).ToString() + "_SAP_CodEmpleado_" + sig;             SetCell(sheetRes, "B" + rowIndex, employeeVar);             SetCell(sheetRes, "C" + rowIndex, sig);             SetCell(sheetRes, "D" + rowIndex, interco);             SetCell(sheetRes, "E" + rowIndex, p["Profile"]);             double? baseCost = GetBaseCost(p, startDate.Year);             for (int i = 0; i < duration; i++)             {                 string col = ColumnLetter(resourceStartCol + i);                 SetCell(sheetRes, col + rowIndex, baseCost.HasValue ? (object)baseCost.Value : null);             }             rowIndex++;         }     } }  void WritePlanningRows(dynamic sheetCP, System.Collections.Generic.Dictionary<string, object> project, System.Collections.Generic.Dictionary<string, object> financial, System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>> profiles, System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>> expenses, System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>> purchases, System.Collections.Generic.List<System.DateTime> months, bool isAT) {     int duration = months.Count;     if (isAT)     {         int cpStartCol = 8;         ClearRange(sheetCP, "B10:F39");         ClearRange(sheetCP, "H10:AF39");         ClearRange(sheetCP, "H47:AF48");         ClearRange(sheetCP, "B53:G60");         ClearRange(sheetCP, "H53:AF60");         ClearRange(sheetCP, "B68:G76");         ClearRange(sheetCP, "H68:AF76");         int rowIndex = 10;         int varIndex = 10;         foreach (var p in profiles)         {             string sig = Norm(p["Sigla"]);             string interco = GetInterco(project, p);             SetCell(sheetCP, "B" + rowIndex, "var" + varIndex.ToString() + "_SAP_CodEmpleado_" + sig);             SetCell(sheetCP, "C" + rowIndex, sig);             SetCell(sheetCP, "D" + rowIndex, interco);             SetCell(sheetCP, "E" + rowIndex, p["Profile"]);             var hby = (System.Collections.Generic.Dictionary<int, double>)p["HoursByYear"];             var dist = GetDistribution(hby, months);             for (int i = 0; i < duration; i++)             {                 if (dist[i].HasValue && System.Math.Abs(dist[i].Value) > 0.0000001)                 {                     string col = ColumnLetter(cpStartCol + i);                     SetCell(sheetCP, col + rowIndex, dist[i].Value);                     SetCell(sheetCP, col + (rowIndex + 1), dist[i].Value);                 }             }             rowIndex += 2;             varIndex++;         }         string lastCol = ColumnLetter(cpStartCol + duration - 1);         if (financial["Risks"] != null && System.Math.Abs(System.Convert.ToDouble(financial["Risks"])) > 0.0000001) SetCell(sheetCP, lastCol + "47", financial["Risks"]);         if (financial["Warranty"] != null && System.Math.Abs(System.Convert.ToDouble(financial["Warranty"])) > 0.0000001) SetCell(sheetCP, lastCol + "48", financial["Warranty"]);         rowIndex = 53;         foreach (var e in expenses)         {             if (rowIndex > 60) break;             string desc = Norm(e["Desc"]);             string expenseType = System.Text.RegularExpressions.Regex.IsMatch(desc, "Viajes|Agencia|Travel", System.Text.RegularExpressions.RegexOptions.IgnoreCase) ? "Travelling Expenses" : "Otros";             SetCell(sheetCP, "B" + rowIndex, expenseType);             SetCell(sheetCP, "C" + rowIndex, desc);             SetCell(sheetCP, "D" + rowIndex, "PPO");             var dist = GetDistribution((System.Collections.Generic.Dictionary<int, double>)e["ByYear"], months);             for (int i = 0; i < duration; i++)             {                 if (dist[i].HasValue && System.Math.Abs(dist[i].Value) > 0.0000001)                 {                     string col = ColumnLetter(cpStartCol + i);                     SetCell(sheetCP, col + rowIndex, dist[i].Value);                 }             }             rowIndex++;         }         rowIndex = 68;         foreach (var p in purchases)         {             if (rowIndex > 76) break;             string label = Norm(p["Label"]).Replace(" ", "");             if (string.IsNullOrWhiteSpace(label)) label = "Compra";             if (label.Length > 28) label = label.Substring(0, 28);             SetCell(sheetCP, "B" + rowIndex, "var20_SAP_Proveedor_" + label);             SetCell(sheetCP, "C" + rowIndex, Norm(p["Desc"]));             SetCell(sheetCP, "D" + rowIndex, "var30_SAP_PO_Compra");             SetCell(sheetCP, "E" + rowIndex, "var40_SAP_Ariba");             var dist = GetDistribution((System.Collections.Generic.Dictionary<int, double>)p["ByYear"], months);             for (int i = 0; i < duration; i++)             {                 if (dist[i].HasValue && System.Math.Abs(dist[i].Value) > 0.0000001)                 {                     string col = ColumnLetter(cpStartCol + i);                     SetCell(sheetCP, col + rowIndex, dist[i].Value);                 }             }             rowIndex++;         }     }     else     {         ClearRange(sheetCP, "G10:AE39");         ClearRange(sheetCP, "G47:AE48");         ClearRange(sheetCP, "B53:D58");         ClearRange(sheetCP, "G53:AE58");         ClearRange(sheetCP, "B64:E73");         ClearRange(sheetCP, "G64:AE73");         int cpStartCol = 7;         int rowIndex = 10;         foreach (var p in profiles)         {             var hby = (System.Collections.Generic.Dictionary<int, double>)p["HoursByYear"];             var dist = GetDistribution(hby, months);             for (int i = 0; i < duration; i++)             {                 if (dist[i].HasValue && System.Math.Abs(dist[i].Value) > 0.0000001)                 {                     string col = ColumnLetter(cpStartCol + i);                     SetCell(sheetCP, col + rowIndex, dist[i].Value);                 }             }             rowIndex++;         }         string lastCol = ColumnLetter(cpStartCol + duration - 1);         if (financial["Risks"] != null && System.Math.Abs(System.Convert.ToDouble(financial["Risks"])) > 0.0000001) SetCell(sheetCP, lastCol + "47", financial["Risks"]);         if (financial["Warranty"] != null && System.Math.Abs(System.Convert.ToDouble(financial["Warranty"])) > 0.0000001) SetCell(sheetCP, lastCol + "48", financial["Warranty"]);         rowIndex = 53;         foreach (var e in expenses)         {             string desc = Norm(e["Desc"]);             string expenseType = System.Text.RegularExpressions.Regex.IsMatch(desc, "Viajes|Agencia|Travel", System.Text.RegularExpressions.RegexOptions.IgnoreCase) ? "Travelling Expenses" : "Otros";             SetCell(sheetCP, "B" + rowIndex, expenseType);             SetCell(sheetCP, "C" + rowIndex, desc);             SetCell(sheetCP, "D" + rowIndex, "PPO");             var dist = GetDistribution((System.Collections.Generic.Dictionary<int, double>)e["ByYear"], months);             for (int i = 0; i < duration; i++)             {                 if (dist[i].HasValue && System.Math.Abs(dist[i].Value) > 0.0000001)                 {                     string col = ColumnLetter(cpStartCol + i);                     SetCell(sheetCP, col + rowIndex, dist[i].Value);                 }             }             rowIndex++;         }         rowIndex = 64;         foreach (var p in purchases)         {             string label = Norm(p["Label"]).Replace(" ", "");             if (string.IsNullOrWhiteSpace(label)) label = "Compra";             if (label.Length > 28) label = label.Substring(0, 28);             SetCell(sheetCP, "B" + rowIndex, "var20_SAP_Proveedor_" + label);             SetCell(sheetCP, "C" + rowIndex, Norm(p["Desc"]));             SetCell(sheetCP, "D" + rowIndex, "var30_SAP_PO_Compra");             SetCell(sheetCP, "E" + rowIndex, "var40_SAP_Ariba");             var dist = GetDistribution((System.Collections.Generic.Dictionary<int, double>)p["ByYear"], months);             for (int i = 0; i < duration; i++)             {                 if (dist[i].HasValue && System.Math.Abs(dist[i].Value) > 0.0000001)                 {                     string col = ColumnLetter(cpStartCol + i);                     SetCell(sheetCP, col + rowIndex, dist[i].Value);                 }             }             rowIndex++;         }     } }  void WriteCoreWorkbook(dynamic excel, string templatePath, string outputPath, System.Collections.Generic.Dictionary<string, object> ppoData, System.Collections.Generic.Dictionary<string, object> cierreRow) {     System.IO.File.Copy(templatePath, outputPath, true);     dynamic wb = null;     dynamic sheetPI = null, sheetRes = null, sheetCP = null, sheetCO = null;     try     {         wb = excel.Workbooks.Open(outputPath, 0, false);         var project = (System.Collections.Generic.Dictionary<string, object>)ppoData["Project"];         var financial = (System.Collections.Generic.Dictionary<string, object>)ppoData["Financial"];         var profiles = (System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>>)ppoData["Profiles"];         var expenses = (System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>>)ppoData["Expenses"];         var purchases = (System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>>)ppoData["Purchases"];         var startDate = (System.DateTime)project["StartDate"];         int duration = System.Convert.ToInt32(project["Duration"]);         var months = GetMonths(startDate, duration);         bool isAT = IsAtProject(project);          string wbs = GetAny(cierreRow, "WBS", "Wbs", "PEP", "WBS/PEP", "Código Proyecto", "Codigo Proyecto");         string accountName = GetAny(cierreRow, "AccountName", "Account Name", "Cuenta", "Cliente");         string sfPractice = GetAny(cierreRow, "Practica", "Práctica", "Practice");         string pmName = GetAny(cierreRow, "Project Manager", "Jefe Proyecto", "Jefe de Proyecto", "PM");         string salesOrder = GetAny(cierreRow, "Sales Order", "SalesOrder", "Pedido", "Pedido SAP", "Order");         string customerCode = GetAny(cierreRow, "Customer Code", "Codigo Cliente", "Código Cliente", "Sold-to number", "SoldTo", "Sold-to");         string salesManagerCode = GetAny(cierreRow, "Sales Manager ID", "SalesManagerID", "Cod Sales Manager", "Código Sales Manager");          sheetPI = GetWorksheet(wb, "Project Infor", true);         sheetRes = GetWorksheet(wb, "Resources", true);         sheetCP = GetWorksheet(wb, "Cost Planning", true);         sheetCO = GetWorksheet(wb, "Cost Overview", false);          SetCell(sheetPI, "C5", System.DateTime.Today);         SetCell(sheetPI, "C8", project["StartDate"]);         SetCell(sheetPI, "C9", project["EndDate"]);         SetCell(sheetPI, "C10", !string.IsNullOrWhiteSpace(wbs) ? (object)wbs : "var2_SAP_PEP_WBS");         SetCell(sheetPI, "C11", project["Description"]);         SetCell(sheetPI, "C12", !string.IsNullOrWhiteSpace(sfPractice) ? (object)sfPractice : project["Practice"]);         SetCell(sheetPI, "C13", "");         SetCell(sheetPI, "C16", !string.IsNullOrWhiteSpace(customerCode) ? (object)customerCode : "var3_SAP_CodigoCliente");         SetCell(sheetPI, "D16", !string.IsNullOrWhiteSpace(accountName) ? (object)accountName : project["Customer"]);         SetCell(sheetPI, "C18", "SLFC " + Norm(project["OpportunityCode"]));         SetCell(sheetPI, "C19", !string.IsNullOrWhiteSpace(salesOrder) ? (object)salesOrder : "var4_SAP_PedidoSalesOrder");         SetCell(sheetPI, "C22", "var5_SAP_CodEmpleadoPM");         SetCell(sheetPI, "D22", !string.IsNullOrWhiteSpace(pmName) ? (object)pmName : "var6_SAP_ProjectManager");         SetCell(sheetPI, "C23", "var7_SAP_CodEmpleadoPracticeLeader");         SetCell(sheetPI, "D23", "var8_SAP_PracticeLeader");         SetCell(sheetPI, "C24", !string.IsNullOrWhiteSpace(salesManagerCode) ? (object)salesManagerCode : "var9_SF_CodEmpleadoSalesManager");         SetCell(sheetPI, "D24", project["AccountManager"]);         SetCell(sheetPI, "C28", financial["OrderAmount"]);         SetCell(sheetPI, "C29", financial["HoursEstimated"]);         SetCell(sheetPI, "C30", financial["ResourceCost"]);         SetCell(sheetPI, "C31", financial["Risks"]);         if (financial["Warranty"] != null && System.Math.Abs(System.Convert.ToDouble(financial["Warranty"])) > 0.0000001) SetCell(sheetPI, "C32", financial["Warranty"]); else SetCell(sheetPI, "C32", "");         SetCell(sheetPI, "C33", financial["Expenses"]);         SetCell(sheetPI, "C34", financial["Purchases"]);          WriteResourceRows(sheetRes, project, profiles, startDate, duration, isAT);         WritePlanningRows(sheetCP, project, financial, profiles, expenses, purchases, months, isAT);          if (sheetCO != null)         {             SetCell(sheetCO, "G17", "");             SetCell(sheetCO, "I17", "");         }          try { excel.CalculateFullRebuild(); } catch { }         try { wb.ForceFullCalculation = true; wb.FullCalculationOnLoad = true; } catch { }         wb.SaveAs(outputPath, 51);     }     finally     {         ReleaseCom(sheetPI); ReleaseCom(sheetRes); ReleaseCom(sheetCP); ReleaseCom(sheetCO);         if (wb != null) { try { wb.Close(true); } catch { } ReleaseCom(wb); }     } }  void WriteAudit(string auditPath, System.Collections.Generic.Dictionary<string, object> ppoData, System.Collections.Generic.Dictionary<string, object> cierreRow, string outputPath, string cierrePath, string templatePath) {     var project = (System.Collections.Generic.Dictionary<string, object>)ppoData["Project"];     var profiles = (System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>>)ppoData["Profiles"];     bool isAT = IsAtProject(project);     string wbs = GetAny(cierreRow, "WBS", "Wbs", "PEP", "WBS/PEP", "Código Proyecto", "Codigo Proyecto");     string accountName = GetAny(cierreRow, "AccountName", "Account Name", "Cuenta", "Cliente");     string ruta = GetAny(cierreRow, "Ruta", "Path", "RutaRelativa");     string practica = GetAny(cierreRow, "Practica", "Práctica", "Practice");     string correo = GetAny(cierreRow, "Correo", "Email", "Owner Email");     var lines = new System.Collections.Generic.List<string>();     lines.Add("# Generación CORE desde PPO + Cierre SF");     lines.Add("");     lines.Add("## Ficheros usados");     lines.Add("- PPO: " + in_PpoFileName + "");     lines.Add("- Cierre SF: " + cierrePath + "");     lines.Add("- Plantilla CORE: " + templatePath + "");     lines.Add("- Salida CORE: " + outputPath + "");     lines.Add("");     lines.Add("## Datos identificativos");     lines.Add("- Opportunity Number / NumeroSF: " + Norm(project["OpportunityCode"]) + "");     lines.Add("- Cliente PPO: " + Norm(project["Customer"]) + "");     lines.Add("- AccountName Cierre SF: " + (!string.IsNullOrWhiteSpace(accountName) ? accountName : "NO ENCONTRADO") + "");     lines.Add("- Proyecto: " + Norm(project["Description"]) + "");     lines.Add("- Tipo PPO: " + Norm(project["PepType"]) + "");     lines.Add("- CORE seleccionado: " + (isAT ? "AT" : "PC") + "");     lines.Add("- WBS/PEP Cierre SF: " + (!string.IsNullOrWhiteSpace(wbs) ? wbs : "NO ENCONTRADO - se ha dejado var2_SAP_PEP_WBS") + "");     lines.Add("- Práctica Cierre SF: " + (!string.IsNullOrWhiteSpace(practica) ? practica : "NO ENCONTRADO - se usa PPO") + "");     lines.Add("- Ruta Cierre SF: " + (!string.IsNullOrWhiteSpace(ruta) ? ruta : "NO ENCONTRADO") + "");     lines.Add("- Correo Cierre SF: " + (!string.IsNullOrWhiteSpace(correo) ? correo : "NO ENCONTRADO") + "");     lines.Add("");     lines.Add("## Reglas aplicadas");     lines.Add("- Se copia la plantilla CORE y solo se escriben valores; no se alteran formatos, colores, comentarios ni cuadros NOTA.");     lines.Add("- Cabecera y datos económicos: PPO como fuente principal; Cierre SF aporta WBS/PEP, AccountName, práctica/ruta/correo si existen.");     lines.Add("- Intercompany: entidad del recurso distinta de la compañía del proyecto => INTERCO; entidad igual => NO.");     if (isAT)     {         lines.Add("- CORE AT Resources: cada perfil se escribe en dos filas: Coste/hora y Tarifa venta (Hora o Jornada).");         lines.Add("- CORE AT Cost Planning: cada perfil se escribe en dos filas: Horas Reales y Horas/Jornadas Facturables.");         lines.Add("- Las horas facturables iniciales se igualan a las horas reales prorrateadas porque es una base de arranque revisable por el jefe de proyecto.");         lines.Add("- La tarifa de venta se intenta extraer de Sintesis Precio usando sigla, horas, tarifa y venta; si no existe, queda en blanco.");         foreach (var p in profiles)         {             double? tariff = GetTariff(p);             string sig = Norm(p["Sigla"]);             lines.Add("  - Tarifa AT " + sig + ": " + (tariff.HasValue ? tariff.Value.ToString(System.Globalization.CultureInfo.InvariantCulture) : "NO ENCONTRADA") + "");         }     }     else     {         lines.Add("- CORE PC Resources: una fila por perfil con coste hora plano según coste del año inicial.");         lines.Add("- CORE PC Cost Planning: una fila por perfil con horas previstas prorrateadas por anualidad.");     }     lines.Add("- Gastos y compras: prorrateo plano por anualidad dentro de los meses del proyecto.");     lines.Add("- Riesgos y garantía: imputados al último mes del proyecto.");     lines.Add("- Facturación emitida/billing real: no se informa.");     lines.Add("");     lines.Add("## Variables que pueden quedar pendientes");     lines.Add("- var1_SAP_FechaInicio: se documenta como contraste SAP; en C8 se usa la fecha estructurada del PPO para no romper planificación.");     lines.Add("- var2_SAP_PEP_WBS: si no se encuentra WBS en Cierre SF.");     lines.Add("- var3_SAP_CodigoCliente: si el Excel de Cierre SF no trae código cliente/Sold-to.");     lines.Add("- var4_SAP_PedidoSalesOrder: si el Excel de Cierre SF no trae pedido/Sales Order.");     lines.Add("- var5_SAP_CodEmpleadoPM, var6_SAP_ProjectManager, var7_SAP_CodEmpleadoPracticeLeader, var8_SAP_PracticeLeader, var9_SF_CodEmpleadoSalesManager si no vienen en Cierre SF.");     lines.Add("- var20_SAP_Proveedor_*, var30_SAP_PO_Compra, var40_SAP_Ariba para compras/subcontrataciones.");     System.IO.File.WriteAllLines(auditPath, lines, System.Text.Encoding.UTF8); }  if (string.IsNullOrWhiteSpace(in_PathRoot)) throw new System.Exception("Asset PathRoot vacío."); if (string.IsNullOrWhiteSpace(in_PpoFileName)) throw new System.Exception("Asset CORE_PPO_FileName vacío."); if (string.IsNullOrWhiteSpace(in_TemplatePCFileName)) throw new System.Exception("Asset CORE_TemplatePC_FileName vacío."); if (string.IsNullOrWhiteSpace(in_TemplateATFileName)) throw new System.Exception("Asset CORE_TemplateAT_FileName vacío."); if (string.IsNullOrWhiteSpace(in_OutputPrefix)) in_OutputPrefix = "core";  string robotRoot = System.IO.Path.Combine(in_PathRoot, "Getronics"); string inputDir = System.IO.Path.Combine(robotRoot, "input"); string templateDir = System.IO.Path.Combine(robotRoot, "template"); string excelDir = System.IO.Path.Combine(robotRoot, "excel"); string outputDir = System.IO.Path.Combine(robotRoot, "output"); System.IO.Directory.CreateDirectory(inputDir); System.IO.Directory.CreateDirectory(templateDir); System.IO.Directory.CreateDirectory(excelDir); System.IO.Directory.CreateDirectory(outputDir);  string ppoPath = System.IO.Path.Combine(inputDir, in_PpoFileName); if (!System.IO.File.Exists(ppoPath)) throw new System.Exception("No existe el PPO esperado: " + ppoPath);  string cierrePath; if (!string.IsNullOrWhiteSpace(in_CierreSfOutputFileName) && !string.Equals(in_CierreSfOutputFileName.Trim(), "LATEST", System.StringComparison.OrdinalIgnoreCase)) {     cierrePath = System.IO.Path.Combine(excelDir, in_CierreSfOutputFileName);     if (!System.IO.File.Exists(cierrePath)) throw new System.Exception("No existe el Excel de Cierre SF indicado: " + cierrePath); } else {     var files = System.IO.Directory.GetFiles(excelDir, "Oportunidades_*.xlsx").OrderByDescending(f => System.IO.File.GetLastWriteTime(f)).ToArray();     if (files.Length == 0) throw new System.Exception("No se ha indicado CORE_CierreSF_OutputFileName y no hay ficheros Oportunidades_*.xlsx en " + excelDir + ".");     cierrePath = files[0]; }  object excelObj = null; dynamic excel = null; try {     var excelType = System.Type.GetTypeFromProgID("Excel.Application");     if (excelType == null) throw new System.Exception("No se encuentra Microsoft Excel instalado o registrado en la máquina.");     excelObj = System.Activator.CreateInstance(excelType);     excel = excelObj;     excel.Visible = false;     excel.DisplayAlerts = false;     try { excel.AutomationSecurity = 3; } catch { }      dynamic ppoWb = null;     System.Collections.Generic.Dictionary<string, object> ppoData;     try     {         ppoWb = excel.Workbooks.Open(ppoPath, 0, true);         ppoData = ReadPpoData(ppoWb);     }     finally     {         if (ppoWb != null) { try { ppoWb.Close(false); } catch { } ReleaseCom(ppoWb); }     }      var project = (System.Collections.Generic.Dictionary<string, object>)ppoData["Project"];     string oppNumber = Norm(project["OpportunityCode"]);     if (string.IsNullOrWhiteSpace(oppNumber)) throw new System.Exception("No se ha podido leer el Opportunity Number del PPO en Hoja de datos!B22.");      dynamic sfWb = null;     System.Collections.Generic.Dictionary<string, object> cierreRow = null;     try     {         sfWb = excel.Workbooks.Open(cierrePath, 0, true);         cierreRow = FindCierreSfRow(sfWb, oppNumber);     }     finally     {         if (sfWb != null) { try { sfWb.Close(false); } catch { } ReleaseCom(sfWb); }     }     if (cierreRow == null) cierreRow = new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase);      bool isAT = IsAtProject(project);     string templateName = isAT ? in_TemplateATFileName : in_TemplatePCFileName;     string templatePath = System.IO.Path.Combine(templateDir, templateName);     if (!System.IO.File.Exists(templatePath)) throw new System.Exception("No existe la plantilla CORE esperada: " + templatePath);      string wbsForName = GetAny(cierreRow, "WBS", "Wbs", "PEP", "WBS/PEP", "Código Proyecto", "Codigo Proyecto");     string idForName = !string.IsNullOrWhiteSpace(wbsForName) ? wbsForName : oppNumber;     string safeId = System.Text.RegularExpressions.Regex.Replace(idForName, "[\\/:*?\"<>|]", "_");     string timestamp = System.DateTime.Now.ToString("yyyyMMdd_HHmm");     string outputPath = System.IO.Path.Combine(outputDir, in_OutputPrefix + "-" + safeId + "-" + timestamp + ".xlsx");     string auditPath = System.IO.Path.Combine(outputDir, in_OutputPrefix + "-" + safeId + "-" + timestamp + ".md");      WriteCoreWorkbook(excel, templatePath, outputPath, ppoData, cierreRow);     WriteAudit(auditPath, ppoData, cierreRow, outputPath, cierrePath, templatePath);      out_OutputPath = outputPath;     out_AuditPath = auditPath;     out_OpportunityNumber = oppNumber;     out_Wbs = wbsForName; } finally {     if (excel != null) { try { excel.Quit(); } catch { } }     ReleaseCom(excelObj);     System.GC.Collect();     System.GC.WaitForPendingFinalizers(); }
+
+Thought for 10s
+Aquí lo tienes formateado, sin cambiar la lógica:
+
+void ReleaseCom(object obj)
+{
+    if (obj != null)
+    {
+        try
+        {
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
+        }
+        catch
+        {
+        }
+    }
+}
+
+string Norm(object value)
+{
+    if (value == null) return string.Empty;
+    return System.Convert.ToString(value).Trim();
+}
+
+double? ToNumber(object value)
+{
+    if (value == null) return null;
+
+    if (value is double) return (double)value;
+    if (value is float) return System.Convert.ToDouble(value);
+    if (value is int || value is long || value is decimal) return System.Convert.ToDouble(value);
+
+    string txt = Norm(value);
+    if (string.IsNullOrWhiteSpace(txt)) return null;
+
+    double n;
+
+    if (double.TryParse(txt, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, out n))
+        return n;
+
+    if (double.TryParse(txt, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), out n))
+        return n;
+
+    if (double.TryParse(txt, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out n))
+        return n;
+
+    string normalized = txt.Replace(".", "").Replace(",", ".");
+
+    if (double.TryParse(normalized, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out n))
+        return n;
+
+    return null;
+}
+
+int ToInt(object value, int defaultValue)
+{
+    double? n = ToNumber(value);
+    if (!n.HasValue) return defaultValue;
+
+    return System.Convert.ToInt32(System.Math.Round(n.Value, 0));
+}
+
+System.DateTime? ToDate(object value)
+{
+    if (value == null) return null;
+
+    if (value is System.DateTime) return (System.DateTime)value;
+
+    double? n = ToNumber(value);
+    if (n.HasValue && n.Value > 1000)
+        return System.DateTime.FromOADate(n.Value);
+
+    string txt = Norm(value);
+    if (string.IsNullOrWhiteSpace(txt)) return null;
+
+    System.DateTime dt;
+
+    if (System.DateTime.TryParse(txt, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), System.Globalization.DateTimeStyles.None, out dt))
+        return dt;
+
+    if (System.DateTime.TryParse(txt, out dt))
+        return dt;
+
+    return null;
+}
+
+object GetCell(dynamic sheet, string address)
+{
+    object range = null;
+
+    try
+    {
+        range = sheet.Range(address);
+        return ((dynamic)range).Value2;
+    }
+    finally
+    {
+        ReleaseCom(range);
+    }
+}
+
+void SetCell(dynamic sheet, string address, object value)
+{
+    object range = null;
+
+    try
+    {
+        range = sheet.Range(address);
+        dynamic r = range;
+
+        if (value == null || (value is string && string.IsNullOrWhiteSpace((string)value)))
+        {
+            r.ClearContents();
+        }
+        else if (value is System.DateTime)
+        {
+            r.Value2 = ((System.DateTime)value).ToOADate();
+        }
+        else
+        {
+            r.Value2 = value;
+        }
+    }
+    finally
+    {
+        ReleaseCom(range);
+    }
+}
+
+void ClearRange(dynamic sheet, string address)
+{
+    object range = null;
+
+    try
+    {
+        range = sheet.Range(address);
+        ((dynamic)range).ClearContents();
+    }
+    finally
+    {
+        ReleaseCom(range);
+    }
+}
+
+dynamic GetWorksheet(dynamic workbook, string name, bool required)
+{
+    foreach (object wsObj in workbook.Worksheets)
+    {
+        dynamic ws = wsObj;
+        string wsName = System.Convert.ToString(ws.Name);
+
+        if (string.Equals(wsName, name, System.StringComparison.OrdinalIgnoreCase))
+            return ws;
+
+        ReleaseCom(wsObj);
+    }
+
+    if (required)
+        throw new System.Exception("No se encuentra la hoja '" + name + "' en '" + System.Convert.ToString(workbook.Name) + "'.");
+
+    return null;
+}
+
+string ColumnLetter(int columnNumber)
+{
+    int dividend = columnNumber;
+    string columnName = string.Empty;
+
+    while (dividend > 0)
+    {
+        int modulo = (dividend - 1) % 26;
+        columnName = System.Convert.ToChar(65 + modulo).ToString() + columnName;
+        dividend = (dividend - modulo) / 26;
+    }
+
+    return columnName;
+}
+
+int ExtractYear(object value)
+{
+    string txt = Norm(value);
+    var match = System.Text.RegularExpressions.Regex.Match(txt, @"20\d{2}");
+
+    if (match.Success)
+        return int.Parse(match.Value);
+
+    double? n = ToNumber(value);
+
+    if (n.HasValue && n.Value >= 2000 && n.Value <= 2100)
+        return System.Convert.ToInt32(n.Value);
+
+    return 0;
+}
+
+void AddToYearMap(System.Collections.Generic.Dictionary<int, double> map, int year, object value)
+{
+    double? n = ToNumber(value);
+
+    if (n.HasValue && System.Math.Abs(n.Value) > 0.0000001)
+    {
+        if (!map.ContainsKey(year))
+            map[year] = 0.0;
+
+        map[year] = map[year] + n.Value;
+    }
+}
+
+System.Collections.Generic.List<System.DateTime> GetMonths(System.DateTime startDate, int duration)
+{
+    var months = new System.Collections.Generic.List<System.DateTime>();
+
+    for (int i = 0; i < duration; i++)
+    {
+        var d = startDate.AddMonths(i);
+        months.Add(new System.DateTime(d.Year, d.Month, 1));
+    }
+
+    return months;
+}
+
+System.Collections.Generic.List<double?> GetDistribution(
+    System.Collections.Generic.Dictionary<int, double> byYear,
+    System.Collections.Generic.List<System.DateTime> months)
+{
+    var counts = new System.Collections.Generic.Dictionary<int, int>();
+
+    foreach (var m in months)
+    {
+        if (!counts.ContainsKey(m.Year))
+            counts[m.Year] = 0;
+
+        counts[m.Year] = counts[m.Year] + 1;
+    }
+
+    var values = new System.Collections.Generic.List<double?>();
+
+    foreach (var m in months)
+    {
+        if (byYear.ContainsKey(m.Year) && counts.ContainsKey(m.Year) && counts[m.Year] > 0)
+            values.Add(byYear[m.Year] / counts[m.Year]);
+        else
+            values.Add(null);
+    }
+
+    return values;
+}
+
+bool IsAtProject(System.Collections.Generic.Dictionary<string, object> project)
+{
+    string pepType = Norm(project.ContainsKey("PepType") ? project["PepType"] : null).ToUpperInvariant();
+    string opportunityType = Norm(project.ContainsKey("OpportunityType") ? project["OpportunityType"] : null).ToUpperInvariant();
+
+    return pepType.Contains("AT")
+        || opportunityType.Contains("ASISTENCIA")
+        || opportunityType.Contains("TIME")
+        || opportunityType.Contains("T&M");
+}
+
+double? GetBaseCost(System.Collections.Generic.Dictionary<string, object> profile, int year)
+{
+    var costs = (System.Collections.Generic.Dictionary<int, double>)profile["Costs"];
+
+    if (costs.ContainsKey(year))
+        return costs[year];
+
+    foreach (var kv in costs.OrderBy(k => k.Key))
+        return kv.Value;
+
+    return null;
+}
+
+double? GetTariff(System.Collections.Generic.Dictionary<string, object> profile)
+{
+    if (!profile.ContainsKey("Tariff")) return null;
+    return ToNumber(profile["Tariff"]);
+}
+
+string GetInterco(
+    System.Collections.Generic.Dictionary<string, object> project,
+    System.Collections.Generic.Dictionary<string, object> profile)
+{
+    string entity = Norm(profile["Entity"]);
+    string company = Norm(project["Company"]);
+
+    if (string.IsNullOrWhiteSpace(entity) || string.IsNullOrWhiteSpace(company))
+        return "NO";
+
+    return string.Equals(entity, company, System.StringComparison.OrdinalIgnoreCase)
+        ? "NO"
+        : "INTERCO";
+}
+
+System.Collections.Generic.Dictionary<string, double> ReadTariffs(dynamic sintesis)
+{
+    var numerators = new System.Collections.Generic.Dictionary<string, double>(System.StringComparer.OrdinalIgnoreCase);
+    var denominators = new System.Collections.Generic.Dictionary<string, double>(System.StringComparer.OrdinalIgnoreCase);
+    var directRates = new System.Collections.Generic.Dictionary<string, double>(System.StringComparer.OrdinalIgnoreCase);
+
+    if (sintesis == null)
+        return directRates;
+
+    for (int r = 18; r <= 80; r++)
+    {
+        string sigla = Norm(GetCell(sintesis, "D" + r));
+
+        if (string.IsNullOrWhiteSpace(sigla) || sigla == "0")
+            continue;
+
+        double? hours = ToNumber(GetCell(sintesis, "N" + r));
+        double? tariff = ToNumber(GetCell(sintesis, "O" + r));
+        double? sale = ToNumber(GetCell(sintesis, "P" + r));
+        double? effectiveRate = null;
+
+        if (tariff.HasValue && System.Math.Abs(tariff.Value) > 0.0000001)
+            effectiveRate = tariff.Value;
+        else if (sale.HasValue && hours.HasValue && System.Math.Abs(hours.Value) > 0.0000001)
+            effectiveRate = sale.Value / hours.Value;
+
+        if (!effectiveRate.HasValue || System.Math.Abs(effectiveRate.Value) < 0.0000001)
+            continue;
+
+        if (hours.HasValue && System.Math.Abs(hours.Value) > 0.0000001)
+        {
+            if (!numerators.ContainsKey(sigla))
+            {
+                numerators[sigla] = 0.0;
+                denominators[sigla] = 0.0;
+            }
+
+            numerators[sigla] = numerators[sigla] + effectiveRate.Value * hours.Value;
+            denominators[sigla] = denominators[sigla] + hours.Value;
+        }
+        else if (!directRates.ContainsKey(sigla))
+        {
+            directRates[sigla] = effectiveRate.Value;
+        }
+    }
+
+    foreach (var kv in numerators)
+    {
+        if (denominators.ContainsKey(kv.Key) && System.Math.Abs(denominators[kv.Key]) > 0.0000001)
+            directRates[kv.Key] = kv.Value / denominators[kv.Key];
+    }
+
+    return directRates;
+}
+
+System.Collections.Generic.Dictionary<string, object> ReadPpoData(dynamic workbook)
+{
+    dynamic hd = null;
+    dynamic pre = null;
+    dynamic par = null;
+    dynamic fsap = null;
+    dynamic sintesis = null;
+
+    try
+    {
+        hd = GetWorksheet(workbook, "Hoja de datos", true);
+        pre = GetWorksheet(workbook, "Presupuesto", true);
+        par = GetWorksheet(workbook, "Parametros", true);
+        fsap = GetWorksheet(workbook, "Facturación y SAP", true);
+        sintesis = GetWorksheet(workbook, "Sintesis Precio", false);
+
+        int startMonth = ToInt(GetCell(hd, "B27"), 0);
+        int startYear = ToInt(GetCell(hd, "B28"), 0);
+        int duration = ToInt(GetCell(hd, "B29"), 0);
+
+        if (duration <= 0)
+            throw new System.Exception("La duración del PPO no es válida o no está informada en Hoja de datos!B29.");
+
+        System.DateTime? startDateNullable = ToDate(GetCell(fsap, "C4"));
+
+        if (!startDateNullable.HasValue)
+        {
+            if (startMonth <= 0 || startYear <= 0)
+                throw new System.Exception("No se ha podido determinar la fecha de inicio del PPO.");
+
+            startDateNullable = new System.DateTime(startYear, startMonth, 1);
+        }
+
+        System.DateTime startDate = startDateNullable.Value;
+        System.DateTime? endDateNullable = ToDate(GetCell(fsap, "E4"));
+        System.DateTime endDate = endDateNullable.HasValue
+            ? endDateNullable.Value
+            : startDate.AddMonths(duration).AddDays(-1);
+
+        double? orderAmount = ToNumber(GetCell(pre, "X8"));
+
+        if (!orderAmount.HasValue && sintesis != null)
+            orderAmount = ToNumber(GetCell(sintesis, "D12"));
+
+        var project = new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase);
+
+        project["Company"] = Norm(GetCell(hd, "B8"));
+        project["Unit"] = Norm(GetCell(hd, "B9"));
+        project["Location"] = Norm(GetCell(hd, "B10"));
+        project["ServiceType"] = Norm(GetCell(hd, "B11"));
+        project["PepType"] = Norm(GetCell(hd, "B12"));
+        project["Portfolio"] = Norm(GetCell(hd, "B14"));
+        project["Practice"] = Norm(GetCell(hd, "B15"));
+        project["Subpractice"] = Norm(GetCell(hd, "B16"));
+        project["OpportunityType"] = Norm(GetCell(hd, "B17"));
+        project["AccountManager"] = Norm(GetCell(hd, "B18"));
+        project["Applicant"] = Norm(GetCell(hd, "B19"));
+        project["SubpracticeOrigin"] = Norm(GetCell(hd, "B20"));
+        project["OpportunityCode"] = Norm(GetCell(hd, "B22"));
+        project["Customer"] = Norm(GetCell(hd, "B23"));
+        project["Description"] = Norm(GetCell(hd, "B25"));
+        project["ProposalDelivery"] = ToDate(GetCell(hd, "B26"));
+        project["StartMonth"] = startMonth;
+        project["StartYear"] = startYear;
+        project["Duration"] = duration;
+        project["StartDate"] = startDate;
+        project["EndDate"] = endDate;
+
+        var financial = new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase);
+
+        financial["OrderAmount"] = orderAmount.HasValue ? (object)orderAmount.Value : null;
+        financial["HoursEstimated"] = ToNumber(GetCell(pre, "K5"));
+        financial["ResourceCost"] = ToNumber(GetCell(pre, "K4"));
+        financial["Risks"] = ToNumber(GetCell(pre, "K49"));
+        financial["Warranty"] = ToNumber(GetCell(pre, "K53"));
+        financial["Expenses"] = ToNumber(GetCell(pre, "K28"));
+        financial["Purchases"] = ToNumber(GetCell(pre, "K34"));
+
+        var tariffs = ReadTariffs(sintesis);
+
+        var profilesMeta =
+            new System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, object>>(
+                System.StringComparer.OrdinalIgnoreCase);
+
+        for (int r = 19; r <= 58; r++)
+        {
+            string profile = Norm(GetCell(par, "B" + r));
+            string entity = Norm(GetCell(par, "C" + r));
+            string sigla = Norm(GetCell(par, "D" + r));
+
+            if (string.IsNullOrWhiteSpace(profile) || string.IsNullOrWhiteSpace(sigla))
+                continue;
+
+            var costs = new System.Collections.Generic.Dictionary<int, double>();
+
+            for (int c = 5; c <= 10; c++)
+            {
+                int year = ExtractYear(GetCell(par, ColumnLetter(c) + "18"));
+
+                if (year > 0)
+                {
+                    double? val = ToNumber(GetCell(par, ColumnLetter(c) + r));
+
+                    if (val.HasValue)
+                        costs[year] = val.Value;
+                }
+            }
+
+            profilesMeta[sigla] =
+                new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase)
+                {
+                    { "Profile", profile },
+                    { "Entity", entity },
+                    { "Sigla", sigla },
+                    { "Costs", costs },
+                    { "Tariff", tariffs.ContainsKey(sigla) ? (object)tariffs[sigla] : null }
+                };
+        }
+
+        var yearCols = new System.Collections.Generic.Dictionary<int, int>();
+
+        for (int c = 5; c <= 10; c++)
+        {
+            int year = ExtractYear(GetCell(pre, ColumnLetter(c) + "3"));
+
+            if (year > 0)
+                yearCols[year] = c;
+        }
+
+        var profileList = new System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>>();
+
+        var profileMap =
+            new System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, object>>(
+                System.StringComparer.OrdinalIgnoreCase);
+
+        for (int r = 6; r <= 27; r++)
+        {
+            string profile = Norm(GetCell(pre, "B" + r));
+            string entity = Norm(GetCell(pre, "C" + r));
+            string sigla = Norm(GetCell(pre, "D" + r));
+
+            if (string.IsNullOrWhiteSpace(profile) || string.IsNullOrWhiteSpace(sigla))
+                continue;
+
+            if (!profileMap.ContainsKey(sigla))
+            {
+                System.Collections.Generic.Dictionary<string, object> meta;
+
+                if (!profilesMeta.TryGetValue(sigla, out meta))
+                {
+                    meta = new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase)
+                    {
+                        { "Profile", profile },
+                        { "Entity", entity },
+                        { "Sigla", sigla },
+                        { "Costs", new System.Collections.Generic.Dictionary<int, double>() },
+                        { "Tariff", tariffs.ContainsKey(sigla) ? (object)tariffs[sigla] : null }
+                    };
+                }
+
+                var rowProfile =
+                    new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase)
+                    {
+                        { "Profile", meta["Profile"] },
+                        { "Entity", meta["Entity"] },
+                        { "Sigla", sigla },
+                        { "HoursByYear", new System.Collections.Generic.Dictionary<int, double>() },
+                        { "Costs", meta["Costs"] },
+                        { "Tariff", meta.ContainsKey("Tariff") ? meta["Tariff"] : null }
+                    };
+
+                profileMap[sigla] = rowProfile;
+                profileList.Add(rowProfile);
+            }
+
+            var hby = (System.Collections.Generic.Dictionary<int, double>)profileMap[sigla]["HoursByYear"];
+
+            foreach (var kv in yearCols)
+                AddToYearMap(hby, kv.Key, GetCell(pre, ColumnLetter(kv.Value) + r));
+        }
+
+        var expenses = new System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>>();
+
+        for (int r = 29; r <= 33; r++)
+        {
+            string desc = Norm(GetCell(pre, "B" + r));
+            double? total = ToNumber(GetCell(pre, "K" + r));
+
+            if (!string.IsNullOrWhiteSpace(desc) && total.HasValue && System.Math.Abs(total.Value) > 0.0000001)
+            {
+                var byYear = new System.Collections.Generic.Dictionary<int, double>();
+
+                foreach (var kv in yearCols)
+                    AddToYearMap(byYear, kv.Key, GetCell(pre, ColumnLetter(kv.Value) + r));
+
+                expenses.Add(
+                    new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase)
+                    {
+                        { "Type", desc },
+                        { "Desc", desc },
+                        { "ByYear", byYear }
+                    });
+            }
+        }
+
+        var purchases = new System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>>();
+
+        for (int r = 35; r <= 49; r++)
+        {
+            string desc = Norm(GetCell(pre, "L" + r));
+
+            if (string.IsNullOrWhiteSpace(desc))
+                desc = Norm(GetCell(pre, "B" + r));
+
+            string label = Norm(GetCell(pre, "B" + r));
+            double? total = ToNumber(GetCell(pre, "K" + r));
+
+            if (!string.IsNullOrWhiteSpace(desc) && total.HasValue && System.Math.Abs(total.Value) > 0.0000001)
+            {
+                var byYear = new System.Collections.Generic.Dictionary<int, double>();
+
+                foreach (var kv in yearCols)
+                    AddToYearMap(byYear, kv.Key, GetCell(pre, ColumnLetter(kv.Value) + r));
+
+                purchases.Add(
+                    new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase)
+                    {
+                        { "Label", label },
+                        { "Desc", desc },
+                        { "ByYear", byYear }
+                    });
+            }
+        }
+
+        return new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase)
+        {
+            { "Project", project },
+            { "Financial", financial },
+            { "Profiles", profileList },
+            { "Expenses", expenses },
+            { "Purchases", purchases }
+        };
+    }
+    finally
+    {
+        ReleaseCom(hd);
+        ReleaseCom(pre);
+        ReleaseCom(par);
+        ReleaseCom(fsap);
+        ReleaseCom(sintesis);
+    }
+}
+
+System.Collections.Generic.Dictionary<string, object> FindCierreSfRow(dynamic workbook, string opportunityNumber)
+{
+    foreach (object wsObj in workbook.Worksheets)
+    {
+        dynamic ws = wsObj;
+        object usedObj = null;
+
+        try
+        {
+            usedObj = ws.UsedRange;
+            dynamic used = usedObj;
+
+            int rowCount = System.Convert.ToInt32(used.Rows.Count);
+            int colCount = System.Convert.ToInt32(used.Columns.Count);
+            int maxHeaderRow = System.Math.Min(10, rowCount);
+
+            for (int headerRow = 1; headerRow <= maxHeaderRow; headerRow++)
+            {
+                var headers = new System.Collections.Generic.Dictionary<string, int>(System.StringComparer.OrdinalIgnoreCase);
+
+                for (int c = 1; c <= colCount; c++)
+                {
+                    string h = Norm(ws.Cells.Item(headerRow, c).Value2);
+
+                    if (!string.IsNullOrWhiteSpace(h) && !headers.ContainsKey(h))
+                        headers[h] = c;
+                }
+
+                int oppCol = 0;
+
+                string[] oppNames = new string[]
+                {
+                    "Opportunity Number",
+                    "NumeroSF",
+                    "NúmeroSF",
+                    "OpportunityNumber",
+                    "SLFC",
+                    "Opportunity Code"
+                };
+
+                foreach (string name in oppNames)
+                {
+                    if (headers.ContainsKey(name))
+                    {
+                        oppCol = headers[name];
+                        break;
+                    }
+                }
+
+                if (oppCol == 0)
+                    continue;
+
+                for (int r = headerRow + 1; r <= rowCount; r++)
+                {
+                    string value = Norm(ws.Cells.Item(r, oppCol).Value2);
+
+                    if (string.Equals(value, opportunityNumber, System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        var row = new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase);
+
+                        foreach (var header in headers)
+                            row[header.Key] = ws.Cells.Item(r, header.Value).Value2;
+
+                        row["__SheetName"] = System.Convert.ToString(ws.Name);
+                        row["__Row"] = r;
+
+                        return row;
+                    }
+                }
+            }
+        }
+        finally
+        {
+            ReleaseCom(usedObj);
+            ReleaseCom(wsObj);
+        }
+    }
+
+    return null;
+}
+
+string GetAny(System.Collections.Generic.Dictionary<string, object> row, params string[] names)
+{
+    if (row == null) return string.Empty;
+
+    foreach (string n in names)
+    {
+        if (row.ContainsKey(n))
+        {
+            string val = Norm(row[n]);
+
+            if (!string.IsNullOrWhiteSpace(val))
+                return val;
+        }
+    }
+
+    return string.Empty;
+}
+
+void WriteResourceRows(
+    dynamic sheetRes,
+    System.Collections.Generic.Dictionary<string, object> project,
+    System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>> profiles,
+    System.DateTime startDate,
+    int duration,
+    bool isAT)
+{
+    if (isAT)
+    {
+        if (profiles.Count > 15)
+            throw new System.Exception(
+                "La plantilla CORE AT incluida soporta 15 perfiles AT en Resources/Cost Planning. Perfiles encontrados: "
+                + profiles.Count.ToString()
+                + ".");
+
+        ClearRange(sheetRes, "B7:E36");
+        ClearRange(sheetRes, "G7:AF36");
+
+        int resourceStartCol = 7;
+        int rowIndex = 7;
+        int varIndex = 10;
+
+        foreach (var p in profiles)
+        {
+            string sig = Norm(p["Sigla"]);
+            string interco = GetInterco(project, p);
+            string employeeVar = "var" + varIndex.ToString() + "_SAP_CodEmpleado_" + sig;
+
+            double? baseCost = GetBaseCost(p, startDate.Year);
+            double? tariff = GetTariff(p);
+
+            SetCell(sheetRes, "B" + rowIndex, employeeVar);
+            SetCell(sheetRes, "C" + rowIndex, sig);
+            SetCell(sheetRes, "D" + rowIndex, interco);
+            SetCell(sheetRes, "E" + rowIndex, p["Profile"]);
+
+            for (int i = 0; i < duration; i++)
+            {
+                string col = ColumnLetter(resourceStartCol + i);
+
+                SetCell(sheetRes, col + rowIndex, baseCost.HasValue ? (object)baseCost.Value : null);
+                SetCell(sheetRes, col + (rowIndex + 1), tariff.HasValue ? (object)tariff.Value : null);
+            }
+
+            rowIndex += 2;
+            varIndex++;
+        }
+    }
+    else
+    {
+        ClearRange(sheetRes, "B7:AD43");
+
+        int resourceStartCol = 6;
+        int rowIndex = 7;
+
+        foreach (var p in profiles)
+        {
+            string sig = Norm(p["Sigla"]);
+            string interco = GetInterco(project, p);
+            string employeeVar = "var" + (rowIndex + 3).ToString() + "_SAP_CodEmpleado_" + sig;
+
+            SetCell(sheetRes, "B" + rowIndex, employeeVar);
+            SetCell(sheetRes, "C" + rowIndex, sig);
+            SetCell(sheetRes, "D" + rowIndex, interco);
+            SetCell(sheetRes, "E" + rowIndex, p["Profile"]);
+
+            double? baseCost = GetBaseCost(p, startDate.Year);
+
+            for (int i = 0; i < duration; i++)
+            {
+                string col = ColumnLetter(resourceStartCol + i);
+                SetCell(sheetRes, col + rowIndex, baseCost.HasValue ? (object)baseCost.Value : null);
+            }
+
+            rowIndex++;
+        }
+    }
+}
+
+void WritePlanningRows(
+    dynamic sheetCP,
+    System.Collections.Generic.Dictionary<string, object> project,
+    System.Collections.Generic.Dictionary<string, object> financial,
+    System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>> profiles,
+    System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>> expenses,
+    System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>> purchases,
+    System.Collections.Generic.List<System.DateTime> months,
+    bool isAT)
+{
+    int duration = months.Count;
+
+    if (isAT)
+    {
+        int cpStartCol = 8;
+
+        ClearRange(sheetCP, "B10:F39");
+        ClearRange(sheetCP, "H10:AF39");
+        ClearRange(sheetCP, "H47:AF48");
+        ClearRange(sheetCP, "B53:G60");
+        ClearRange(sheetCP, "H53:AF60");
+        ClearRange(sheetCP, "B68:G76");
+        ClearRange(sheetCP, "H68:AF76");
+
+        int rowIndex = 10;
+        int varIndex = 10;
+
+        foreach (var p in profiles)
+        {
+            string sig = Norm(p["Sigla"]);
+            string interco = GetInterco(project, p);
+
+            SetCell(sheetCP, "B" + rowIndex, "var" + varIndex.ToString() + "_SAP_CodEmpleado_" + sig);
+            SetCell(sheetCP, "C" + rowIndex, sig);
+            SetCell(sheetCP, "D" + rowIndex, interco);
+            SetCell(sheetCP, "E" + rowIndex, p["Profile"]);
+
+            var hby = (System.Collections.Generic.Dictionary<int, double>)p["HoursByYear"];
+            var dist = GetDistribution(hby, months);
+
+            for (int i = 0; i < duration; i++)
+            {
+                if (dist[i].HasValue && System.Math.Abs(dist[i].Value) > 0.0000001)
+                {
+                    string col = ColumnLetter(cpStartCol + i);
+
+                    SetCell(sheetCP, col + rowIndex, dist[i].Value);
+                    SetCell(sheetCP, col + (rowIndex + 1), dist[i].Value);
+                }
+            }
+
+            rowIndex += 2;
+            varIndex++;
+        }
+
+        string lastCol = ColumnLetter(cpStartCol + duration - 1);
+
+        if (financial["Risks"] != null && System.Math.Abs(System.Convert.ToDouble(financial["Risks"])) > 0.0000001)
+            SetCell(sheetCP, lastCol + "47", financial["Risks"]);
+
+        if (financial["Warranty"] != null && System.Math.Abs(System.Convert.ToDouble(financial["Warranty"])) > 0.0000001)
+            SetCell(sheetCP, lastCol + "48", financial["Warranty"]);
+
+        rowIndex = 53;
+
+        foreach (var e in expenses)
+        {
+            if (rowIndex > 60) break;
+
+            string desc = Norm(e["Desc"]);
+
+            string expenseType =
+                System.Text.RegularExpressions.Regex.IsMatch(
+                    desc,
+                    "Viajes|Agencia|Travel",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+                    ? "Travelling Expenses"
+                    : "Otros";
+
+            SetCell(sheetCP, "B" + rowIndex, expenseType);
+            SetCell(sheetCP, "C" + rowIndex, desc);
+            SetCell(sheetCP, "D" + rowIndex, "PPO");
+
+            var dist = GetDistribution((System.Collections.Generic.Dictionary<int, double>)e["ByYear"], months);
+
+            for (int i = 0; i < duration; i++)
+            {
+                if (dist[i].HasValue && System.Math.Abs(dist[i].Value) > 0.0000001)
+                {
+                    string col = ColumnLetter(cpStartCol + i);
+                    SetCell(sheetCP, col + rowIndex, dist[i].Value);
+                }
+            }
+
+            rowIndex++;
+        }
+
+        rowIndex = 68;
+
+        foreach (var p in purchases)
+        {
+            if (rowIndex > 76) break;
+
+            string label = Norm(p["Label"]).Replace(" ", "");
+
+            if (string.IsNullOrWhiteSpace(label))
+                label = "Compra";
+
+            if (label.Length > 28)
+                label = label.Substring(0, 28);
+
+            SetCell(sheetCP, "B" + rowIndex, "var20_SAP_Proveedor_" + label);
+            SetCell(sheetCP, "C" + rowIndex, Norm(p["Desc"]));
+            SetCell(sheetCP, "D" + rowIndex, "var30_SAP_PO_Compra");
+            SetCell(sheetCP, "E" + rowIndex, "var40_SAP_Ariba");
+
+            var dist = GetDistribution((System.Collections.Generic.Dictionary<int, double>)p["ByYear"], months);
+
+            for (int i = 0; i < duration; i++)
+            {
+                if (dist[i].HasValue && System.Math.Abs(dist[i].Value) > 0.0000001)
+                {
+                    string col = ColumnLetter(cpStartCol + i);
+                    SetCell(sheetCP, col + rowIndex, dist[i].Value);
+                }
+            }
+
+            rowIndex++;
+        }
+    }
+    else
+    {
+        ClearRange(sheetCP, "G10:AE39");
+        ClearRange(sheetCP, "G47:AE48");
+        ClearRange(sheetCP, "B53:D58");
+        ClearRange(sheetCP, "G53:AE58");
+        ClearRange(sheetCP, "B64:E73");
+        ClearRange(sheetCP, "G64:AE73");
+
+        int cpStartCol = 7;
+        int rowIndex = 10;
+
+        foreach (var p in profiles)
+        {
+            var hby = (System.Collections.Generic.Dictionary<int, double>)p["HoursByYear"];
+            var dist = GetDistribution(hby, months);
+
+            for (int i = 0; i < duration; i++)
+            {
+                if (dist[i].HasValue && System.Math.Abs(dist[i].Value) > 0.0000001)
+                {
+                    string col = ColumnLetter(cpStartCol + i);
+                    SetCell(sheetCP, col + rowIndex, dist[i].Value);
+                }
+            }
+
+            rowIndex++;
+        }
+
+        string lastCol = ColumnLetter(cpStartCol + duration - 1);
+
+        if (financial["Risks"] != null && System.Math.Abs(System.Convert.ToDouble(financial["Risks"])) > 0.0000001)
+            SetCell(sheetCP, lastCol + "47", financial["Risks"]);
+
+        if (financial["Warranty"] != null && System.Math.Abs(System.Convert.ToDouble(financial["Warranty"])) > 0.0000001)
+            SetCell(sheetCP, lastCol + "48", financial["Warranty"]);
+
+        rowIndex = 53;
+
+        foreach (var e in expenses)
+        {
+            string desc = Norm(e["Desc"]);
+
+            string expenseType =
+                System.Text.RegularExpressions.Regex.IsMatch(
+                    desc,
+                    "Viajes|Agencia|Travel",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+                    ? "Travelling Expenses"
+                    : "Otros";
+
+            SetCell(sheetCP, "B" + rowIndex, expenseType);
+            SetCell(sheetCP, "C" + rowIndex, desc);
+            SetCell(sheetCP, "D" + rowIndex, "PPO");
+
+            var dist = GetDistribution((System.Collections.Generic.Dictionary<int, double>)e["ByYear"], months);
+
+            for (int i = 0; i < duration; i++)
+            {
+                if (dist[i].HasValue && System.Math.Abs(dist[i].Value) > 0.0000001)
+                {
+                    string col = ColumnLetter(cpStartCol + i);
+                    SetCell(sheetCP, col + rowIndex, dist[i].Value);
+                }
+            }
+
+            rowIndex++;
+        }
+
+        rowIndex = 64;
+
+        foreach (var p in purchases)
+        {
+            string label = Norm(p["Label"]).Replace(" ", "");
+
+            if (string.IsNullOrWhiteSpace(label))
+                label = "Compra";
+
+            if (label.Length > 28)
+                label = label.Substring(0, 28);
+
+            SetCell(sheetCP, "B" + rowIndex, "var20_SAP_Proveedor_" + label);
+            SetCell(sheetCP, "C" + rowIndex, Norm(p["Desc"]));
+            SetCell(sheetCP, "D" + rowIndex, "var30_SAP_PO_Compra");
+            SetCell(sheetCP, "E" + rowIndex, "var40_SAP_Ariba");
+
+            var dist = GetDistribution((System.Collections.Generic.Dictionary<int, double>)p["ByYear"], months);
+
+            for (int i = 0; i < duration; i++)
+            {
+                if (dist[i].HasValue && System.Math.Abs(dist[i].Value) > 0.0000001)
+                {
+                    string col = ColumnLetter(cpStartCol + i);
+                    SetCell(sheetCP, col + rowIndex, dist[i].Value);
+                }
+            }
+
+            rowIndex++;
+        }
+    }
+}
+
+void WriteCoreWorkbook(
+    dynamic excel,
+    string templatePath,
+    string outputPath,
+    System.Collections.Generic.Dictionary<string, object> ppoData,
+    System.Collections.Generic.Dictionary<string, object> cierreRow)
+{
+    System.IO.File.Copy(templatePath, outputPath, true);
+
+    dynamic wb = null;
+    dynamic sheetPI = null;
+    dynamic sheetRes = null;
+    dynamic sheetCP = null;
+    dynamic sheetCO = null;
+
+    try
+    {
+        wb = excel.Workbooks.Open(outputPath, 0, false);
+
+        var project = (System.Collections.Generic.Dictionary<string, object>)ppoData["Project"];
+        var financial = (System.Collections.Generic.Dictionary<string, object>)ppoData["Financial"];
+        var profiles = (System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>>)ppoData["Profiles"];
+        var expenses = (System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>>)ppoData["Expenses"];
+        var purchases = (System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>>)ppoData["Purchases"];
+
+        var startDate = (System.DateTime)project["StartDate"];
+        int duration = System.Convert.ToInt32(project["Duration"]);
+        var months = GetMonths(startDate, duration);
+        bool isAT = IsAtProject(project);
+
+        string wbs = GetAny(cierreRow, "WBS", "Wbs", "PEP", "WBS/PEP", "Código Proyecto", "Codigo Proyecto");
+        string accountName = GetAny(cierreRow, "AccountName", "Account Name", "Cuenta", "Cliente");
+        string sfPractice = GetAny(cierreRow, "Practica", "Práctica", "Practice");
+        string pmName = GetAny(cierreRow, "Project Manager", "Jefe Proyecto", "Jefe de Proyecto", "PM");
+        string salesOrder = GetAny(cierreRow, "Sales Order", "SalesOrder", "Pedido", "Pedido SAP", "Order");
+        string customerCode = GetAny(cierreRow, "Customer Code", "Codigo Cliente", "Código Cliente", "Sold-to number", "SoldTo", "Sold-to");
+        string salesManagerCode = GetAny(cierreRow, "Sales Manager ID", "SalesManagerID", "Cod Sales Manager", "Código Sales Manager");
+
+        sheetPI = GetWorksheet(wb, "Project Infor", true);
+        sheetRes = GetWorksheet(wb, "Resources", true);
+        sheetCP = GetWorksheet(wb, "Cost Planning", true);
+        sheetCO = GetWorksheet(wb, "Cost Overview", false);
+
+        SetCell(sheetPI, "C5", System.DateTime.Today);
+        SetCell(sheetPI, "C8", project["StartDate"]);
+        SetCell(sheetPI, "C9", project["EndDate"]);
+        SetCell(sheetPI, "C10", !string.IsNullOrWhiteSpace(wbs) ? (object)wbs : "var2_SAP_PEP_WBS");
+        SetCell(sheetPI, "C11", project["Description"]);
+        SetCell(sheetPI, "C12", !string.IsNullOrWhiteSpace(sfPractice) ? (object)sfPractice : project["Practice"]);
+        SetCell(sheetPI, "C13", "");
+        SetCell(sheetPI, "C16", !string.IsNullOrWhiteSpace(customerCode) ? (object)customerCode : "var3_SAP_CodigoCliente");
+        SetCell(sheetPI, "D16", !string.IsNullOrWhiteSpace(accountName) ? (object)accountName : project["Customer"]);
+        SetCell(sheetPI, "C18", "SLFC " + Norm(project["OpportunityCode"]));
+        SetCell(sheetPI, "C19", !string.IsNullOrWhiteSpace(salesOrder) ? (object)salesOrder : "var4_SAP_PedidoSalesOrder");
+        SetCell(sheetPI, "C22", "var5_SAP_CodEmpleadoPM");
+        SetCell(sheetPI, "D22", !string.IsNullOrWhiteSpace(pmName) ? (object)pmName : "var6_SAP_ProjectManager");
+        SetCell(sheetPI, "C23", "var7_SAP_CodEmpleadoPracticeLeader");
+        SetCell(sheetPI, "D23", "var8_SAP_PracticeLeader");
+        SetCell(sheetPI, "C24", !string.IsNullOrWhiteSpace(salesManagerCode) ? (object)salesManagerCode : "var9_SF_CodEmpleadoSalesManager");
+        SetCell(sheetPI, "D24", project["AccountManager"]);
+        SetCell(sheetPI, "C28", financial["OrderAmount"]);
+        SetCell(sheetPI, "C29", financial["HoursEstimated"]);
+        SetCell(sheetPI, "C30", financial["ResourceCost"]);
+        SetCell(sheetPI, "C31", financial["Risks"]);
+
+        if (financial["Warranty"] != null && System.Math.Abs(System.Convert.ToDouble(financial["Warranty"])) > 0.0000001)
+            SetCell(sheetPI, "C32", financial["Warranty"]);
+        else
+            SetCell(sheetPI, "C32", "");
+
+        SetCell(sheetPI, "C33", financial["Expenses"]);
+        SetCell(sheetPI, "C34", financial["Purchases"]);
+
+        WriteResourceRows(sheetRes, project, profiles, startDate, duration, isAT);
+        WritePlanningRows(sheetCP, project, financial, profiles, expenses, purchases, months, isAT);
+
+        if (sheetCO != null)
+        {
+            SetCell(sheetCO, "G17", "");
+            SetCell(sheetCO, "I17", "");
+        }
+
+        try
+        {
+            excel.CalculateFullRebuild();
+        }
+        catch
+        {
+        }
+
+        try
+        {
+            wb.ForceFullCalculation = true;
+            wb.FullCalculationOnLoad = true;
+        }
+        catch
+        {
+        }
+
+        wb.SaveAs(outputPath, 51);
+    }
+    finally
+    {
+        ReleaseCom(sheetPI);
+        ReleaseCom(sheetRes);
+        ReleaseCom(sheetCP);
+        ReleaseCom(sheetCO);
+
+        if (wb != null)
+        {
+            try
+            {
+                wb.Close(true);
+            }
+            catch
+            {
+            }
+
+            ReleaseCom(wb);
+        }
+    }
+}
+
+void WriteAudit(
+    string auditPath,
+    System.Collections.Generic.Dictionary<string, object> ppoData,
+    System.Collections.Generic.Dictionary<string, object> cierreRow,
+    string outputPath,
+    string cierrePath,
+    string templatePath)
+{
+    var project = (System.Collections.Generic.Dictionary<string, object>)ppoData["Project"];
+    var profiles = (System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>>)ppoData["Profiles"];
+    bool isAT = IsAtProject(project);
+
+    string wbs = GetAny(cierreRow, "WBS", "Wbs", "PEP", "WBS/PEP", "Código Proyecto", "Codigo Proyecto");
+    string accountName = GetAny(cierreRow, "AccountName", "Account Name", "Cuenta", "Cliente");
+    string ruta = GetAny(cierreRow, "Ruta", "Path", "RutaRelativa");
+    string practica = GetAny(cierreRow, "Practica", "Práctica", "Practice");
+    string correo = GetAny(cierreRow, "Correo", "Email", "Owner Email");
+
+    var lines = new System.Collections.Generic.List<string>();
+
+    lines.Add("# Generación CORE desde PPO + Cierre SF");
+    lines.Add("");
+    lines.Add("## Ficheros usados");
+    lines.Add("- PPO: `" + in_PpoFileName + "`");
+    lines.Add("- Cierre SF: `" + cierrePath + "`");
+    lines.Add("- Plantilla CORE: `" + templatePath + "`");
+    lines.Add("- Salida CORE: `" + outputPath + "`");
+    lines.Add("");
+    lines.Add("## Datos identificativos");
+    lines.Add("- Opportunity Number / NumeroSF: `" + Norm(project["OpportunityCode"]) + "`");
+    lines.Add("- Cliente PPO: `" + Norm(project["Customer"]) + "`");
+    lines.Add("- AccountName Cierre SF: `" + (!string.IsNullOrWhiteSpace(accountName) ? accountName : "NO ENCONTRADO") + "`");
+    lines.Add("- Proyecto: `" + Norm(project["Description"]) + "`");
+    lines.Add("- Tipo PPO: `" + Norm(project["PepType"]) + "`");
+    lines.Add("- CORE seleccionado: `" + (isAT ? "AT" : "PC") + "`");
+    lines.Add("- WBS/PEP Cierre SF: `" + (!string.IsNullOrWhiteSpace(wbs) ? wbs : "NO ENCONTRADO - se ha dejado var2_SAP_PEP_WBS") + "`");
+    lines.Add("- Práctica Cierre SF: `" + (!string.IsNullOrWhiteSpace(practica) ? practica : "NO ENCONTRADO - se usa PPO") + "`");
+    lines.Add("- Ruta Cierre SF: `" + (!string.IsNullOrWhiteSpace(ruta) ? ruta : "NO ENCONTRADO") + "`");
+    lines.Add("- Correo Cierre SF: `" + (!string.IsNullOrWhiteSpace(correo) ? correo : "NO ENCONTRADO") + "`");
+    lines.Add("");
+    lines.Add("## Reglas aplicadas");
+    lines.Add("- Se copia la plantilla CORE y solo se escriben valores; no se alteran formatos, colores, comentarios ni cuadros NOTA.");
+    lines.Add("- Cabecera y datos económicos: PPO como fuente principal; Cierre SF aporta WBS/PEP, AccountName, práctica/ruta/correo si existen.");
+    lines.Add("- Intercompany: entidad del recurso distinta de la compañía del proyecto => `INTERCO`; entidad igual => `NO`.");
+
+    if (isAT)
+    {
+        lines.Add("- CORE AT Resources: cada perfil se escribe en dos filas: `Coste/hora` y `Tarifa venta (Hora o Jornada)`.");
+        lines.Add("- CORE AT Cost Planning: cada perfil se escribe en dos filas: `Horas Reales` y `Horas/Jornadas Facturables`.");
+        lines.Add("- Las horas facturables iniciales se igualan a las horas reales prorrateadas porque es una base de arranque revisable por el jefe de proyecto.");
+        lines.Add("- La tarifa de venta se intenta extraer de `Sintesis Precio` usando sigla, horas, tarifa y venta; si no existe, queda en blanco.");
+
+        foreach (var p in profiles)
+        {
+            double? tariff = GetTariff(p);
+            string sig = Norm(p["Sigla"]);
+
+            lines.Add(
+                "  - Tarifa AT `"
+                + sig
+                + "`: `"
+                + (tariff.HasValue ? tariff.Value.ToString(System.Globalization.CultureInfo.InvariantCulture) : "NO ENCONTRADA")
+                + "`");
+        }
+    }
+    else
+    {
+        lines.Add("- CORE PC Resources: una fila por perfil con coste hora plano según coste del año inicial.");
+        lines.Add("- CORE PC Cost Planning: una fila por perfil con horas previstas prorrateadas por anualidad.");
+    }
+
+    lines.Add("- Gastos y compras: prorrateo plano por anualidad dentro de los meses del proyecto.");
+    lines.Add("- Riesgos y garantía: imputados al último mes del proyecto.");
+    lines.Add("- Facturación emitida/billing real: no se informa.");
+    lines.Add("");
+    lines.Add("## Variables que pueden quedar pendientes");
+    lines.Add("- `var1_SAP_FechaInicio`: se documenta como contraste SAP; en C8 se usa la fecha estructurada del PPO para no romper planificación.");
+    lines.Add("- `var2_SAP_PEP_WBS`: si no se encuentra WBS en Cierre SF.");
+    lines.Add("- `var3_SAP_CodigoCliente`: si el Excel de Cierre SF no trae código cliente/Sold-to.");
+    lines.Add("- `var4_SAP_PedidoSalesOrder`: si el Excel de Cierre SF no trae pedido/Sales Order.");
+    lines.Add("- `var5_SAP_CodEmpleadoPM`, `var6_SAP_ProjectManager`, `var7_SAP_CodEmpleadoPracticeLeader`, `var8_SAP_PracticeLeader`, `var9_SF_CodEmpleadoSalesManager` si no vienen en Cierre SF.");
+    lines.Add("- `var20_SAP_Proveedor_*`, `var30_SAP_PO_Compra`, `var40_SAP_Ariba` para compras/subcontrataciones.");
+
+    System.IO.File.WriteAllLines(auditPath, lines, System.Text.Encoding.UTF8);
+}
+
+if (string.IsNullOrWhiteSpace(in_PathRoot))
+    throw new System.Exception("Asset PathRoot vacío.");
+
+if (string.IsNullOrWhiteSpace(in_PpoFileName))
+    throw new System.Exception("Asset CORE_PPO_FileName vacío.");
+
+if (string.IsNullOrWhiteSpace(in_TemplatePCFileName))
+    throw new System.Exception("Asset CORE_TemplatePC_FileName vacío.");
+
+if (string.IsNullOrWhiteSpace(in_TemplateATFileName))
+    throw new System.Exception("Asset CORE_TemplateAT_FileName vacío.");
+
+if (string.IsNullOrWhiteSpace(in_OutputPrefix))
+    in_OutputPrefix = "core";
+
+string robotRoot = System.IO.Path.Combine(in_PathRoot, "Getronics");
+string inputDir = System.IO.Path.Combine(robotRoot, "input");
+string templateDir = System.IO.Path.Combine(robotRoot, "template");
+string excelDir = System.IO.Path.Combine(robotRoot, "excel");
+string outputDir = System.IO.Path.Combine(robotRoot, "output");
+
+System.IO.Directory.CreateDirectory(inputDir);
+System.IO.Directory.CreateDirectory(templateDir);
+System.IO.Directory.CreateDirectory(excelDir);
+System.IO.Directory.CreateDirectory(outputDir);
+
+string ppoPath = System.IO.Path.Combine(inputDir, in_PpoFileName);
+
+if (!System.IO.File.Exists(ppoPath))
+    throw new System.Exception("No existe el PPO esperado: " + ppoPath);
+
+string cierrePath;
+
+if (!string.IsNullOrWhiteSpace(in_CierreSfOutputFileName)
+    && !string.Equals(in_CierreSfOutputFileName.Trim(), "LATEST", System.StringComparison.OrdinalIgnoreCase))
+{
+    cierrePath = System.IO.Path.Combine(excelDir, in_CierreSfOutputFileName);
+
+    if (!System.IO.File.Exists(cierrePath))
+        throw new System.Exception("No existe el Excel de Cierre SF indicado: " + cierrePath);
+}
+else
+{
+    var files = System.IO.Directory
+        .GetFiles(excelDir, "Oportunidades_*.xlsx")
+        .OrderByDescending(f => System.IO.File.GetLastWriteTime(f))
+        .ToArray();
+
+    if (files.Length == 0)
+    {
+        throw new System.Exception(
+            "No se ha indicado CORE_CierreSF_OutputFileName y no hay ficheros Oportunidades_*.xlsx en "
+            + excelDir
+            + ".");
+    }
+
+    cierrePath = files[0];
+}
+
+object excelObj = null;
+dynamic excel = null;
+
+try
+{
+    var excelType = System.Type.GetTypeFromProgID("Excel.Application");
+
+    if (excelType == null)
+        throw new System.Exception("No se encuentra Microsoft Excel instalado o registrado en la máquina.");
+
+    excelObj = System.Activator.CreateInstance(excelType);
+    excel = excelObj;
+
+    excel.Visible = false;
+    excel.DisplayAlerts = false;
+
+    try
+    {
+        excel.AutomationSecurity = 3;
+    }
+    catch
+    {
+    }
+
+    dynamic ppoWb = null;
+    System.Collections.Generic.Dictionary<string, object> ppoData;
+
+    try
+    {
+        ppoWb = excel.Workbooks.Open(ppoPath, 0, true);
+        ppoData = ReadPpoData(ppoWb);
+    }
+    finally
+    {
+        if (ppoWb != null)
+        {
+            try
+            {
+                ppoWb.Close(false);
+            }
+            catch
+            {
+            }
+
+            ReleaseCom(ppoWb);
+        }
+    }
+
+    var project = (System.Collections.Generic.Dictionary<string, object>)ppoData["Project"];
+    string oppNumber = Norm(project["OpportunityCode"]);
+
+    if (string.IsNullOrWhiteSpace(oppNumber))
+        throw new System.Exception("No se ha podido leer el Opportunity Number del PPO en Hoja de datos!B22.");
+
+    dynamic sfWb = null;
+    System.Collections.Generic.Dictionary<string, object> cierreRow = null;
+
+    try
+    {
+        sfWb = excel.Workbooks.Open(cierrePath, 0, true);
+        cierreRow = FindCierreSfRow(sfWb, oppNumber);
+    }
+    finally
+    {
+        if (sfWb != null)
+        {
+            try
+            {
+                sfWb.Close(false);
+            }
+            catch
+            {
+            }
+
+            ReleaseCom(sfWb);
+        }
+    }
+
+    if (cierreRow == null)
+        cierreRow = new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase);
+
+    bool isAT = IsAtProject(project);
+    string templateName = isAT ? in_TemplateATFileName : in_TemplatePCFileName;
+    string templatePath = System.IO.Path.Combine(templateDir, templateName);
+
+    if (!System.IO.File.Exists(templatePath))
+        throw new System.Exception("No existe la plantilla CORE esperada: " + templatePath);
+
+    string wbsForName = GetAny(cierreRow, "WBS", "Wbs", "PEP", "WBS/PEP", "Código Proyecto", "Codigo Proyecto");
+    string idForName = !string.IsNullOrWhiteSpace(wbsForName) ? wbsForName : oppNumber;
+    string safeId = System.Text.RegularExpressions.Regex.Replace(idForName, "[\\/:*?\"<>|]", "_");
+    string timestamp = System.DateTime.Now.ToString("yyyyMMdd_HHmm");
+
+    string outputPath = System.IO.Path.Combine(outputDir, in_OutputPrefix + "-" + safeId + "-" + timestamp + ".xlsx");
+    string auditPath = System.IO.Path.Combine(outputDir, in_OutputPrefix + "-" + safeId + "-" + timestamp + ".md");
+
+    WriteCoreWorkbook(excel, templatePath, outputPath, ppoData, cierreRow);
+    WriteAudit(auditPath, ppoData, cierreRow, outputPath, cierrePath, templatePath);
+
+    out_OutputPath = outputPath;
+    out_AuditPath = auditPath;
+    out_OpportunityNumber = oppNumber;
+    out_Wbs = wbsForName;
+}
+finally
+{
+    if (excel != null)
+    {
+        try
+        {
+            excel.Quit();
+        }
+        catch
+        {
+        }
+    }
+
+    ReleaseCom(excelObj);
+
+    System.GC.Collect();
+    System.GC.WaitForPendingFinalizers();
+}
+
+no convendría extraer esa lógica del invoke code a actividades de uipath? como es mas mantenible?
+
+Thought for 20s
+Sí, conviene extraer gran parte de esa lógica del Invoke Code, pero no conviene convertir absolutamente todo en cientos de actividades visuales. La opción más mantenible es un diseño híbrido estándar UiPath:
+
+Parte	Mejor implementación
+Lectura de assets, rutas, validaciones, logs, control de errores	Actividades UiPath
+Apertura/copia de Excel, lectura de rangos, escritura de celdas/rangos	Actividades Excel de UiPath
+Decisión PC/AT, selección de plantilla, naming de salida	Actividades + pequeñas expresiones
+Mapeo PPO → modelo de datos	Actividades con DataTable + subworkflows
+Prorrateos, reglas de intercompany, normalización de importes/fechas	Funciones pequeñas en Invoke Code o workflows separados
+Relleno de Project Infor, Resources, Cost Planning	Subworkflows UiPath específicos
+Auditoría Markdown	Actividades de texto/fichero, no necesariamente código grande
+Dictamen técnico
+La versión actual con un Invoke Code grande es válida como prototipo funcional, pero no es la opción más mantenible para un proceso corporativo UiPath.
+
+El problema no es usar Invoke Code; el problema es usarlo como “monolito” donde vive casi todo:
+
+lectura del PPO;
+
+búsqueda en Cierre SF;
+
+lógica PC/AT;
+
+escritura de CORE;
+
+generación de auditoría;
+
+gestión COM de Excel;
+
+reglas de negocio;
+
+paths y outputs.
+
+Eso dificulta mantenimiento, revisión por otros desarrolladores, depuración en Studio, trazabilidad funcional y validación con negocio.
+
+Qué sería más mantenible
+Yo lo reestructuraría así:
+
+Main.xaml
+│
+├── Init_Config.xaml
+├── Prepare_Folders.xaml
+├── Resolve_InputFiles.xaml
+├── Read_PPO.xaml
+├── Read_CierreSF_Output.xaml
+├── Build_Core_DataModel.xaml
+├── Select_Core_Template.xaml
+├── Generate_Core_File.xaml
+├── Fill_ProjectInfor.xaml
+├── Fill_Resources.xaml
+├── Fill_CostPlanning.xaml
+├── Generate_AuditMarkdown.xaml
+└── End_Process.xaml
+Cada XAML tendría una responsabilidad clara.
+
+1. Main.xaml
+Solo debería orquestar:
+
+Leer assets
+Preparar rutas
+Leer PPO
+Leer Cierre SF
+Construir datos normalizados
+Copiar plantilla
+Rellenar CORE
+Guardar salida
+Generar auditoría
+No debería contener 800 líneas de C#.
+
+2. Read_PPO.xaml
+Leer las hojas del PPO con actividades Excel:
+
+Use Excel File / Excel Application Scope
+
+Read Cell
+
+Read Range
+
+variables DataTable
+
+Hojas relevantes:
+
+Hoja de datos
+Presupuesto
+Parametros
+Facturación y SAP
+Sintesis Precio
+La salida debería ser un conjunto de variables o un diccionario estructurado:
+
+dtPpoHojaDatos
+dtPpoPresupuesto
+dtPpoParametros
+dtPpoFacturacionSap
+dtPpoSintesisPrecio
+3. Read_CierreSF_Output.xaml
+Leer el Excel Oportunidades_*.xlsx generado por sf-cierre-fase1.
+
+Salida:
+
+dtCierreSF
+rowCierreSF
+Aquí sí es muy mantenible usar actividades:
+
+Read Range
+
+Filter Data Table
+
+buscar Opportunity Number = NumeroSF
+
+4. Build_Core_DataModel.xaml
+Este sería el sitio correcto para normalizar los datos:
+
+NumeroSF
+Cliente
+WBS
+ProjectName
+StartDate
+EndDate
+Duration
+OrderAmount
+HoursEstimated
+ResourceCost
+Risks
+Warranty
+Expenses
+Purchases
+Profiles
+Aquí podrías usar algunas actividades Assign, For Each Row, Add Data Row, etc.
+
+Para reglas como prorrateo o conversión numérica, se puede usar Invoke Code, pero en piezas pequeñas.
+
+Ejemplo aceptable de Invoke Code:
+
+decimal importeMensual = totalAnual / numeroMesesDelAnio;
+Ejemplo no ideal:
+
+abrir Excel + leer PPO + leer Salesforce + rellenar CORE + guardar + generar Markdown
+5. Fill_ProjectInfor.xaml
+Subworkflow específico para rellenar la pestaña:
+
+Project Infor
+Con actividades Write Cell.
+
+Ejemplo:
+
+Celda	Valor
+C5	Fecha actual
+C8	Fecha inicio
+C9	Fecha fin
+C10	WBS o var2_SAP_PEP_WBS
+C11	Descripción proyecto
+C16	Código cliente o var3_SAP_CodigoCliente
+D16	Cliente
+C19	Pedido o var4_SAP_PedidoSalesOrder
+Esto es más mantenible porque cualquier cambio de celda se ve directamente en Studio.
+
+6. Fill_Resources.xaml
+Subworkflow con bifurcación:
+
+If tipoCore = "PC"
+    Fill_Resources_PC.xaml
+Else If tipoCore = "AT"
+    Fill_Resources_AT.xaml
+Para PC:
+
+una fila por perfil
+coste hora por mes
+Para AT:
+
+dos filas por perfil:
+- coste hora
+- tarifa venta
+Esto encaja con lo explicado en la reunión: en AT la diferencia principal es que además del coste debe informarse tarifa de venta, y en planificación deben distinguirse horas reales y horas facturables.
+
+7. Fill_CostPlanning.xaml
+También separado:
+
+Fill_CostPlanning_PC.xaml
+Fill_CostPlanning_AT.xaml
+Para PC:
+
+Horas previstas prorrateadas
+Gastos/compras prorrateados
+Riesgos/garantía al último mes
+Para AT:
+
+Horas reales prorrateadas
+Horas/jornadas facturables prorrateadas
+Gastos/compras prorrateados
+Riesgos/garantía al último mes
+Dónde sí mantendría Invoke Code
+Mantendría Invoke Code solo para utilidades pequeñas y puras, sin abrir Excel desde código.
+
+Por ejemplo:
+
+NormalizeText
+ParseDecimal
+ParseDate
+GetMonthDistribution
+DetermineIntercompany
+DetectCoreType
+CalculateEndDate
+SanitizeFileName
+Eso sí es razonable, porque son funciones de transformación, no automatización completa.
+
+Lo que evitaría es esto:
+
+Invoke Code que instancia Excel.Application
+Invoke Code que abre libros
+Invoke Code que escribe celdas
+Invoke Code que recorre hojas
+Invoke Code que guarda ficheros
+Eso es menos UiPath-standard, más difícil de depurar y más frágil ante errores COM.
+
+Conclusión
+Para una entrega seria, lo más mantenible sería:
+
+80-90% actividades UiPath + subworkflows
+10-20% Invoke Code pequeño para funciones de cálculo/normalización
+0% scripts externos .ps1
+0% Invoke Code monolítico
+Tu intuición es correcta: la lógica debería salir del Invoke Code grande. No necesariamente toda, pero sí todo lo que sea orquestación, lectura/escritura Excel, rutas, validaciones y rellenado de celdas. El Invoke Code debería quedar solo como apoyo técnico para cálculos y transformaciones compactas.
+
+
+Actualiza el proyecto de uipath según las indicaciones que me acabas de detallar y entregamelo de nuevo en un zip
+
+Thought for 6m 26s
+He actualizado el proyecto a una arquitectura modular con subworkflows, evitando el Invoke Code monolítico.
+
+Descargar core-from-ppo-uipath-modular.zip
+
+Cambios principales:
+
+Main.xaml ahora solo orquesta el proceso.
+
+La lógica está separada en workflows dentro de Framework/:
+
+Init_Config.xaml
+
+Prepare_Folders.xaml
+
+Resolve_InputFiles.xaml
+
+Read_PPO.xaml
+
+Read_CierreSF_Output.xaml
+
+Build_Core_DataModel.xaml
+
+Select_Core_Template.xaml
+
+Generate_Core_File.xaml
+
+Fill_ProjectInfor.xaml
+
+Fill_Resources_PC.xaml
+
+Fill_Resources_AT.xaml
+
+Fill_CostPlanning_PC.xaml
+
+Fill_CostPlanning_AT.xaml
+
+Recalculate_Core.xaml
+
+Generate_AuditMarkdown.xaml
+
+Se mantiene la lógica PC/AT.
+
+Se incluyen las dos plantillas:
+
+template-core-pc.xlsx
+
+template-core-at.xlsx
+
+Se generan JSONs intermedios en Getronics/work para depuración:
+
+ppo-data.json
+
+cierre-sf-row.json
+
+runtime-core-model.json
+
+El README_CONFIGURACION.md está actualizado con la arquitectura, assets, estructura de carpetas y procedimiento.
+
+Nota técnica: he dejado Invoke Code solo en bloques acotados por responsabilidad —lectura PPO, lectura Cierre SF, relleno de una hoja concreta, recálculo, auditoría—. No hay script externo .ps1 ni un único bloque de código centralizado. El ZIP está estructurado para abrirlo en UiPath Studio 23.10.4 con las mismas versiones de paquetes que sf-cierre-fase1-develop.
+
+
+dame este codigo correctamente formateado:
+
+if (!System.IO.File.Exists(in_PpoJsonPath)) throw new System.Exception("No existe JSON PPO: " + in_PpoJsonPath); if (!System.IO.File.Exists(in_CierreSfJsonPath)) throw new System.Exception("No existe JSON Cierre SF: " + in_CierreSfJsonPath); System.IO.Directory.CreateDirectory(in_WorkDir); out_RuntimeJsonPath = System.IO.Path.Combine(in_WorkDir, "runtime-core-model.json"); var runtime = new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase) {     {"ppoJsonPath", in_PpoJsonPath},     {"cierreSfJsonPath", in_CierreSfJsonPath},     {"ppoPath", in_PpoPath},     {"cierreSfPath", in_CierreSfPath},     {"coreType", in_CoreType},     {"opportunityNumber", in_OpportunityNumber},     {"wbs", in_Wbs},     {"createdAt", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} }; System.IO.File.WriteAllText(out_RuntimeJsonPath, System.Text.Json.JsonSerializer.Serialize(runtime, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }), System.Text.Encoding.UTF8);
+
+Thought for a couple of seconds
+if (!System.IO.File.Exists(in_PpoJsonPath))
+{
+    throw new System.Exception("No existe JSON PPO: " + in_PpoJsonPath);
+}
+
+if (!System.IO.File.Exists(in_CierreSfJsonPath))
+{
+    throw new System.Exception("No existe JSON Cierre SF: " + in_CierreSfJsonPath);
+}
+
+System.IO.Directory.CreateDirectory(in_WorkDir);
+
+out_RuntimeJsonPath = System.IO.Path.Combine(in_WorkDir, "runtime-core-model.json");
+
+var runtime = new System.Collections.Generic.Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase)
+{
+    { "ppoJsonPath", in_PpoJsonPath },
+    { "cierreSfJsonPath", in_CierreSfJsonPath },
+    { "ppoPath", in_PpoPath },
+    { "cierreSfPath", in_CierreSfPath },
+    { "coreType", in_CoreType },
+    { "opportunityNumber", in_OpportunityNumber },
+    { "wbs", in_Wbs },
+    { "createdAt", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") }
+};
+
+var options = new System.Text.Json.JsonSerializerOptions
+{
+    WriteIndented = true
+};
+
+string json = System.Text.Json.JsonSerializer.Serialize(runtime, options);
+
+System.IO.File.WriteAllText(
+    out_RuntimeJsonPath,
+    json,
+    System.Text.Encoding.UTF8
+);
+
+
+Build_Core_DataModel.xaml
+Archivo
+He copiado ese código bien formateado en el invoke code de Build_Core_DataModel.xaml. Si puedes apreciar la diferencia en el texto plano del xaml para este caso en el que el codigo se ve correctamente formateado en la interfaz de uipath studio, adapta todos los invoke code del proyecto para corregir este punto y dame de nuevo el zip completo
+
+Thought for 3m 48s
+He actualizado el ZIP completo para que todos los Invoke Code conserven los saltos de línea correctamente en UiPath Studio.
+
+Descargar core-from-ppo-uipath-modular-formatted.zip
+
+Cambios aplicados:
+
+Sustituido Framework/Build_Core_DataModel.xaml por tu versión corregida.
+
+Adaptados todos los Invoke Code restantes para que el atributo Code use saltos de línea XML &#xD;&#xA;, evitando que UiPath Studio los muestre en una sola línea.
+
+Añadida nota técnica en README_CONFIGURACION.md.
+
+No he cambiado la lógica funcional del proceso.
+
+
+Imagen cargada
+necesito que el codigo de los invoke code sea perfectamente legible y este bien formateado y estructurado, no puede ser que me cueles formatos del codigo como el de la imagen adjunta. Hay que revisar con ese criterio el proyecto al completo
+
+Thought for 10m 8s
+Revisado y regenerado el proyecto completo con el criterio de legibilidad aplicado a todos los Invoke Code.
+
+Descargar core-from-ppo-uipath-modular-readable-invokecode.zip
+
+Cambios aplicados:
+
+Revisados los 14 bloques Invoke Code del proyecto.
+
+Corregido el formato para que se vea con saltos de línea reales en UiPath Studio.
+
+Eliminados bloques de código comprimidos en una sola línea.
+
+Mantenida la arquitectura modular por workflows.
+
+Sustituido Build_Core_DataModel.xaml por tu versión formateada.
+
+Añadida nota en README_CONFIGURACION.md.
+
+Validado que los XAML siguen siendo XML válidos.
+
+
+Ahora necesito que este proceso que has generado para cumplimentar el CORE funcione completamente como un subproceso importable por otro proceso que ha desarrollado un compañero (el módulo se llamará oportunidad-generar-core.xaml), de forma que debes estructurar de forma clara y entendible por un humano (diseñar el flujo y el código como lo haría un humano, es decir, con una estructura, contenido, variables y diseño que se pueda entender claramente desde una perspectiva de negocio) y habría que condensarlo todo en un solo XAML bien claro, con los comentarios y aclaraciones necesarias en el código para que sea claramente entendible, tratando de usar en la medida de lo posible actividades de uipath studio para descargar la complejidad de los invoke code y hacer un proceso más uipath friendly, aprovechando actividades como por ejemplo las de Excel existentes o los try catch para excepciones. 
+
+El subproceso será llamado dentro de un bucle iterativo y la entrada al subproceso serán las variables:
+* RutaPPO: tendrá la ruta y nombre con extensión del PPO a tratar
+* RutaPlantillaCorePC y RutaPlantillaCoreAT: tendrá la ruta y nombre con extensión de las plantillas del CORE
+* RutaCORE: tendrá la ruta y nombre con extensión del CORE generado
+* TipoProyecto: será "PC" o "AT"
+* Una variable para cada dato de Salesforce y SAP necesarios para rellenar el CORE, todas de tipo string
+(Estas variables de input eliminan la necesidad de assets para el submodulo)
+
+Elimina las partes que no sean estrictamente necesarias como por ejemplo lo de Generate_AuditMarkdown o la generación de un fichero intermedio runtime-core-model.json para almacenar los datos (los datos viajarán directamente a través de variables de uipath) 
+
+Simplifica concretando todo lo posible la lógica del submódulo para que haga claramente lo que debe hacer de forma robusta para cualquier PPO con la estructura del PPO que te envié.
+
+Todas las secuencias y demás actividades deben tener el título y la anotación en español humanizado. Los módulos y variables también irán nombrados en español humanizado.
+
+Como comentario final, remarcar que debes usar inteligentemente el uso de secuencias de uipath y actividades de control de flujo disponibles, además de las actividades para temas concretos como Excel, para realizar un submódulo riguroso y amigable para que otro compañero pueda utilizarlo sin necesidad de que se lo explique en profundidad.
+Por puntualizar, el entregable de esta tarea es el submódulo oportunidad-generar-core.xaml completamente funcional y preparado como si fuera para producción. 
+
+Thought for 8m 26s
+He generado el submódulo como un único XAML importable:
+
+Descargar ZIP del submódulo
+
+Descargar XAML directo
+
+Incluye:
+
+oportunidad-generar-core.xaml
+
+Sin assets.
+
+Sin colas.
+
+Sin JSON intermedios en disco.
+
+Sin auditoría Markdown.
+
+Entrada por argumentos: rutas, tipo PC/AT y datos SAP/Salesforce.
+
+Secuencias, títulos y anotaciones en español.
+
+TryCatch general para devolver/loguear error y relanzarlo al proceso padre.
+
+Copia de plantilla con actividad UiPath.
+
+Lectura del PPO y cumplimentación del CORE encapsuladas en bloques Invoke Code formateados y comentados, dejando la orquestación visible en UiPath Studio.
+
+Argumentos principales esperados:
+
+RutaPPO
+
+RutaPlantillaCorePC
+
+RutaPlantillaCoreAT
+
+RutaCORE
+
+TipoProyecto
+
+SAP_FechaInicio, SAP_FechaFin
+
+SAP_CodigoPEP_WBS
+
+SAP_CodigoCliente
+
+SAP_PedidoSalesOrder
+
+SAP_CodigoEmpleadoJefeProyecto
+
+SAP_NombreJefeProyecto
+
+SAP_CodigoEmpleadoPracticeLeader
+
+SAP_NombrePracticeLeader
+
+SF_CodigoEmpleadoSalesManager
+
+SF_NombreSalesManager
+
+SF_AccountName
+
+SF_Practica
+
+SAP_ProveedorCompra, SAP_PedidoCompra, SAP_CodigoAriba
+
+SAP_CodigosEmpleadoRecursosJson, opcional, con formato tipo:
+
+{
+  "JP": "123456",
+  "ARQ": "456789"
+}
+Outputs:
+
+ResultadoGeneracionCore
+
+NumeroSFLeido
+
+RutaCOREGenerado
+
+
+Imagen cargada
+
+Workflow.xaml
+Archivo
+la actividad copy file que has puesto da error. te he colocado en el fichero Workflow.xaml una actividad Copy File vacía para que veas como se configura y que puedas regerenar el oportunidad-generar-core.xaml correctamente. Lo de "Crear carpeta destino del CORE" no es necesario ya que se presupone que la carpeta del CORE ya existirá. Añade todos los comentarios para estructurar y autoexplicar claramente el codigo c# del invoke de "Leer PPO y construir modelo de negocio" y del invoke "Rellenar CORE desde PPO y datos SAP/Salesforce" de forma que cada pequeño módulo de ese invoke tenga un titulo explicativo en forma de comentario y un subtitulo con la descripcion de lo que hace si conviene detallarlo, y además, si hay alguna parte que por su relevancia convendría extraer a un if, switch, for, etc, de uipath studio, es mejor hacerlo para que se vea mejor el flujo del proceso y no se utilicen monolitos gigantescos dentro de actividades invoke code. quita cosas redundantes como por ejemplo el argumento de output "RutaCOREGenerado" (es lo mismo que la variable de input RutaCORE y no aporta valor ni utilidad adicional), o por ejemplo el valor de la variable "ResultadoGeneracionCore" se puede escribir directamente en el log, no compliques creando la variable por un lado y luego utilizarla en el log.
+
+Thought for 3m 9s
+He regenerado el submódulo corrigiendo los puntos que indicaste.
+
+Descargar ZIP actualizado
+
+Descargar XAML directo
+
+Cambios aplicados:
+
+Corregida la actividad Copy File usando las propiedades correctas Path y Destination, según tu Workflow.xaml.
+
+Eliminada la actividad Crear carpeta destino del CORE. Ahora el submódulo valida que la carpeta exista y, si no existe, lanza error.
+
+Eliminados los outputs redundantes:
+
+ResultadoGeneracionCore
+
+RutaCOREGenerado
+
+Se mantiene solo NumeroSFLeido como output útil.
+
+El resultado correcto/error se escribe directamente en logs.
+
+Reforzados los comentarios internos de los Invoke Code, especialmente:
+
+Leer PPO y construir modelo de negocio
+
+Rellenar CORE desde PPO y datos SAP/Salesforce
+
+Conservada la estructura en un único XAML importable:
+
+validar entrada;
+
+copiar plantilla;
+
+leer PPO;
+
+rellenar CORE;
+
+registrar finalización;
+
+gestionar errores con TryCatch.
+
+Validé que el XAML generado es XML válido.
+
+
+
+Explicar

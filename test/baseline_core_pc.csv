@@ -1,0 +1,59 @@
+Area,Hoja,Celda,Tipo,Esperado,Tolerancia,Origen,Notas
+Project Infor,Project Infor,C5,Today,today,,Modulo,Fecha de generacion dinamica
+Project Infor,Project Infor,C8,Date,2025-11-01,,PPO Facturacion y SAP!C4,El wrapper deja in_SAP_FechaInicio vacio para validar fallback PPO
+Project Infor,Project Infor,C9,Date,2026-10-31,,PPO Facturacion y SAP!E4,El wrapper deja in_SAP_FechaFin vacio para validar fallback PPO
+Project Infor,Project Infor,C10,Text,ZEV-PCE0012-1001,,Wrapper,in_SAP_CodigoPEP_WBS de prueba
+Project Infor,Project Infor,C11,Text,Smart Airport en la nueva terminal de Puerto Vallarta,,PPO Hoja de datos!B25,
+Project Infor,Project Infor,C12,Text,Software Development,,Wrapper,in_SF_Practica de prueba
+Project Infor,Project Infor,C13,Blank,,,Modulo,Debe quedar vacio
+Project Infor,Project Infor,C16,Text,CUST-GAP-TEST,,Wrapper,in_SAP_CodigoCliente de prueba
+Project Infor,Project Infor,D16,Text,GAP,,Wrapper,in_SF_AccountName de prueba
+Project Infor,Project Infor,C18,Text,SLFC 20250256445,,PPO Hoja de datos!B22,
+Project Infor,Project Infor,C19,Text,SO-TEST-20250256445,,Wrapper,in_SAP_PedidoSalesOrder de prueba
+Project Infor,Project Infor,C22,Text,E90001,,Wrapper,in_SAP_CodigoEmpleadoJefeProyecto de prueba
+Project Infor,Project Infor,D22,Text,PM Test,,Wrapper,in_SAP_NombreJefeProyecto de prueba
+Project Infor,Project Infor,C23,Text,E90002,,Wrapper,in_SAP_CodigoEmpleadoPracticeLeader de prueba
+Project Infor,Project Infor,D23,Text,Practice Leader Test,,Wrapper,in_SAP_NombrePracticeLeader de prueba
+Project Infor,Project Infor,C24,Text,E90003,,Wrapper,in_SF_CodigoEmpleadoSalesManager de prueba
+Project Infor,Project Infor,D24,Text,Joan Marcer,,Wrapper,in_SF_NombreSalesManager de prueba
+Project Infor,Project Infor,C28,Number,583896.55,0.01,PPO Presupuesto!X8,
+Project Infor,Project Infor,C29,Number,13570,0.01,PPO Presupuesto!K5,
+Project Infor,Project Infor,C30,Number,367515.14084,0.01,PPO Presupuesto!K4,
+Project Infor,Project Infor,C31,Number,18375.757042,0.01,PPO Presupuesto!K49,
+Project Infor,Project Infor,C32,Number,0,0.01,PPO Presupuesto!K53,
+Project Infor,Project Infor,C33,Number,7400,0.01,PPO Presupuesto!K28,
+Project Infor,Project Infor,C34,Number,40000,0.01,PPO Presupuesto!K34,
+Cost Overview,Cost Overview,G17,Blank,,,Modulo,Billing real inicial debe quedar vacio
+Cost Overview,Cost Overview,I17,Blank,,,Modulo,Billing real inicial debe quedar vacio
+Resources,Resources,B7,Text,E91010,,Wrapper,Codigo recurso JP desde JSON de prueba
+Resources,Resources,C7,Text,JP,,PPO Presupuesto!D6,
+Resources,Resources,D7,Text,NO,,Matriz intercompany S08,ZEV/ICT frente a recurso ICT mantiene literal oficial NO
+Resources,Resources,E7,Text,Jefe Proyecto,,PPO Parametros!B19,
+Resources,Resources,F7,Number,40,0.01,PPO Parametros!E19,Coste/hora del anio de inicio
+Resources,Resources,B8,Text,E91011,,Wrapper,Codigo recurso CSS desde JSON de prueba
+Resources,Resources,C8,Text,CSS,,PPO Presupuesto!D7,
+Resources,Resources,D8,Text,INTERCO,,Matriz intercompany S08,ZEV/ICT frente a recurso Global Rosetta mantiene literal oficial INTERCO
+Resources,Resources,E8,Text,Consultor Smart Spaces,,PPO Parametros!B20,
+Resources,Resources,F8,Number,26,0.01,PPO Parametros!E20,Coste/hora del anio de inicio
+Resources,Resources,B13,Text,E91016,,Wrapper,Codigo recurso DG desde JSON de prueba
+Resources,Resources,C13,Text,DG,,PPO Presupuesto!D12,
+Resources,Resources,D13,Text,INTERCO,,Matriz intercompany S08,ZEV/ICT frente a recurso Global Rosetta mantiene literal oficial INTERCO
+Resources,Resources,E13,Text,Diseñador gráfico,,PPO Parametros!B25,
+Resources,Resources,F13,Number,25,0.01,PPO Parametros!E25,Coste/hora del anio de inicio
+Cost Planning,Cost Planning,G10,Number,10,0.01,PPO Presupuesto!E6,JP 2025 / 2 meses
+Cost Planning,Cost Planning,H10,Number,10,0.01,PPO Presupuesto!E6,JP 2025 / 2 meses
+Cost Planning,Cost Planning,I10,Number,46,0.01,PPO Presupuesto!F6,JP 2026 / 10 meses
+Cost Planning,Cost Planning,G11,Number,150,0.01,PPO Presupuesto!E7,CSS 2025 / 2 meses
+Cost Planning,Cost Planning,I11,Number,144,0.01,PPO Presupuesto!F7,CSS 2026 / 10 meses
+Cost Planning,Cost Planning,G16,Blank,,,PPO Presupuesto!E12,DG no tiene horas 2025
+Cost Planning,Cost Planning,I16,Number,16,0.01,PPO Presupuesto!F12,DG 2026 / 10 meses
+Cost Planning,Cost Planning,B53,Text,Travelling Expenses,,Regla actual XAML,Agencia de Viajes clasifica como travelling
+Cost Planning,Cost Planning,C53,Text,Agencia de Viajes,,PPO Presupuesto!B29,
+Cost Planning,Cost Planning,I53,Number,650,0.01,PPO Presupuesto!F29,Gasto 2026 / 10 meses
+Cost Planning,Cost Planning,B64,Text,Proveedor Test,,Wrapper,in_SAP_ProveedorCompra de prueba
+Cost Planning,Cost Planning,C64,Text,Trabajos on site,,PPO Presupuesto!L37,
+Cost Planning,Cost Planning,D64,Text,PO-TEST-001,,Wrapper,in_SAP_PedidoCompra de prueba
+Cost Planning,Cost Planning,E64,Text,ARIBA-TEST-001,,Wrapper,in_SAP_CodigoAriba de prueba
+Cost Planning,Cost Planning,G64,Number,20000,0.01,PPO Presupuesto!E37,Compra 2025 / 2 meses
+Cost Planning,Cost Planning,R47,Number,18375.757042,0.01,PPO Presupuesto!K49,Riesgo imputado al ultimo mes
+Cost Planning,Cost Planning,R48,Number,0,0.01,PPO Presupuesto!K53,Garantia imputada al ultimo mes

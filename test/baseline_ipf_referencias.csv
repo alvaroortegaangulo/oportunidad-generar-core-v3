@@ -1,0 +1,43 @@
+Libro,Hoja,Celda,Tipo,Esperado,Tolerancia,Comentario
+PlantillaBase,Invoice Request,C3,Text,Invoice,,Request Type de plantilla oficial
+PlantillaBase,Invoice Request,C6,Blank,,,Bill Type viene vacio en la plantilla oficial
+PlantillaBase,Invoice Request,C8,Text,Connectis ICT Services SAU,,Company Issuer de referencia
+PlantillaBase,Invoice Request,C11,Text,SERVICIOS A LA INFRAESTRUCTURA,,Customer de ejemplo incluido en la plantilla
+PlantillaBase,Invoice Request,F11,Text,461530,,Sold-to de ejemplo incluido en la plantilla
+PlantillaBase,Invoice Request,C16,NotBlank,,,Requested by viene precargado en la plantilla
+PlantillaBase,Invoice Request,F16,Text,USD $,,Currency de ejemplo incluido en la plantilla
+PlantillaBase,Invoice Request,C18,NotBlank,,,La plantilla base contiene direccion de ejemplo que el modulo debe limpiar
+PlantillaBase,Invoice Request,C24,NotBlank,,,La plantilla base contiene direccion de ejemplo que el modulo debe limpiar
+PlantillaBase,Invoice Request,C26,NotBlank,,,La plantilla base contiene Summary Text de ejemplo
+PlantillaBase,Invoice Request,C30,NotBlank,,,La plantilla base contiene linea PO de ejemplo
+PlantillaBase,Invoice Request,C32,NotBlank,,,La plantilla base contiene Text Narrative de ejemplo
+PlantillaBase,Invoice Request,F32,Number,22320.40,0.01,Importe de ejemplo incluido en la plantilla
+PlantillaBase,Invoice Request,F41,Formula,=SUM(F29:F36),,Formula de neto preservada
+PlantillaBase,Invoice Request,F42,Formula,"=IF(D40=""Yes"",(+F41*D41),0)",,Formula de VAT preservada
+PlantillaBase,Invoice Request,F43,Formula,=SUM(F41:F42),,Formula de gross preservada
+PlantillaBase,Invoice Request,D46,Text,714603126,,Sales Order de ejemplo incluido en la plantilla
+PlantillaBase,Invoice Request,D47,Text,ZEV-PCE0012-1001,,WBS de ejemplo incluido en la plantilla
+PlantillaBase,Invoice Request,F47,NotBlank,,,Comentarios de ejemplo que el modulo debe limpiar
+PlantillaBase,Invoice Request,D52,Formula,=F41,,Formula de WBS breakdown preservada
+PlantillaBase,Invoice Request,C61,Text,Iberiabilling @getronics.com,,Mailbox de plantilla
+EjemploGAP,Invoice Request,C3,Text,Invoice,,Request Type del ejemplo GAP
+EjemploGAP,Invoice Request,C6,Blank,,,Bill Type viene vacio tambien en el ejemplo GAP
+EjemploGAP,Invoice Request,C8,Text,Connectis ICT Services SAU,,Company Issuer del ejemplo GAP
+EjemploGAP,Invoice Request,C11,Text,SERVICIOS A LA INFRAESTRUCTURA,,Customer del ejemplo GAP
+EjemploGAP,Invoice Request,F11,Text,461530,,Sold-to del ejemplo GAP
+EjemploGAP,Invoice Request,C16,NotBlank,,,Requested by del ejemplo GAP
+EjemploGAP,Invoice Request,F16,Text,USD $,,Currency del ejemplo GAP
+EjemploGAP,Invoice Request,C18,NotBlank,,,El ejemplo GAP conserva direccion de facturacion de ejemplo
+EjemploGAP,Invoice Request,C24,NotBlank,,,El ejemplo GAP conserva direccion de facturacion de ejemplo
+EjemploGAP,Invoice Request,C26,NotBlank,,,Summary Text del ejemplo GAP
+EjemploGAP,Invoice Request,C30,NotBlank,,,Linea PO del ejemplo GAP
+EjemploGAP,Invoice Request,C32,NotBlank,,,Text Narrative del ejemplo GAP
+EjemploGAP,Invoice Request,F32,Number,22320.40,0.01,Importe del ejemplo GAP
+EjemploGAP,Invoice Request,F41,Formula,=SUM(F29:F36),,Formula de neto preservada
+EjemploGAP,Invoice Request,F42,Formula,"=IF(D40=""Yes"",(+F41*D41),0)",,Formula de VAT preservada
+EjemploGAP,Invoice Request,F43,Formula,=SUM(F41:F42),,Formula de gross preservada
+EjemploGAP,Invoice Request,D46,Text,714603126,,Sales Order del ejemplo GAP
+EjemploGAP,Invoice Request,D47,Text,ZEV-PCE0012-1001,,WBS del ejemplo GAP
+EjemploGAP,Invoice Request,F47,NotBlank,,,Comentarios del ejemplo GAP
+EjemploGAP,Invoice Request,D52,Formula,=F41,,Formula de WBS breakdown preservada
+EjemploGAP,Invoice Request,C61,Text,Iberiabilling @getronics.com,,Mailbox del ejemplo GAP

@@ -1,0 +1,1795 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="core_common_preparar_cost_planning" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data.Common" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="in_dt_PerfilesPPO" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="in_dt_ResourcesATFijos" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="in_dt_HorasPorAnio" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="in_dt_Gastos" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="in_dt_Compras" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="in_dt_MesesPPO" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="in_TipoProyectoNormalizado" Type="InArgument(x:String)" />
+    <x:Property Name="in_CapacidadCostPlanningPerfiles" Type="InArgument(x:Int32)" />
+    <x:Property Name="in_CapacidadCostPlanningGastos" Type="InArgument(x:Int32)" />
+    <x:Property Name="in_CapacidadCostPlanningCompras" Type="InArgument(x:Int32)" />
+    <x:Property Name="in_Riesgos" Type="InArgument(x:Object)" />
+    <x:Property Name="in_Garantia" Type="InArgument(x:Object)" />
+    <x:Property Name="in_ProveedorCompraSAP" Type="InArgument(x:String)" />
+    <x:Property Name="in_PedidoCompraSAP" Type="InArgument(x:String)" />
+    <x:Property Name="in_CodigoAribaSAP" Type="InArgument(x:String)" />
+    <x:Property Name="out_dt_CostPlanningPCHoras" Type="OutArgument(sd:DataTable)" />
+    <x:Property Name="out_dt_CostPlanningPCRiesgosGarantia" Type="OutArgument(sd:DataTable)" />
+    <x:Property Name="out_dt_CostPlanningPCGastosFijos" Type="OutArgument(sd:DataTable)" />
+    <x:Property Name="out_dt_CostPlanningPCGastosMeses" Type="OutArgument(sd:DataTable)" />
+    <x:Property Name="out_dt_CostPlanningPCComprasFijos" Type="OutArgument(sd:DataTable)" />
+    <x:Property Name="out_dt_CostPlanningPCComprasMeses" Type="OutArgument(sd:DataTable)" />
+    <x:Property Name="out_dt_CostPlanningATRecursosFijos" Type="OutArgument(sd:DataTable)" />
+    <x:Property Name="out_dt_CostPlanningATHoras" Type="OutArgument(sd:DataTable)" />
+    <x:Property Name="out_dt_CostPlanningATRiesgosGarantia" Type="OutArgument(sd:DataTable)" />
+    <x:Property Name="out_dt_CostPlanningATGastosFijos" Type="OutArgument(sd:DataTable)" />
+    <x:Property Name="out_dt_CostPlanningATGastosMeses" Type="OutArgument(sd:DataTable)" />
+    <x:Property Name="out_dt_CostPlanningATComprasFijos" Type="OutArgument(sd:DataTable)" />
+    <x:Property Name="out_dt_CostPlanningATComprasMeses" Type="OutArgument(sd:DataTable)" />
+    <x:Property Name="out_CantidadPerfiles" Type="OutArgument(x:Int32)" />
+    <x:Property Name="out_DuracionMeses" Type="OutArgument(x:Int32)" />
+    <x:Property Name="out_CantidadGastos" Type="OutArgument(x:Int32)" />
+    <x:Property Name="out_CantidadCompras" Type="OutArgument(x:Int32)" />
+  </x:Members>
+  <VisualBasic.Settings>
+    <x:Null />
+  </VisualBasic.Settings>
+  <sap:VirtualizedContainerService.HintSize>1220,11323.333333333334</sap:VirtualizedContainerService.HintSize>
+  <sap2010:WorkflowViewState.IdRef>ActivityBuilder_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Activities</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Globalization</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>System.Text.Json</x:String>
+      <x:String>System.Text.RegularExpressions</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>GlobalVariablesNamespace</x:String>
+      <x:String>GlobalConstantsNamespace</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Activities.Statements</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Collections</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.TypeConverter</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.Common</AssemblyReference>
+      <AssemblyReference>System.Linq</AssemblyReference>
+      <AssemblyReference>System.ObjectModel</AssemblyReference>
+      <AssemblyReference>System.Private.CoreLib</AssemblyReference>
+      <AssemblyReference>System.Text.Json</AssemblyReference>
+      <AssemblyReference>System.Text.RegularExpressions</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Workflow</AssemblyReference>
+      <AssemblyReference>UiPath.Studio.Constants</AssemblyReference>
+      <AssemblyReference>System.Collections.NonGeneric</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence sap2010:Annotation.AnnotationText="Objetivo: preparar Cost Planning una sola vez para PC y AT.&#xA;Entradas: modelo PPO, Resources ya normalizado, compras SAP y capacidad de plantilla.&#xA;Salida: tablas PC/AT listas para que los workflows de escritura solo escriban rangos." DisplayName="core-common-preparar-cost-planning" sap:VirtualizedContainerService.HintSize="820,11258.666666666666" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="scg:List(s:Object[])" Name="costPlanningTablasDefinicion" />
+      <Variable x:TypeArguments="scg:List(x:Int32)" Name="aniosMesesCostPlanning" />
+      <Variable x:TypeArguments="scg:List(x:String)" Name="ordenGastosCostPlanning" />
+      <Variable x:TypeArguments="scg:List(x:String)" Name="ordenComprasCostPlanning" />
+      <Variable x:TypeArguments="scg:Dictionary(x:Int32, x:Int32)" Name="conteoPorAnioCostPlanning" />
+      <Variable x:TypeArguments="scg:Dictionary(x:String, x:Double)" Name="horasPorClaveCostPlanning" />
+      <Variable x:TypeArguments="scg:Dictionary(x:String, x:Double)" Name="gastosPorClaveCostPlanning" />
+      <Variable x:TypeArguments="scg:Dictionary(x:String, x:Double)" Name="comprasPorClaveCostPlanning" />
+      <Variable x:TypeArguments="scg:Dictionary(x:String, x:String)" Name="compraDescripcionPorClaveCostPlanning" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dtCostPlanningActual" />
+      <Variable x:TypeArguments="sd:DataRow" Name="filaPerfilCostPlanning" />
+      <Variable x:TypeArguments="x:Object" Name="valorNumeroCostPlanning" />
+      <Variable x:TypeArguments="x:Object" Name="codigoEmpleadoCostPlanning" />
+      <Variable x:TypeArguments="x:Object" Name="intercompanyCostPlanning" />
+      <Variable x:TypeArguments="x:Object" Name="perfilATCostPlanning" />
+      <Variable x:TypeArguments="x:Int32" Name="columnasCostPlanningActual" />
+      <Variable x:TypeArguments="x:Int32" Name="filasCostPlanningActual" />
+      <Variable x:TypeArguments="x:Int32" Name="duracionCostPlanning" />
+      <Variable x:TypeArguments="x:Int32" Name="perfilesDetectadosCostPlanning" />
+      <Variable x:TypeArguments="x:Int32" Name="capacidadPerfilesCostPlanning" />
+      <Variable x:TypeArguments="x:Int32" Name="capacidadFilasCostPlanningRecursos" />
+      <Variable x:TypeArguments="x:Int32" Name="capacidadGastosCostPlanning" />
+      <Variable x:TypeArguments="x:Int32" Name="capacidadComprasCostPlanning" />
+      <Variable x:TypeArguments="x:Int32" Name="anioMesCostPlanning" />
+      <Variable x:TypeArguments="x:Int32" Name="anioValorCostPlanning" />
+      <Variable x:TypeArguments="x:Int32" Name="filaATCostPlanning" />
+      <Variable x:TypeArguments="x:Int32" Name="indiceUltimoMesCostPlanning" />
+      <Variable x:TypeArguments="x:Double" Name="numeroTemporalCostPlanning" />
+      <Variable x:TypeArguments="x:Double" Name="numeroCostPlanning" />
+      <Variable x:TypeArguments="x:Double" Name="horasCostPlanning" />
+      <Variable x:TypeArguments="x:Double" Name="importeCostPlanning" />
+      <Variable x:TypeArguments="x:Double" Name="importeDistribuidoCostPlanning" />
+      <Variable x:TypeArguments="x:Double" Name="riesgosCostPlanning" />
+      <Variable x:TypeArguments="x:Double" Name="garantiaCostPlanning" />
+      <Variable x:TypeArguments="x:Boolean" Name="esProyectoATCostPlanning" />
+      <Variable x:TypeArguments="x:Boolean" Name="numeroValidoCostPlanning" />
+      <Variable x:TypeArguments="x:Boolean" Name="horasEncontradasCostPlanning" />
+      <Variable x:TypeArguments="x:Boolean" Name="importeDisponibleCostPlanning" />
+      <Variable x:TypeArguments="x:Boolean" Name="riesgosDisponibleCostPlanning" />
+      <Variable x:TypeArguments="x:Boolean" Name="garantiaDisponibleCostPlanning" />
+      <Variable x:TypeArguments="x:String" Name="separadorClaveCostPlanning" />
+      <Variable x:TypeArguments="x:String" Name="claveAgrupacionCostPlanning" />
+      <Variable x:TypeArguments="x:String" Name="claveCompraCostPlanning" />
+      <Variable x:TypeArguments="x:String" Name="siglaCostPlanning" />
+      <Variable x:TypeArguments="x:String" Name="perfilCostPlanning" />
+      <Variable x:TypeArguments="x:String" Name="descripcionCostPlanning" />
+      <Variable x:TypeArguments="x:String" Name="etiquetaCostPlanning" />
+      <Variable x:TypeArguments="x:String" Name="tipoGastoCostPlanning" />
+      <Variable x:TypeArguments="x:String" Name="proveedorCompraCostPlanning" />
+      <Variable x:TypeArguments="x:String" Name="pedidoCompraCostPlanning" />
+      <Variable x:TypeArguments="x:String" Name="codigoAribaCostPlanning" />
+    </Sequence.Variables>
+    <sap:WorkflowViewStateService.ViewState>
+      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+      </scg:Dictionary>
+    </sap:WorkflowViewStateService.ViewState>
+    <Sequence sap2010:Annotation.AnnotationText="Objetivo: validar meses, perfiles y capacidad antes de construir tablas destino.&#xA;Salida: duracion, perfiles detectados y capacidades normalizadas para PC/AT." DisplayName="Validar estructura de Cost Planning" sap:VirtualizedContainerService.HintSize="758,1530.6666666666667" sap2010:WorkflowViewState.IdRef="Sequence_CP_001">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <ui:MultipleAssign DisplayName="Inicializar capacidad Cost Planning" sap:VirtualizedContainerService.HintSize="478.6666666666667,240" sap2010:WorkflowViewState.IdRef="MultipleAssign_CP_001">
+        <ui:MultipleAssign.AssignOperations>
+          <scg:List x:TypeArguments="ui:AssignOperation" Capacity="5">
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_001">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:Int32">[duracionCostPlanning]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:Int32">[If(in_dt_MesesPPO Is Nothing, 0, in_dt_MesesPPO.Rows.Count)]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_002">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:Int32">[perfilesDetectadosCostPlanning]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:Int32">[If(in_dt_PerfilesPPO Is Nothing, 0, in_dt_PerfilesPPO.Rows.Count)]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_003">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:Boolean">[esProyectoATCostPlanning]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:Boolean">[String.Equals(in_TipoProyectoNormalizado, "AT", System.StringComparison.OrdinalIgnoreCase)]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_004">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:Int32">[capacidadPerfilesCostPlanning]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:Int32">[If(in_CapacidadCostPlanningPerfiles &gt; 0, in_CapacidadCostPlanningPerfiles, If(esProyectoATCostPlanning, 15, 30))]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_005">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:Int32">[capacidadFilasCostPlanningRecursos]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:Int32">[If(esProyectoATCostPlanning, capacidadPerfilesCostPlanning * 2, capacidadPerfilesCostPlanning)]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+          </scg:List>
+        </ui:MultipleAssign.AssignOperations>
+      </ui:MultipleAssign>
+      <If Condition="[duracionCostPlanning &lt;= 0]" DisplayName="Validar duracion Cost Planning" sap:VirtualizedContainerService.HintSize="478.6666666666667,276" sap2010:WorkflowViewState.IdRef="If_CP_001">
+        <If.Then>
+          <Throw DisplayName="Error duracion Cost Planning" Exception="[New Exception(&quot;No se ha podido determinar la duracion de Cost Planning desde dtMesesPPO.&quot;)]" sap:VirtualizedContainerService.HintSize="334,92" sap2010:WorkflowViewState.IdRef="Throw_CP_001" />
+        </If.Then>
+        <If.Else>
+          <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_2" />
+        </If.Else>
+      </If>
+      <If Condition="[duracionCostPlanning &gt; 60]" DisplayName="Validar limite de meses Cost Planning" sap:VirtualizedContainerService.HintSize="478.6666666666667,276" sap2010:WorkflowViewState.IdRef="If_CP_002">
+        <If.Then>
+          <Throw DisplayName="Error limite meses Cost Planning" Exception="[New Exception(&quot;La plantilla CORE incluida soporta hasta 60 meses. Duracion detectada en PPO: &quot; + duracionCostPlanning.ToString())]" sap:VirtualizedContainerService.HintSize="334,92" sap2010:WorkflowViewState.IdRef="Throw_CP_002" />
+        </If.Then>
+        <If.Else>
+          <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_3" />
+        </If.Else>
+      </If>
+      <If Condition="[perfilesDetectadosCostPlanning &gt; capacidadPerfilesCostPlanning]" DisplayName="Validar capacidad de perfiles Cost Planning" sap:VirtualizedContainerService.HintSize="478.6666666666667,234" sap2010:WorkflowViewState.IdRef="If_CP_003">
+        <If.Then>
+          <Throw DisplayName="Error capacidad perfiles Cost Planning" Exception="[New Exception(&quot;La plantilla CORE &quot; + If(esProyectoATCostPlanning, &quot;AT&quot;, &quot;PC&quot;) + &quot; recibida soporta &quot; + capacidadPerfilesCostPlanning.ToString() + &quot; perfiles utiles en Cost Planning. Perfiles detectados: &quot; + perfilesDetectadosCostPlanning.ToString())]" sap2010:WorkflowViewState.IdRef="Throw_CP_003" />
+        </If.Then>
+        <If.Else>
+          <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_4" />
+        </If.Else>
+      </If>
+      <If Condition="[capacidadPerfilesCostPlanning &lt;= 0]" DisplayName="Validar perfiles utiles Cost Planning" sap:VirtualizedContainerService.HintSize="478.6666666666667,234" sap2010:WorkflowViewState.IdRef="If_CP_004">
+        <If.Then>
+          <Throw DisplayName="Error filas Cost Planning" Exception="[New Exception(&quot;La plantilla CORE &quot; + If(esProyectoATCostPlanning, &quot;AT&quot;, &quot;PC&quot;) + &quot; recibida no tiene filas utiles detectables en Cost Planning.&quot;)]" sap2010:WorkflowViewState.IdRef="Throw_CP_004" />
+        </If.Then>
+        <If.Else>
+          <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_5" />
+        </If.Else>
+      </If>
+    </Sequence>
+    <Sequence sap2010:Annotation.AnnotationText="Objetivo: preparar calendarios, acumuladores y orden funcional de gastos/compras.&#xA;Regla: se agrupa por anio manteniendo el primer orden de aparicion del PPO." DisplayName="Preparar calendario y acumuladores Cost Planning" sap:VirtualizedContainerService.HintSize="758,6507.333333333333" sap2010:WorkflowViewState.IdRef="Sequence_CP_002">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <ui:MultipleAssign DisplayName="Inicializar acumuladores Cost Planning" sap:VirtualizedContainerService.HintSize="696,454.6666666666667" sap2010:WorkflowViewState.IdRef="MultipleAssign_CP_002">
+        <ui:MultipleAssign.AssignOperations>
+          <scg:List x:TypeArguments="ui:AssignOperation" Capacity="12">
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_006">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="scg:List(x:Int32)">[aniosMesesCostPlanning]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="scg:List(x:Int32)">[New System.Collections.Generic.List(Of Int32)]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_007">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="scg:Dictionary(x:Int32, x:Int32)">[conteoPorAnioCostPlanning]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="scg:Dictionary(x:Int32, x:Int32)">[New System.Collections.Generic.Dictionary(Of Int32, Int32)]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_008">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Double)">[horasPorClaveCostPlanning]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Double)">[New System.Collections.Generic.Dictionary(Of String, Double)(System.StringComparer.OrdinalIgnoreCase)]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_009">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Double)">[gastosPorClaveCostPlanning]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Double)">[New System.Collections.Generic.Dictionary(Of String, Double)(System.StringComparer.OrdinalIgnoreCase)]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_010">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Double)">[comprasPorClaveCostPlanning]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Double)">[New System.Collections.Generic.Dictionary(Of String, Double)(System.StringComparer.OrdinalIgnoreCase)]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_011">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">[compraDescripcionPorClaveCostPlanning]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">[New System.Collections.Generic.Dictionary(Of String, String)(System.StringComparer.OrdinalIgnoreCase)]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_012">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="scg:List(x:String)">[ordenGastosCostPlanning]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="scg:List(x:String)">[New System.Collections.Generic.List(Of String)]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_013">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="scg:List(x:String)">[ordenComprasCostPlanning]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="scg:List(x:String)">[New System.Collections.Generic.List(Of String)]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_014">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[separadorClaveCostPlanning]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[Microsoft.VisualBasic.ChrW(31).ToString()]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_015">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[proveedorCompraCostPlanning]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(in_ProveedorCompraSAP), "Proveedor no disponible", in_ProveedorCompraSAP.Trim())]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_016">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[pedidoCompraCostPlanning]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(in_PedidoCompraSAP), "PO compra no disponible", in_PedidoCompraSAP.Trim())]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_017">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[codigoAribaCostPlanning]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(in_CodigoAribaSAP), "Ariba no disponible", in_CodigoAribaSAP.Trim())]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+          </scg:List>
+        </ui:MultipleAssign.AssignOperations>
+      </ui:MultipleAssign>
+      <ui:ForEachRow ColumnNames="{x:Null}" CurrentIndex="{x:Null}" DataTable="[in_dt_MesesPPO]" DisplayName="Recorrer meses PPO Cost Planning" sap:VirtualizedContainerService.HintSize="696,240" sap2010:WorkflowViewState.IdRef="ForEachRow_CP_001">
+        <ui:ForEachRow.Body>
+          <ActivityAction x:TypeArguments="sd:DataRow">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="sd:DataRow" Name="filaMesCostPlanning" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Registrar anio de mes Cost Planning" sap2010:WorkflowViewState.IdRef="Sequence_CP_003">
+              <Assign DisplayName="Leer anio mes" sap2010:WorkflowViewState.IdRef="Assign_CP_001">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:Object">[valorNumeroCostPlanning]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:Object">[filaMesCostPlanning("Anio")]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <Assign DisplayName="Validar numero anio mes" sap2010:WorkflowViewState.IdRef="Assign_CP_002">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:Boolean">[numeroValidoCostPlanning]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:Boolean">[(valorNumeroCostPlanning IsNot Nothing AndAlso Not TypeOf valorNumeroCostPlanning Is DBNull AndAlso Not String.IsNullOrWhiteSpace(Convert.ToString(valorNumeroCostPlanning).Trim()) AndAlso (TypeOf valorNumeroCostPlanning Is Double OrElse TypeOf valorNumeroCostPlanning Is Single OrElse TypeOf valorNumeroCostPlanning Is Integer OrElse TypeOf valorNumeroCostPlanning Is Long OrElse TypeOf valorNumeroCostPlanning Is Decimal OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim().Replace(".", "").Replace(",", "."), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalCostPlanning)))]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <Assign DisplayName="Normalizar anio mes" sap2010:WorkflowViewState.IdRef="Assign_CP_003">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:Int32">[anioMesCostPlanning]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:Int32">[If(numeroValidoCostPlanning, CInt(System.Math.Round(If(TypeOf valorNumeroCostPlanning Is Double OrElse TypeOf valorNumeroCostPlanning Is Single OrElse TypeOf valorNumeroCostPlanning Is Integer OrElse TypeOf valorNumeroCostPlanning Is Long OrElse TypeOf valorNumeroCostPlanning Is Decimal, Convert.ToDouble(valorNumeroCostPlanning), numeroTemporalCostPlanning), 0)), 0)]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <Assign DisplayName="Agregar anio a calendario" sap2010:WorkflowViewState.IdRef="Assign_CP_004">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="scg:List(x:Int32)">[aniosMesesCostPlanning]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="scg:List(x:Int32)">[aniosMesesCostPlanning.Concat(New Int32() {anioMesCostPlanning}).ToList()]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <If Condition="[Not conteoPorAnioCostPlanning.ContainsKey(anioMesCostPlanning)]" DisplayName="Inicializar conteo del anio" sap2010:WorkflowViewState.IdRef="If_CP_005">
+                <If.Then>
+                  <Assign DisplayName="Crear conteo del anio" sap2010:WorkflowViewState.IdRef="Assign_CP_005">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Int32">[conteoPorAnioCostPlanning(anioMesCostPlanning)]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Int32">[0]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                </If.Then>
+              </If>
+              <Assign DisplayName="Incrementar conteo del anio" sap2010:WorkflowViewState.IdRef="Assign_CP_006">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:Int32">[conteoPorAnioCostPlanning(anioMesCostPlanning)]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:Int32">[conteoPorAnioCostPlanning(anioMesCostPlanning) + 1]</InArgument>
+                </Assign.Value>
+              </Assign>
+            </Sequence>
+          </ActivityAction>
+        </ui:ForEachRow.Body>
+      </ui:ForEachRow>
+      <If Condition="[in_dt_HorasPorAnio IsNot Nothing]" DisplayName="Hay horas por anio Cost Planning" sap:VirtualizedContainerService.HintSize="696,234" sap2010:WorkflowViewState.IdRef="If_CP_006">
+        <If.Then>
+          <ui:ForEachRow ColumnNames="{x:Null}" CurrentIndex="{x:Null}" DataTable="[in_dt_HorasPorAnio]" DisplayName="Recorrer horas por anio Cost Planning" sap2010:WorkflowViewState.IdRef="ForEachRow_CP_002">
+            <ui:ForEachRow.Body>
+              <ActivityAction x:TypeArguments="sd:DataRow">
+                <ActivityAction.Argument>
+                  <DelegateInArgument x:TypeArguments="sd:DataRow" Name="filaHoraCostPlanning" />
+                </ActivityAction.Argument>
+                <Sequence DisplayName="Acumular horas Cost Planning" sap2010:WorkflowViewState.IdRef="Sequence_CP_004">
+                  <Assign DisplayName="Leer sigla horas" sap2010:WorkflowViewState.IdRef="Assign_CP_007">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:String">[siglaCostPlanning]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:String">[If(filaHoraCostPlanning("Sigla") Is Nothing OrElse TypeOf filaHoraCostPlanning("Sigla") Is DBNull, "", Convert.ToString(filaHoraCostPlanning("Sigla")).Trim())]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Leer anio horas" sap2010:WorkflowViewState.IdRef="Assign_CP_008">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Object">[valorNumeroCostPlanning]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Object">[filaHoraCostPlanning("Anio")]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Validar anio horas" sap2010:WorkflowViewState.IdRef="Assign_CP_009">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Boolean">[numeroValidoCostPlanning]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Boolean">[(valorNumeroCostPlanning IsNot Nothing AndAlso Not TypeOf valorNumeroCostPlanning Is DBNull AndAlso Not String.IsNullOrWhiteSpace(Convert.ToString(valorNumeroCostPlanning).Trim()) AndAlso (TypeOf valorNumeroCostPlanning Is Double OrElse TypeOf valorNumeroCostPlanning Is Single OrElse TypeOf valorNumeroCostPlanning Is Integer OrElse TypeOf valorNumeroCostPlanning Is Long OrElse TypeOf valorNumeroCostPlanning Is Decimal OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim().Replace(".", "").Replace(",", "."), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalCostPlanning)))]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Normalizar anio horas" sap2010:WorkflowViewState.IdRef="Assign_CP_010">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Int32">[anioValorCostPlanning]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Int32">[If(numeroValidoCostPlanning, CInt(System.Math.Round(If(TypeOf valorNumeroCostPlanning Is Double OrElse TypeOf valorNumeroCostPlanning Is Single OrElse TypeOf valorNumeroCostPlanning Is Integer OrElse TypeOf valorNumeroCostPlanning Is Long OrElse TypeOf valorNumeroCostPlanning Is Decimal, Convert.ToDouble(valorNumeroCostPlanning), numeroTemporalCostPlanning), 0)), 0)]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Leer valor horas" sap2010:WorkflowViewState.IdRef="Assign_CP_011">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Object">[valorNumeroCostPlanning]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Object">[filaHoraCostPlanning("Horas")]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Validar valor horas" sap2010:WorkflowViewState.IdRef="Assign_CP_012">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Boolean">[numeroValidoCostPlanning]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Boolean">[(valorNumeroCostPlanning IsNot Nothing AndAlso Not TypeOf valorNumeroCostPlanning Is DBNull AndAlso Not String.IsNullOrWhiteSpace(Convert.ToString(valorNumeroCostPlanning).Trim()) AndAlso (TypeOf valorNumeroCostPlanning Is Double OrElse TypeOf valorNumeroCostPlanning Is Single OrElse TypeOf valorNumeroCostPlanning Is Integer OrElse TypeOf valorNumeroCostPlanning Is Long OrElse TypeOf valorNumeroCostPlanning Is Decimal OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim().Replace(".", "").Replace(",", "."), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalCostPlanning)))]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Normalizar valor horas" sap2010:WorkflowViewState.IdRef="Assign_CP_013">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Double">[horasCostPlanning]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Double">[If(numeroValidoCostPlanning, If(TypeOf valorNumeroCostPlanning Is Double OrElse TypeOf valorNumeroCostPlanning Is Single OrElse TypeOf valorNumeroCostPlanning Is Integer OrElse TypeOf valorNumeroCostPlanning Is Long OrElse TypeOf valorNumeroCostPlanning Is Decimal, Convert.ToDouble(valorNumeroCostPlanning), numeroTemporalCostPlanning), 0.0)]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <If Condition="[Not String.IsNullOrWhiteSpace(siglaCostPlanning) AndAlso anioValorCostPlanning &gt; 0 AndAlso numeroValidoCostPlanning]" DisplayName="La hora es acumulable" sap2010:WorkflowViewState.IdRef="If_CP_007">
+                    <If.Then>
+                      <Sequence DisplayName="Acumular hora por sigla y anio" sap2010:WorkflowViewState.IdRef="Sequence_CP_005">
+                        <Assign DisplayName="Preparar clave horas" sap2010:WorkflowViewState.IdRef="Assign_CP_014">
+                          <Assign.To>
+                            <OutArgument x:TypeArguments="x:String">[claveAgrupacionCostPlanning]</OutArgument>
+                          </Assign.To>
+                          <Assign.Value>
+                            <InArgument x:TypeArguments="x:String">[siglaCostPlanning + separadorClaveCostPlanning + anioValorCostPlanning.ToString()]</InArgument>
+                          </Assign.Value>
+                        </Assign>
+                        <Assign DisplayName="Acumular horas por clave" sap2010:WorkflowViewState.IdRef="Assign_CP_015">
+                          <Assign.To>
+                            <OutArgument x:TypeArguments="x:Double">[horasPorClaveCostPlanning(claveAgrupacionCostPlanning)]</OutArgument>
+                          </Assign.To>
+                          <Assign.Value>
+                            <InArgument x:TypeArguments="x:Double">[If(horasPorClaveCostPlanning.ContainsKey(claveAgrupacionCostPlanning), horasPorClaveCostPlanning(claveAgrupacionCostPlanning), 0.0) + horasCostPlanning]</InArgument>
+                          </Assign.Value>
+                        </Assign>
+                      </Sequence>
+                    </If.Then>
+                  </If>
+                </Sequence>
+              </ActivityAction>
+            </ui:ForEachRow.Body>
+          </ui:ForEachRow>
+        </If.Then>
+        <If.Else>
+          <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_6" />
+        </If.Else>
+      </If>
+      <If Condition="[in_dt_Gastos IsNot Nothing]" DisplayName="Hay gastos Cost Planning" sap:VirtualizedContainerService.HintSize="696,2130" sap2010:WorkflowViewState.IdRef="If_CP_008">
+        <If.Then>
+          <ui:ForEachRow ColumnNames="{x:Null}" CurrentIndex="{x:Null}" DataTable="[in_dt_Gastos]" DisplayName="Recorrer gastos Cost Planning" sap:VirtualizedContainerService.HintSize="620,1946" sap2010:WorkflowViewState.IdRef="ForEachRow_CP_003">
+            <ui:ForEachRow.Body>
+              <ActivityAction x:TypeArguments="sd:DataRow">
+                <ActivityAction.Argument>
+                  <DelegateInArgument x:TypeArguments="sd:DataRow" Name="filaGastoCostPlanning" />
+                </ActivityAction.Argument>
+                <Sequence DisplayName="Acumular gasto Cost Planning" sap:VirtualizedContainerService.HintSize="586,1756" sap2010:WorkflowViewState.IdRef="Sequence_CP_006">
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                  <Assign DisplayName="Leer descripcion gasto" sap:VirtualizedContainerService.HintSize="544,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_CP_016">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:String">[descripcionCostPlanning]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:String">[If(filaGastoCostPlanning("Descripcion") Is Nothing OrElse TypeOf filaGastoCostPlanning("Descripcion") Is DBNull, "", Convert.ToString(filaGastoCostPlanning("Descripcion")).Trim())]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Leer anio gasto" sap:VirtualizedContainerService.HintSize="544,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_CP_017">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Object">[valorNumeroCostPlanning]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Object">[filaGastoCostPlanning("Anio")]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Validar anio gasto" sap:VirtualizedContainerService.HintSize="544,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_CP_018">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Boolean">[numeroValidoCostPlanning]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Boolean">[(valorNumeroCostPlanning IsNot Nothing AndAlso Not TypeOf valorNumeroCostPlanning Is DBNull AndAlso Not String.IsNullOrWhiteSpace(Convert.ToString(valorNumeroCostPlanning).Trim()) AndAlso (TypeOf valorNumeroCostPlanning Is Double OrElse TypeOf valorNumeroCostPlanning Is Single OrElse TypeOf valorNumeroCostPlanning Is Integer OrElse TypeOf valorNumeroCostPlanning Is Long OrElse TypeOf valorNumeroCostPlanning Is Decimal OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim().Replace(".", "").Replace(",", "."), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalCostPlanning)))]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Normalizar anio gasto" sap:VirtualizedContainerService.HintSize="544,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_CP_019">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Int32">[anioValorCostPlanning]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Int32">[If(numeroValidoCostPlanning, CInt(System.Math.Round(If(TypeOf valorNumeroCostPlanning Is Double OrElse TypeOf valorNumeroCostPlanning Is Single OrElse TypeOf valorNumeroCostPlanning Is Integer OrElse TypeOf valorNumeroCostPlanning Is Long OrElse TypeOf valorNumeroCostPlanning Is Decimal, Convert.ToDouble(valorNumeroCostPlanning), numeroTemporalCostPlanning), 0)), 0)]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Leer importe gasto" sap:VirtualizedContainerService.HintSize="544,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_CP_020">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Object">[valorNumeroCostPlanning]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Object">[filaGastoCostPlanning("Importe")]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Validar importe gasto" sap:VirtualizedContainerService.HintSize="544,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_CP_021">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Boolean">[numeroValidoCostPlanning]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Boolean">[(valorNumeroCostPlanning IsNot Nothing AndAlso Not TypeOf valorNumeroCostPlanning Is DBNull AndAlso Not String.IsNullOrWhiteSpace(Convert.ToString(valorNumeroCostPlanning).Trim()) AndAlso (TypeOf valorNumeroCostPlanning Is Double OrElse TypeOf valorNumeroCostPlanning Is Single OrElse TypeOf valorNumeroCostPlanning Is Integer OrElse TypeOf valorNumeroCostPlanning Is Long OrElse TypeOf valorNumeroCostPlanning Is Decimal OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim().Replace(".", "").Replace(",", "."), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalCostPlanning)))]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Normalizar importe gasto" sap:VirtualizedContainerService.HintSize="544,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_CP_022">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Double">[importeCostPlanning]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Double">[If(numeroValidoCostPlanning, If(TypeOf valorNumeroCostPlanning Is Double OrElse TypeOf valorNumeroCostPlanning Is Single OrElse TypeOf valorNumeroCostPlanning Is Integer OrElse TypeOf valorNumeroCostPlanning Is Long OrElse TypeOf valorNumeroCostPlanning Is Decimal, Convert.ToDouble(valorNumeroCostPlanning), numeroTemporalCostPlanning), 0.0)]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <If Condition="[Not String.IsNullOrWhiteSpace(descripcionCostPlanning) AndAlso anioValorCostPlanning &gt; 0 AndAlso numeroValidoCostPlanning]" DisplayName="El gasto es acumulable" sap:VirtualizedContainerService.HintSize="544,791.3333333333334" sap2010:WorkflowViewState.IdRef="If_CP_009">
+                    <If.Then>
+                      <Sequence DisplayName="Acumular gasto por descripcion y anio" sap:VirtualizedContainerService.HintSize="510,607.3333333333334" sap2010:WorkflowViewState.IdRef="Sequence_CP_007">
+                        <sap:WorkflowViewStateService.ViewState>
+                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                          </scg:Dictionary>
+                        </sap:WorkflowViewStateService.ViewState>
+                        <If Condition="[Not ordenGastosCostPlanning.Any(Function(gasto) String.Equals(gasto, descripcionCostPlanning, System.StringComparison.OrdinalIgnoreCase))]" DisplayName="Registrar descripcion gasto" sap:VirtualizedContainerService.HintSize="468,269.3333333333333" sap2010:WorkflowViewState.IdRef="If_CP_010">
+                          <If.Then>
+                            <Assign DisplayName="Agregar descripcion gasto al orden" sap:VirtualizedContainerService.HintSize="434,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_CP_023">
+                              <Assign.To>
+                                <OutArgument x:TypeArguments="scg:List(x:String)">[ordenGastosCostPlanning]</OutArgument>
+                              </Assign.To>
+                              <Assign.Value>
+                                <InArgument x:TypeArguments="scg:List(x:String)">[ordenGastosCostPlanning.Concat(New String() {descripcionCostPlanning}).ToList()]</InArgument>
+                              </Assign.Value>
+                            </Assign>
+                          </If.Then>
+                          <If.Else>
+                            <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_7" />
+                          </If.Else>
+                        </If>
+                        <Assign DisplayName="Preparar clave gasto" sap:VirtualizedContainerService.HintSize="468,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_CP_024">
+                          <Assign.To>
+                            <OutArgument x:TypeArguments="x:String">[claveAgrupacionCostPlanning]</OutArgument>
+                          </Assign.To>
+                          <Assign.Value>
+                            <InArgument x:TypeArguments="x:String">[descripcionCostPlanning + separadorClaveCostPlanning + anioValorCostPlanning.ToString()]</InArgument>
+                          </Assign.Value>
+                        </Assign>
+                        <Assign DisplayName="Acumular gasto por clave" sap:VirtualizedContainerService.HintSize="468,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_CP_025">
+                          <Assign.To>
+                            <OutArgument x:TypeArguments="x:Double">[gastosPorClaveCostPlanning(claveAgrupacionCostPlanning)]</OutArgument>
+                          </Assign.To>
+                          <Assign.Value>
+                            <InArgument x:TypeArguments="x:Double">[If(gastosPorClaveCostPlanning.ContainsKey(claveAgrupacionCostPlanning), gastosPorClaveCostPlanning(claveAgrupacionCostPlanning), 0.0) + importeCostPlanning]</InArgument>
+                          </Assign.Value>
+                        </Assign>
+                      </Sequence>
+                    </If.Then>
+                    <If.Else>
+                      <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_8" />
+                    </If.Else>
+                  </If>
+                </Sequence>
+              </ActivityAction>
+            </ui:ForEachRow.Body>
+          </ui:ForEachRow>
+        </If.Then>
+        <If.Else>
+          <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_9" />
+        </If.Else>
+      </If>
+      <If Condition="[in_dt_Compras IsNot Nothing]" DisplayName="Hay compras Cost Planning" sap:VirtualizedContainerService.HintSize="696,2400" sap2010:WorkflowViewState.IdRef="If_CP_011">
+        <If.Then>
+          <ui:ForEachRow ColumnNames="{x:Null}" CurrentIndex="{x:Null}" DataTable="[in_dt_Compras]" DisplayName="Recorrer compras Cost Planning" sap:VirtualizedContainerService.HintSize="662,2216" sap2010:WorkflowViewState.IdRef="ForEachRow_CP_004">
+            <ui:ForEachRow.Body>
+              <ActivityAction x:TypeArguments="sd:DataRow">
+                <ActivityAction.Argument>
+                  <DelegateInArgument x:TypeArguments="sd:DataRow" Name="filaCompraCostPlanning" />
+                </ActivityAction.Argument>
+                <Sequence DisplayName="Acumular compra Cost Planning" sap:VirtualizedContainerService.HintSize="628,2026" sap2010:WorkflowViewState.IdRef="Sequence_CP_008">
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                  <ui:MultipleAssign DisplayName="Leer descripcion y etiqueta compra" sap:VirtualizedContainerService.HintSize="586,148" sap2010:WorkflowViewState.IdRef="MultipleAssign_CP_003">
+                    <ui:MultipleAssign.AssignOperations>
+                      <scg:List x:TypeArguments="ui:AssignOperation" Capacity="2">
+                        <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_018">
+                          <ui:AssignOperation.To>
+                            <OutArgument x:TypeArguments="x:String">[etiquetaCostPlanning]</OutArgument>
+                          </ui:AssignOperation.To>
+                          <ui:AssignOperation.Value>
+                            <InArgument x:TypeArguments="x:String">[If(filaCompraCostPlanning("Etiqueta") Is Nothing OrElse TypeOf filaCompraCostPlanning("Etiqueta") Is DBNull, "", Convert.ToString(filaCompraCostPlanning("Etiqueta")).Trim())]</InArgument>
+                          </ui:AssignOperation.Value>
+                        </ui:AssignOperation>
+                        <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_019">
+                          <ui:AssignOperation.To>
+                            <OutArgument x:TypeArguments="x:String">[descripcionCostPlanning]</OutArgument>
+                          </ui:AssignOperation.To>
+                          <ui:AssignOperation.Value>
+                            <InArgument x:TypeArguments="x:String">[If(filaCompraCostPlanning("Descripcion") Is Nothing OrElse TypeOf filaCompraCostPlanning("Descripcion") Is DBNull, "", Convert.ToString(filaCompraCostPlanning("Descripcion")).Trim())]</InArgument>
+                          </ui:AssignOperation.Value>
+                        </ui:AssignOperation>
+                      </scg:List>
+                    </ui:MultipleAssign.AssignOperations>
+                  </ui:MultipleAssign>
+                  <Assign DisplayName="Leer anio compra" sap:VirtualizedContainerService.HintSize="586,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_CP_026">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Object">[valorNumeroCostPlanning]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Object">[filaCompraCostPlanning("Anio")]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Validar anio compra" sap:VirtualizedContainerService.HintSize="586,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_CP_027">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Boolean">[numeroValidoCostPlanning]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Boolean">[(valorNumeroCostPlanning IsNot Nothing AndAlso Not TypeOf valorNumeroCostPlanning Is DBNull AndAlso Not String.IsNullOrWhiteSpace(Convert.ToString(valorNumeroCostPlanning).Trim()) AndAlso (TypeOf valorNumeroCostPlanning Is Double OrElse TypeOf valorNumeroCostPlanning Is Single OrElse TypeOf valorNumeroCostPlanning Is Integer OrElse TypeOf valorNumeroCostPlanning Is Long OrElse TypeOf valorNumeroCostPlanning Is Decimal OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim().Replace(".", "").Replace(",", "."), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalCostPlanning)))]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Normalizar anio compra" sap:VirtualizedContainerService.HintSize="586,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_CP_028">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Int32">[anioValorCostPlanning]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Int32">[If(numeroValidoCostPlanning, CInt(System.Math.Round(If(TypeOf valorNumeroCostPlanning Is Double OrElse TypeOf valorNumeroCostPlanning Is Single OrElse TypeOf valorNumeroCostPlanning Is Integer OrElse TypeOf valorNumeroCostPlanning Is Long OrElse TypeOf valorNumeroCostPlanning Is Decimal, Convert.ToDouble(valorNumeroCostPlanning), numeroTemporalCostPlanning), 0)), 0)]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Leer importe compra" sap:VirtualizedContainerService.HintSize="586,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_CP_029">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Object">[valorNumeroCostPlanning]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Object">[filaCompraCostPlanning("Importe")]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Validar importe compra" sap2010:WorkflowViewState.IdRef="Assign_CP_030">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Boolean">[numeroValidoCostPlanning]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Boolean">[(valorNumeroCostPlanning IsNot Nothing AndAlso Not TypeOf valorNumeroCostPlanning Is DBNull AndAlso Not String.IsNullOrWhiteSpace(Convert.ToString(valorNumeroCostPlanning).Trim()) AndAlso (TypeOf valorNumeroCostPlanning Is Double OrElse TypeOf valorNumeroCostPlanning Is Single OrElse TypeOf valorNumeroCostPlanning Is Integer OrElse TypeOf valorNumeroCostPlanning Is Long OrElse TypeOf valorNumeroCostPlanning Is Decimal OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim().Replace(".", "").Replace(",", "."), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalCostPlanning)))]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Normalizar importe compra" sap2010:WorkflowViewState.IdRef="Assign_CP_031">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Double">[importeCostPlanning]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Double">[If(numeroValidoCostPlanning, If(TypeOf valorNumeroCostPlanning Is Double OrElse TypeOf valorNumeroCostPlanning Is Single OrElse TypeOf valorNumeroCostPlanning Is Integer OrElse TypeOf valorNumeroCostPlanning Is Long OrElse TypeOf valorNumeroCostPlanning Is Decimal, Convert.ToDouble(valorNumeroCostPlanning), numeroTemporalCostPlanning), 0.0)]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <If Condition="[Not String.IsNullOrWhiteSpace(descripcionCostPlanning) AndAlso anioValorCostPlanning &gt; 0 AndAlso numeroValidoCostPlanning]" DisplayName="La compra es acumulable" sap:VirtualizedContainerService.HintSize="586,1129.3333333333333" sap2010:WorkflowViewState.IdRef="If_CP_012">
+                    <If.Then>
+                      <Sequence DisplayName="Acumular compra por clave y anio" sap:VirtualizedContainerService.HintSize="552,945.3333333333334" sap2010:WorkflowViewState.IdRef="Sequence_CP_009">
+                        <sap:WorkflowViewStateService.ViewState>
+                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                          </scg:Dictionary>
+                        </sap:WorkflowViewStateService.ViewState>
+                        <Assign DisplayName="Preparar clave compra" sap:VirtualizedContainerService.HintSize="510,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_CP_032">
+                          <Assign.To>
+                            <OutArgument x:TypeArguments="x:String">[claveCompraCostPlanning]</OutArgument>
+                          </Assign.To>
+                          <Assign.Value>
+                            <InArgument x:TypeArguments="x:String">[etiquetaCostPlanning + separadorClaveCostPlanning + descripcionCostPlanning]</InArgument>
+                          </Assign.Value>
+                        </Assign>
+                        <If Condition="[Not ordenComprasCostPlanning.Any(Function(compra) String.Equals(compra, claveCompraCostPlanning, System.StringComparison.OrdinalIgnoreCase))]" DisplayName="Registrar compra" sap:VirtualizedContainerService.HintSize="510,482" sap2010:WorkflowViewState.IdRef="If_CP_013">
+                          <If.Then>
+                            <Sequence DisplayName="Agregar compra al orden" sap:VirtualizedContainerService.HintSize="476,298" sap2010:WorkflowViewState.IdRef="Sequence_CP_010">
+                              <sap:WorkflowViewStateService.ViewState>
+                                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                </scg:Dictionary>
+                              </sap:WorkflowViewStateService.ViewState>
+                              <Assign DisplayName="Agregar clave compra al orden" sap:VirtualizedContainerService.HintSize="434,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_CP_033">
+                                <Assign.To>
+                                  <OutArgument x:TypeArguments="scg:List(x:String)">[ordenComprasCostPlanning]</OutArgument>
+                                </Assign.To>
+                                <Assign.Value>
+                                  <InArgument x:TypeArguments="scg:List(x:String)">[ordenComprasCostPlanning.Concat(New String() {claveCompraCostPlanning}).ToList()]</InArgument>
+                                </Assign.Value>
+                              </Assign>
+                              <Assign DisplayName="Guardar descripcion compra" sap:VirtualizedContainerService.HintSize="434,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_CP_034">
+                                <Assign.To>
+                                  <OutArgument x:TypeArguments="x:String">[compraDescripcionPorClaveCostPlanning(claveCompraCostPlanning)]</OutArgument>
+                                </Assign.To>
+                                <Assign.Value>
+                                  <InArgument x:TypeArguments="x:String">[descripcionCostPlanning]</InArgument>
+                                </Assign.Value>
+                              </Assign>
+                            </Sequence>
+                          </If.Then>
+                          <If.Else>
+                            <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_10" />
+                          </If.Else>
+                        </If>
+                        <Assign DisplayName="Preparar clave importe compra" sap:VirtualizedContainerService.HintSize="510,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_CP_035">
+                          <Assign.To>
+                            <OutArgument x:TypeArguments="x:String">[claveAgrupacionCostPlanning]</OutArgument>
+                          </Assign.To>
+                          <Assign.Value>
+                            <InArgument x:TypeArguments="x:String">[claveCompraCostPlanning + separadorClaveCostPlanning + anioValorCostPlanning.ToString()]</InArgument>
+                          </Assign.Value>
+                        </Assign>
+                        <Assign DisplayName="Acumular compra por clave" sap:VirtualizedContainerService.HintSize="510,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_CP_036">
+                          <Assign.To>
+                            <OutArgument x:TypeArguments="x:Double">[comprasPorClaveCostPlanning(claveAgrupacionCostPlanning)]</OutArgument>
+                          </Assign.To>
+                          <Assign.Value>
+                            <InArgument x:TypeArguments="x:Double">[If(comprasPorClaveCostPlanning.ContainsKey(claveAgrupacionCostPlanning), comprasPorClaveCostPlanning(claveAgrupacionCostPlanning), 0.0) + importeCostPlanning]</InArgument>
+                          </Assign.Value>
+                        </Assign>
+                      </Sequence>
+                    </If.Then>
+                    <If.Else>
+                      <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_11" />
+                    </If.Else>
+                  </If>
+                </Sequence>
+              </ActivityAction>
+            </ui:ForEachRow.Body>
+          </ui:ForEachRow>
+        </If.Then>
+        <If.Else>
+          <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_12" />
+        </If.Else>
+      </If>
+      <ui:MultipleAssign DisplayName="Resolver capacidad gastos y compras" sap:VirtualizedContainerService.HintSize="696,148" sap2010:WorkflowViewState.IdRef="MultipleAssign_CP_004">
+        <ui:MultipleAssign.AssignOperations>
+          <scg:List x:TypeArguments="ui:AssignOperation" Capacity="2">
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_020">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:Int32">[capacidadGastosCostPlanning]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:Int32">[If(in_CapacidadCostPlanningGastos &gt; 0, in_CapacidadCostPlanningGastos, If(esProyectoATCostPlanning, 8, 6))]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_021">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:Int32">[capacidadComprasCostPlanning]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:Int32">[If(in_CapacidadCostPlanningCompras &gt; 0, in_CapacidadCostPlanningCompras, If(esProyectoATCostPlanning, 9, 10))]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+          </scg:List>
+        </ui:MultipleAssign.AssignOperations>
+      </ui:MultipleAssign>
+      <If Condition="[ordenGastosCostPlanning.Count &gt; capacidadGastosCostPlanning]" DisplayName="Validar capacidad gastos Cost Planning" sap:VirtualizedContainerService.HintSize="696,276" sap2010:WorkflowViewState.IdRef="If_CP_014">
+        <If.Then>
+          <Throw DisplayName="Error capacidad gastos Cost Planning" Exception="[New Exception(&quot;La plantilla CORE &quot; + If(esProyectoATCostPlanning, &quot;AT&quot;, &quot;PC&quot;) + &quot; soporta &quot; + capacidadGastosCostPlanning.ToString() + &quot; lineas de gastos en Cost Planning. Gastos detectados: &quot; + ordenGastosCostPlanning.Count.ToString())]" sap:VirtualizedContainerService.HintSize="334,92" sap2010:WorkflowViewState.IdRef="Throw_CP_005" />
+        </If.Then>
+        <If.Else>
+          <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_13" />
+        </If.Else>
+      </If>
+      <If Condition="[ordenComprasCostPlanning.Count &gt; capacidadComprasCostPlanning]" DisplayName="Validar capacidad compras Cost Planning" sap:VirtualizedContainerService.HintSize="696,234" sap2010:WorkflowViewState.IdRef="If_CP_015">
+        <If.Then>
+          <Throw DisplayName="Error capacidad compras Cost Planning" Exception="[New Exception(&quot;La plantilla CORE &quot; + If(esProyectoATCostPlanning, &quot;AT&quot;, &quot;PC&quot;) + &quot; soporta &quot; + capacidadComprasCostPlanning.ToString() + &quot; lineas de compras en Cost Planning. Compras detectadas: &quot; + ordenComprasCostPlanning.Count.ToString())]" sap2010:WorkflowViewState.IdRef="Throw_CP_006" />
+        </If.Then>
+        <If.Else>
+          <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_14" />
+        </If.Else>
+      </If>
+    </Sequence>
+    <Sequence sap2010:Annotation.AnnotationText="Objetivo: crear tablas rectangulares Col01..ColNN con filas vacias hasta la capacidad real.&#xA;Salida: tablas PC/AT alineadas con los rangos fijos de Cost Planning." DisplayName="Construir tablas rectangulares Cost Planning" sap:VirtualizedContainerService.HintSize="758,1338" sap2010:WorkflowViewState.IdRef="Sequence_CP_011">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <ui:MultipleAssign DisplayName="Inicializar DataTables Cost Planning" sap:VirtualizedContainerService.HintSize="554.6666666666666,485.3333333333333" sap2010:WorkflowViewState.IdRef="MultipleAssign_CP_005">
+        <ui:MultipleAssign.AssignOperations>
+          <scg:List x:TypeArguments="ui:AssignOperation" Capacity="13">
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_022">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="sd:DataTable">[out_dt_CostPlanningPCHoras]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="sd:DataTable">[New System.Data.DataTable("dtCostPlanningPCHoras")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_023">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="sd:DataTable">[out_dt_CostPlanningPCRiesgosGarantia]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="sd:DataTable">[New System.Data.DataTable("dtCostPlanningPCRiesgosGarantia")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_024">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="sd:DataTable">[out_dt_CostPlanningPCGastosFijos]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="sd:DataTable">[New System.Data.DataTable("dtCostPlanningPCGastosFijos")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_025">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="sd:DataTable">[out_dt_CostPlanningPCGastosMeses]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="sd:DataTable">[New System.Data.DataTable("dtCostPlanningPCGastosMeses")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_026">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="sd:DataTable">[out_dt_CostPlanningPCComprasFijos]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="sd:DataTable">[New System.Data.DataTable("dtCostPlanningPCComprasFijos")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_027">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="sd:DataTable">[out_dt_CostPlanningPCComprasMeses]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="sd:DataTable">[New System.Data.DataTable("dtCostPlanningPCComprasMeses")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_028">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="sd:DataTable">[out_dt_CostPlanningATRecursosFijos]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="sd:DataTable">[New System.Data.DataTable("dtCostPlanningATRecursosFijos")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_029">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="sd:DataTable">[out_dt_CostPlanningATHoras]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="sd:DataTable">[New System.Data.DataTable("dtCostPlanningATHoras")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_030">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="sd:DataTable">[out_dt_CostPlanningATRiesgosGarantia]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="sd:DataTable">[New System.Data.DataTable("dtCostPlanningATRiesgosGarantia")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_031">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="sd:DataTable">[out_dt_CostPlanningATGastosFijos]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="sd:DataTable">[New System.Data.DataTable("dtCostPlanningATGastosFijos")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_032">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="sd:DataTable">[out_dt_CostPlanningATGastosMeses]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="sd:DataTable">[New System.Data.DataTable("dtCostPlanningATGastosMeses")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_033">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="sd:DataTable">[out_dt_CostPlanningATComprasFijos]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="sd:DataTable">[New System.Data.DataTable("dtCostPlanningATComprasFijos")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_034">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="sd:DataTable">[out_dt_CostPlanningATComprasMeses]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="sd:DataTable">[New System.Data.DataTable("dtCostPlanningATComprasMeses")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+          </scg:List>
+        </ui:MultipleAssign.AssignOperations>
+      </ui:MultipleAssign>
+      <Assign DisplayName="Definir tablas Cost Planning" sap:VirtualizedContainerService.HintSize="554.6666666666666,86" sap2010:WorkflowViewState.IdRef="Assign_CP_037">
+        <Assign.To>
+          <OutArgument x:TypeArguments="scg:List(s:Object[])">[costPlanningTablasDefinicion]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="scg:List(s:Object[])" xml:space="preserve">[New System.Collections.Generic.List(Of Object()) From {
+    New Object() {out_dt_CostPlanningPCHoras, duracionCostPlanning, capacidadFilasCostPlanningRecursos},
+    New Object() {out_dt_CostPlanningPCRiesgosGarantia, 25, 2},
+    New Object() {out_dt_CostPlanningPCGastosFijos, 3, capacidadGastosCostPlanning},
+    New Object() {out_dt_CostPlanningPCGastosMeses, duracionCostPlanning, capacidadGastosCostPlanning},
+    New Object() {out_dt_CostPlanningPCComprasFijos, 4, capacidadComprasCostPlanning},
+    New Object() {out_dt_CostPlanningPCComprasMeses, duracionCostPlanning, capacidadComprasCostPlanning},
+    New Object() {out_dt_CostPlanningATRecursosFijos, 5, capacidadFilasCostPlanningRecursos},
+    New Object() {out_dt_CostPlanningATHoras, duracionCostPlanning, capacidadFilasCostPlanningRecursos},
+    New Object() {out_dt_CostPlanningATRiesgosGarantia, 25, 2},
+    New Object() {out_dt_CostPlanningATGastosFijos, 6, capacidadGastosCostPlanning},
+    New Object() {out_dt_CostPlanningATGastosMeses, duracionCostPlanning, capacidadGastosCostPlanning},
+    New Object() {out_dt_CostPlanningATComprasFijos, 6, capacidadComprasCostPlanning},
+    New Object() {out_dt_CostPlanningATComprasMeses, duracionCostPlanning, capacidadComprasCostPlanning}
+}]</InArgument>
+        </Assign.Value>
+      </Assign>
+      <ui:ForEach x:TypeArguments="s:Object[]" CurrentIndex="{x:Null}" DisplayName="Recorrer tablas Cost Planning" sap:VirtualizedContainerService.HintSize="554.6666666666666,576" sap2010:WorkflowViewState.IdRef="ForEach_CP_001" Values="[costPlanningTablasDefinicion]">
+        <ui:ForEach.Body>
+          <ActivityAction x:TypeArguments="s:Object[]">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="s:Object[]" Name="tablaCostPlanningDefinicion" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Preparar tabla Cost Planning" sap:VirtualizedContainerService.HintSize="520.6666666666666,386" sap2010:WorkflowViewState.IdRef="Sequence_CP_012">
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+              <ui:MultipleAssign DisplayName="Resolver definicion tabla Cost Planning" sap:VirtualizedContainerService.HintSize="478.6666666666667,178.66666666666666" sap2010:WorkflowViewState.IdRef="MultipleAssign_CP_006">
+                <ui:MultipleAssign.AssignOperations>
+                  <scg:List x:TypeArguments="ui:AssignOperation" Capacity="3">
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_035">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="sd:DataTable">[dtCostPlanningActual]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="sd:DataTable">[CType(tablaCostPlanningDefinicion(0), System.Data.DataTable)]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_036">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Int32">[columnasCostPlanningActual]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Int32">[CInt(tablaCostPlanningDefinicion(1))]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_037">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Int32">[filasCostPlanningActual]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Int32">[CInt(tablaCostPlanningDefinicion(2))]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                  </scg:List>
+                </ui:MultipleAssign.AssignOperations>
+              </ui:MultipleAssign>
+              <ui:ForEach x:TypeArguments="x:Int32" CurrentIndex="{x:Null}" DisplayName="Crear columnas Cost Planning" sap2010:WorkflowViewState.IdRef="ForEach_CP_002" Values="[System.Linq.Enumerable.Range(1, columnasCostPlanningActual)]">
+                <ui:ForEach.Body>
+                  <ActivityAction x:TypeArguments="x:Int32">
+                    <ActivityAction.Argument>
+                      <DelegateInArgument x:TypeArguments="x:Int32" Name="columnaCostPlanningIndice" />
+                    </ActivityAction.Argument>
+                    <ui:AddDataColumn x:TypeArguments="x:Object" AllowDBNull="{x:Null}" AutoIncrement="{x:Null}" Column="{x:Null}" DefaultValue="{x:Null}" MaxLength="{x:Null}" Unique="{x:Null}" ColumnName="[&quot;Col&quot; + columnaCostPlanningIndice.ToString(&quot;00&quot;)]" DataTable="[dtCostPlanningActual]" DisplayName="Agregar columna Cost Planning" sap2010:WorkflowViewState.IdRef="AddDataColumn_CP_001" />
+                  </ActivityAction>
+                </ui:ForEach.Body>
+              </ui:ForEach>
+              <ui:ForEach x:TypeArguments="x:Int32" CurrentIndex="{x:Null}" DisplayName="Crear filas vacias Cost Planning" sap2010:WorkflowViewState.IdRef="ForEach_CP_003" Values="[System.Linq.Enumerable.Range(0, filasCostPlanningActual)]">
+                <ui:ForEach.Body>
+                  <ActivityAction x:TypeArguments="x:Int32">
+                    <ActivityAction.Argument>
+                      <DelegateInArgument x:TypeArguments="x:Int32" Name="filaCostPlanningIndice" />
+                    </ActivityAction.Argument>
+                    <ui:AddDataRow DataRow="{x:Null}" ArrayRow="[System.Linq.Enumerable.Repeat(CType(&quot;&quot;, Object), columnasCostPlanningActual).ToArray()]" DataTable="[dtCostPlanningActual]" DisplayName="Agregar fila vacia Cost Planning" sap2010:WorkflowViewState.IdRef="AddDataRow_CP_001" />
+                  </ActivityAction>
+                </ui:ForEach.Body>
+              </ui:ForEach>
+            </Sequence>
+          </ActivityAction>
+        </ui:ForEach.Body>
+      </ui:ForEach>
+    </Sequence>
+    <Sequence sap2010:Annotation.AnnotationText="Objetivo: cargar horas PC y AT usando el prorrateo plano por anualidad.&#xA;Regla: PC ocupa una fila por perfil; AT duplica cada perfil para horas reales y facturables." DisplayName="Cargar recursos y horas Cost Planning" sap:VirtualizedContainerService.HintSize="758,350.6666666666667" sap2010:WorkflowViewState.IdRef="Sequence_CP_013">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <ui:ForEach x:TypeArguments="x:Int32" CurrentIndex="{x:Null}" DisplayName="Recorrer perfiles Cost Planning" sap:VirtualizedContainerService.HintSize="388,240" sap2010:WorkflowViewState.IdRef="ForEach_CP_004" Values="[System.Linq.Enumerable.Range(0, If(in_dt_PerfilesPPO Is Nothing, 0, in_dt_PerfilesPPO.Rows.Count))]">
+        <ui:ForEach.Body>
+          <ActivityAction x:TypeArguments="x:Int32">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="x:Int32" Name="indicePerfilCostPlanning" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Preparar perfil Cost Planning" sap2010:WorkflowViewState.IdRef="Sequence_CP_014">
+              <ui:MultipleAssign DisplayName="Leer perfil PPO Cost Planning" sap2010:WorkflowViewState.IdRef="MultipleAssign_CP_007">
+                <ui:MultipleAssign.AssignOperations>
+                  <scg:List x:TypeArguments="ui:AssignOperation" Capacity="6">
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_038">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="sd:DataRow">[filaPerfilCostPlanning]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="sd:DataRow">[in_dt_PerfilesPPO.Rows(indicePerfilCostPlanning)]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_039">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:String">[siglaCostPlanning]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:String">[If(filaPerfilCostPlanning("Sigla") Is Nothing OrElse TypeOf filaPerfilCostPlanning("Sigla") Is DBNull, "", Convert.ToString(filaPerfilCostPlanning("Sigla")).Trim())]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_040">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:String">[perfilCostPlanning]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:String">[If(filaPerfilCostPlanning("Perfil") Is Nothing OrElse TypeOf filaPerfilCostPlanning("Perfil") Is DBNull, "", Convert.ToString(filaPerfilCostPlanning("Perfil")).Trim())]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_041">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Int32">[filaATCostPlanning]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Int32">[indicePerfilCostPlanning * 2]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_042">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Object">[codigoEmpleadoCostPlanning]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Object">[CType("", Object)]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_043">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Object">[intercompanyCostPlanning]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Object">[CType("", Object)]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                  </scg:List>
+                </ui:MultipleAssign.AssignOperations>
+              </ui:MultipleAssign>
+              <Assign DisplayName="Inicializar perfil AT Cost Planning" sap2010:WorkflowViewState.IdRef="Assign_CP_038">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:Object">[perfilATCostPlanning]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:Object">[CType(perfilCostPlanning, Object)]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <If Condition="[in_dt_ResourcesATFijos IsNot Nothing AndAlso filaATCostPlanning &lt; in_dt_ResourcesATFijos.Rows.Count]" DisplayName="Hay Resources AT para el perfil" sap2010:WorkflowViewState.IdRef="If_CP_016">
+                <If.Then>
+                  <ui:MultipleAssign DisplayName="Leer datos Resources AT" sap2010:WorkflowViewState.IdRef="MultipleAssign_CP_008">
+                    <ui:MultipleAssign.AssignOperations>
+                      <scg:List x:TypeArguments="ui:AssignOperation" Capacity="3">
+                        <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_044">
+                          <ui:AssignOperation.To>
+                            <OutArgument x:TypeArguments="x:Object">[codigoEmpleadoCostPlanning]</OutArgument>
+                          </ui:AssignOperation.To>
+                          <ui:AssignOperation.Value>
+                            <InArgument x:TypeArguments="x:Object">[in_dt_ResourcesATFijos.Rows(filaATCostPlanning)(0)]</InArgument>
+                          </ui:AssignOperation.Value>
+                        </ui:AssignOperation>
+                        <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_045">
+                          <ui:AssignOperation.To>
+                            <OutArgument x:TypeArguments="x:Object">[intercompanyCostPlanning]</OutArgument>
+                          </ui:AssignOperation.To>
+                          <ui:AssignOperation.Value>
+                            <InArgument x:TypeArguments="x:Object">[in_dt_ResourcesATFijos.Rows(filaATCostPlanning)(2)]</InArgument>
+                          </ui:AssignOperation.Value>
+                        </ui:AssignOperation>
+                        <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_046">
+                          <ui:AssignOperation.To>
+                            <OutArgument x:TypeArguments="x:Object">[perfilATCostPlanning]</OutArgument>
+                          </ui:AssignOperation.To>
+                          <ui:AssignOperation.Value>
+                            <InArgument x:TypeArguments="x:Object">[in_dt_ResourcesATFijos.Rows(filaATCostPlanning)(3)]</InArgument>
+                          </ui:AssignOperation.Value>
+                        </ui:AssignOperation>
+                      </scg:List>
+                    </ui:MultipleAssign.AssignOperations>
+                  </ui:MultipleAssign>
+                </If.Then>
+              </If>
+              <If Condition="[filaATCostPlanning + 1 &lt; out_dt_CostPlanningATRecursosFijos.Rows.Count]" DisplayName="Hay filas AT para el perfil Cost Planning" sap2010:WorkflowViewState.IdRef="If_CP_017">
+                <If.Then>
+                  <ui:MultipleAssign DisplayName="Escribir fijos AT Cost Planning" sap2010:WorkflowViewState.IdRef="MultipleAssign_CP_009">
+                    <ui:MultipleAssign.AssignOperations>
+                      <scg:List x:TypeArguments="ui:AssignOperation" Capacity="8">
+                        <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_047">
+                          <ui:AssignOperation.To>
+                            <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningATRecursosFijos.Rows(filaATCostPlanning)(0)]</OutArgument>
+                          </ui:AssignOperation.To>
+                          <ui:AssignOperation.Value>
+                            <InArgument x:TypeArguments="x:Object">[If(codigoEmpleadoCostPlanning Is Nothing, CType("", Object), codigoEmpleadoCostPlanning)]</InArgument>
+                          </ui:AssignOperation.Value>
+                        </ui:AssignOperation>
+                        <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_048">
+                          <ui:AssignOperation.To>
+                            <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningATRecursosFijos.Rows(filaATCostPlanning)(1)]</OutArgument>
+                          </ui:AssignOperation.To>
+                          <ui:AssignOperation.Value>
+                            <InArgument x:TypeArguments="x:Object">[siglaCostPlanning]</InArgument>
+                          </ui:AssignOperation.Value>
+                        </ui:AssignOperation>
+                        <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_049">
+                          <ui:AssignOperation.To>
+                            <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningATRecursosFijos.Rows(filaATCostPlanning)(2)]</OutArgument>
+                          </ui:AssignOperation.To>
+                          <ui:AssignOperation.Value>
+                            <InArgument x:TypeArguments="x:Object">[If(intercompanyCostPlanning Is Nothing, CType("", Object), intercompanyCostPlanning)]</InArgument>
+                          </ui:AssignOperation.Value>
+                        </ui:AssignOperation>
+                        <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_050">
+                          <ui:AssignOperation.To>
+                            <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningATRecursosFijos.Rows(filaATCostPlanning)(3)]</OutArgument>
+                          </ui:AssignOperation.To>
+                          <ui:AssignOperation.Value>
+                            <InArgument x:TypeArguments="x:Object">[If(perfilATCostPlanning Is Nothing, CType("", Object), perfilATCostPlanning)]</InArgument>
+                          </ui:AssignOperation.Value>
+                        </ui:AssignOperation>
+                        <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_051">
+                          <ui:AssignOperation.To>
+                            <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningATRecursosFijos.Rows(filaATCostPlanning + 1)(0)]</OutArgument>
+                          </ui:AssignOperation.To>
+                          <ui:AssignOperation.Value>
+                            <InArgument x:TypeArguments="x:Object">[If(codigoEmpleadoCostPlanning Is Nothing, CType("", Object), codigoEmpleadoCostPlanning)]</InArgument>
+                          </ui:AssignOperation.Value>
+                        </ui:AssignOperation>
+                        <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_052">
+                          <ui:AssignOperation.To>
+                            <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningATRecursosFijos.Rows(filaATCostPlanning + 1)(1)]</OutArgument>
+                          </ui:AssignOperation.To>
+                          <ui:AssignOperation.Value>
+                            <InArgument x:TypeArguments="x:Object">[siglaCostPlanning]</InArgument>
+                          </ui:AssignOperation.Value>
+                        </ui:AssignOperation>
+                        <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_053">
+                          <ui:AssignOperation.To>
+                            <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningATRecursosFijos.Rows(filaATCostPlanning + 1)(2)]</OutArgument>
+                          </ui:AssignOperation.To>
+                          <ui:AssignOperation.Value>
+                            <InArgument x:TypeArguments="x:Object">[If(intercompanyCostPlanning Is Nothing, CType("", Object), intercompanyCostPlanning)]</InArgument>
+                          </ui:AssignOperation.Value>
+                        </ui:AssignOperation>
+                        <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_054">
+                          <ui:AssignOperation.To>
+                            <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningATRecursosFijos.Rows(filaATCostPlanning + 1)(3)]</OutArgument>
+                          </ui:AssignOperation.To>
+                          <ui:AssignOperation.Value>
+                            <InArgument x:TypeArguments="x:Object">[If(perfilATCostPlanning Is Nothing, CType("", Object), perfilATCostPlanning)]</InArgument>
+                          </ui:AssignOperation.Value>
+                        </ui:AssignOperation>
+                      </scg:List>
+                    </ui:MultipleAssign.AssignOperations>
+                  </ui:MultipleAssign>
+                </If.Then>
+              </If>
+              <ui:ForEach x:TypeArguments="x:Int32" CurrentIndex="{x:Null}" DisplayName="Recorrer meses perfil Cost Planning" sap2010:WorkflowViewState.IdRef="ForEach_CP_005" Values="[System.Linq.Enumerable.Range(0, duracionCostPlanning)]">
+                <ui:ForEach.Body>
+                  <ActivityAction x:TypeArguments="x:Int32">
+                    <ActivityAction.Argument>
+                      <DelegateInArgument x:TypeArguments="x:Int32" Name="mesCostPlanningIndice" />
+                    </ActivityAction.Argument>
+                    <Sequence DisplayName="Escribir horas mensuales Cost Planning" sap2010:WorkflowViewState.IdRef="Sequence_CP_015">
+                      <Assign DisplayName="Resolver anio del mes horas" sap2010:WorkflowViewState.IdRef="Assign_CP_039">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:Int32">[anioMesCostPlanning]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:Int32">[aniosMesesCostPlanning(mesCostPlanningIndice)]</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <Assign DisplayName="Preparar clave horas mensuales" sap2010:WorkflowViewState.IdRef="Assign_CP_040">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:String">[claveAgrupacionCostPlanning]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:String">[siglaCostPlanning + separadorClaveCostPlanning + anioMesCostPlanning.ToString()]</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <Assign DisplayName="Detectar horas del mes" sap2010:WorkflowViewState.IdRef="Assign_CP_041">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:Boolean">[horasEncontradasCostPlanning]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:Boolean">[horasPorClaveCostPlanning.ContainsKey(claveAgrupacionCostPlanning) AndAlso conteoPorAnioCostPlanning.ContainsKey(anioMesCostPlanning) AndAlso conteoPorAnioCostPlanning(anioMesCostPlanning) &gt; 0]</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <Assign DisplayName="Calcular horas prorrateadas" sap2010:WorkflowViewState.IdRef="Assign_CP_042">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:Double">[horasCostPlanning]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:Double">[If(horasEncontradasCostPlanning, horasPorClaveCostPlanning(claveAgrupacionCostPlanning) / conteoPorAnioCostPlanning(anioMesCostPlanning), 0.0)]</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <If Condition="[horasEncontradasCostPlanning]" DisplayName="Escribir horas prorrateadas" sap2010:WorkflowViewState.IdRef="If_CP_018">
+                        <If.Then>
+                          <Sequence DisplayName="Volcar horas en tablas PC y AT" sap2010:WorkflowViewState.IdRef="Sequence_CP_016">
+                            <Assign DisplayName="Escribir horas PC" sap2010:WorkflowViewState.IdRef="Assign_CP_043">
+                              <Assign.To>
+                                <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningPCHoras.Rows(indicePerfilCostPlanning)(mesCostPlanningIndice)]</OutArgument>
+                              </Assign.To>
+                              <Assign.Value>
+                                <InArgument x:TypeArguments="x:Object">[If(System.Math.Abs(horasCostPlanning) &lt;= 0.0000001, CType(0.0, Object), CType(horasCostPlanning, Object))]</InArgument>
+                              </Assign.Value>
+                            </Assign>
+                            <If Condition="[filaATCostPlanning + 1 &lt; out_dt_CostPlanningATHoras.Rows.Count]" DisplayName="Hay filas AT para horas" sap2010:WorkflowViewState.IdRef="If_CP_019">
+                              <If.Then>
+                                <ui:MultipleAssign DisplayName="Escribir horas AT" sap2010:WorkflowViewState.IdRef="MultipleAssign_CP_010">
+                                  <ui:MultipleAssign.AssignOperations>
+                                    <scg:List x:TypeArguments="ui:AssignOperation" Capacity="2">
+                                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_055">
+                                        <ui:AssignOperation.To>
+                                          <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningATHoras.Rows(filaATCostPlanning)(mesCostPlanningIndice)]</OutArgument>
+                                        </ui:AssignOperation.To>
+                                        <ui:AssignOperation.Value>
+                                          <InArgument x:TypeArguments="x:Object">[If(System.Math.Abs(horasCostPlanning) &lt;= 0.0000001, CType(0.0, Object), CType(horasCostPlanning, Object))]</InArgument>
+                                        </ui:AssignOperation.Value>
+                                      </ui:AssignOperation>
+                                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_056">
+                                        <ui:AssignOperation.To>
+                                          <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningATHoras.Rows(filaATCostPlanning + 1)(mesCostPlanningIndice)]</OutArgument>
+                                        </ui:AssignOperation.To>
+                                        <ui:AssignOperation.Value>
+                                          <InArgument x:TypeArguments="x:Object">[If(System.Math.Abs(horasCostPlanning) &lt;= 0.0000001, CType(0.0, Object), CType(horasCostPlanning, Object))]</InArgument>
+                                        </ui:AssignOperation.Value>
+                                      </ui:AssignOperation>
+                                    </scg:List>
+                                  </ui:MultipleAssign.AssignOperations>
+                                </ui:MultipleAssign>
+                              </If.Then>
+                            </If>
+                          </Sequence>
+                        </If.Then>
+                      </If>
+                    </Sequence>
+                  </ActivityAction>
+                </ui:ForEach.Body>
+              </ui:ForEach>
+            </Sequence>
+          </ActivityAction>
+        </ui:ForEach.Body>
+      </ui:ForEach>
+    </Sequence>
+    <Sequence sap2010:Annotation.AnnotationText="Objetivo: escribir riesgos y garantia en el ultimo mes real del proyecto cuando vienen informados." DisplayName="Cargar riesgos y garantia Cost Planning" sap:VirtualizedContainerService.HintSize="758,610.6666666666666" sap2010:WorkflowViewState.IdRef="Sequence_CP_017">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <Assign DisplayName="Calcular ultimo mes Cost Planning" sap2010:WorkflowViewState.IdRef="Assign_CP_044">
+        <Assign.To>
+          <OutArgument x:TypeArguments="x:Int32">[indiceUltimoMesCostPlanning]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="x:Int32">[duracionCostPlanning - 1]</InArgument>
+        </Assign.Value>
+      </Assign>
+      <Assign DisplayName="Leer riesgos PPO" sap2010:WorkflowViewState.IdRef="Assign_CP_045">
+        <Assign.To>
+          <OutArgument x:TypeArguments="x:Object">[valorNumeroCostPlanning]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="x:Object">[in_Riesgos]</InArgument>
+        </Assign.Value>
+      </Assign>
+      <Assign DisplayName="Validar riesgos PPO" sap2010:WorkflowViewState.IdRef="Assign_CP_046">
+        <Assign.To>
+          <OutArgument x:TypeArguments="x:Boolean">[riesgosDisponibleCostPlanning]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="x:Boolean">[(valorNumeroCostPlanning IsNot Nothing AndAlso Not TypeOf valorNumeroCostPlanning Is DBNull AndAlso Not String.IsNullOrWhiteSpace(Convert.ToString(valorNumeroCostPlanning).Trim()) AndAlso (TypeOf valorNumeroCostPlanning Is Double OrElse TypeOf valorNumeroCostPlanning Is Single OrElse TypeOf valorNumeroCostPlanning Is Integer OrElse TypeOf valorNumeroCostPlanning Is Long OrElse TypeOf valorNumeroCostPlanning Is Decimal OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim().Replace(".", "").Replace(",", "."), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalCostPlanning)))]</InArgument>
+        </Assign.Value>
+      </Assign>
+      <Assign DisplayName="Normalizar riesgos PPO" sap2010:WorkflowViewState.IdRef="Assign_CP_047">
+        <Assign.To>
+          <OutArgument x:TypeArguments="x:Double">[riesgosCostPlanning]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="x:Double">[If(riesgosDisponibleCostPlanning, If(TypeOf valorNumeroCostPlanning Is Double OrElse TypeOf valorNumeroCostPlanning Is Single OrElse TypeOf valorNumeroCostPlanning Is Integer OrElse TypeOf valorNumeroCostPlanning Is Long OrElse TypeOf valorNumeroCostPlanning Is Decimal, Convert.ToDouble(valorNumeroCostPlanning), numeroTemporalCostPlanning), 0.0)]</InArgument>
+        </Assign.Value>
+      </Assign>
+      <If Condition="[riesgosDisponibleCostPlanning]" DisplayName="Escribir riesgos Cost Planning" sap2010:WorkflowViewState.IdRef="If_CP_020">
+        <If.Then>
+          <ui:MultipleAssign DisplayName="Volcar riesgos PC y AT" sap2010:WorkflowViewState.IdRef="MultipleAssign_CP_011">
+            <ui:MultipleAssign.AssignOperations>
+              <scg:List x:TypeArguments="ui:AssignOperation" Capacity="2">
+                <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_057">
+                  <ui:AssignOperation.To>
+                    <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningPCRiesgosGarantia.Rows(0)(indiceUltimoMesCostPlanning)]</OutArgument>
+                  </ui:AssignOperation.To>
+                  <ui:AssignOperation.Value>
+                    <InArgument x:TypeArguments="x:Object">[If(System.Math.Abs(riesgosCostPlanning) &lt;= 0.0000001, CType(0.0, Object), CType(riesgosCostPlanning, Object))]</InArgument>
+                  </ui:AssignOperation.Value>
+                </ui:AssignOperation>
+                <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_058">
+                  <ui:AssignOperation.To>
+                    <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningATRiesgosGarantia.Rows(0)(indiceUltimoMesCostPlanning)]</OutArgument>
+                  </ui:AssignOperation.To>
+                  <ui:AssignOperation.Value>
+                    <InArgument x:TypeArguments="x:Object">[If(System.Math.Abs(riesgosCostPlanning) &lt;= 0.0000001, CType(0.0, Object), CType(riesgosCostPlanning, Object))]</InArgument>
+                  </ui:AssignOperation.Value>
+                </ui:AssignOperation>
+              </scg:List>
+            </ui:MultipleAssign.AssignOperations>
+          </ui:MultipleAssign>
+        </If.Then>
+      </If>
+      <Assign DisplayName="Leer garantia PPO" sap2010:WorkflowViewState.IdRef="Assign_CP_048">
+        <Assign.To>
+          <OutArgument x:TypeArguments="x:Object">[valorNumeroCostPlanning]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="x:Object">[in_Garantia]</InArgument>
+        </Assign.Value>
+      </Assign>
+      <Assign DisplayName="Validar garantia PPO" sap2010:WorkflowViewState.IdRef="Assign_CP_049">
+        <Assign.To>
+          <OutArgument x:TypeArguments="x:Boolean">[garantiaDisponibleCostPlanning]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="x:Boolean">[(valorNumeroCostPlanning IsNot Nothing AndAlso Not TypeOf valorNumeroCostPlanning Is DBNull AndAlso Not String.IsNullOrWhiteSpace(Convert.ToString(valorNumeroCostPlanning).Trim()) AndAlso (TypeOf valorNumeroCostPlanning Is Double OrElse TypeOf valorNumeroCostPlanning Is Single OrElse TypeOf valorNumeroCostPlanning Is Integer OrElse TypeOf valorNumeroCostPlanning Is Long OrElse TypeOf valorNumeroCostPlanning Is Decimal OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalCostPlanning) OrElse Double.TryParse(Convert.ToString(valorNumeroCostPlanning).Trim().Replace(".", "").Replace(",", "."), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalCostPlanning)))]</InArgument>
+        </Assign.Value>
+      </Assign>
+      <Assign DisplayName="Normalizar garantia PPO" sap2010:WorkflowViewState.IdRef="Assign_CP_050">
+        <Assign.To>
+          <OutArgument x:TypeArguments="x:Double">[garantiaCostPlanning]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="x:Double">[If(garantiaDisponibleCostPlanning, If(TypeOf valorNumeroCostPlanning Is Double OrElse TypeOf valorNumeroCostPlanning Is Single OrElse TypeOf valorNumeroCostPlanning Is Integer OrElse TypeOf valorNumeroCostPlanning Is Long OrElse TypeOf valorNumeroCostPlanning Is Decimal, Convert.ToDouble(valorNumeroCostPlanning), numeroTemporalCostPlanning), 0.0)]</InArgument>
+        </Assign.Value>
+      </Assign>
+      <If Condition="[garantiaDisponibleCostPlanning]" DisplayName="Escribir garantia Cost Planning" sap2010:WorkflowViewState.IdRef="If_CP_021">
+        <If.Then>
+          <ui:MultipleAssign DisplayName="Volcar garantia PC y AT" sap2010:WorkflowViewState.IdRef="MultipleAssign_CP_012">
+            <ui:MultipleAssign.AssignOperations>
+              <scg:List x:TypeArguments="ui:AssignOperation" Capacity="2">
+                <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_059">
+                  <ui:AssignOperation.To>
+                    <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningPCRiesgosGarantia.Rows(1)(indiceUltimoMesCostPlanning)]</OutArgument>
+                  </ui:AssignOperation.To>
+                  <ui:AssignOperation.Value>
+                    <InArgument x:TypeArguments="x:Object">[If(System.Math.Abs(garantiaCostPlanning) &lt;= 0.0000001, CType(0.0, Object), CType(garantiaCostPlanning, Object))]</InArgument>
+                  </ui:AssignOperation.Value>
+                </ui:AssignOperation>
+                <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_060">
+                  <ui:AssignOperation.To>
+                    <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningATRiesgosGarantia.Rows(1)(indiceUltimoMesCostPlanning)]</OutArgument>
+                  </ui:AssignOperation.To>
+                  <ui:AssignOperation.Value>
+                    <InArgument x:TypeArguments="x:Object">[If(System.Math.Abs(garantiaCostPlanning) &lt;= 0.0000001, CType(0.0, Object), CType(garantiaCostPlanning, Object))]</InArgument>
+                  </ui:AssignOperation.Value>
+                </ui:AssignOperation>
+              </scg:List>
+            </ui:MultipleAssign.AssignOperations>
+          </ui:MultipleAssign>
+        </If.Then>
+      </If>
+    </Sequence>
+    <Sequence sap2010:Annotation.AnnotationText="Objetivo: cargar gastos fijos y meses manteniendo descripcion PPO y tipo funcional." DisplayName="Cargar gastos Cost Planning" sap:VirtualizedContainerService.HintSize="758,130.66666666666666" sap2010:WorkflowViewState.IdRef="Sequence_CP_018">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <ui:ForEach x:TypeArguments="x:Int32" CurrentIndex="{x:Null}" DisplayName="Recorrer gastos preparados" sap2010:WorkflowViewState.IdRef="ForEach_CP_006" Values="[System.Linq.Enumerable.Range(0, ordenGastosCostPlanning.Count)]">
+        <ui:ForEach.Body>
+          <ActivityAction x:TypeArguments="x:Int32">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="x:Int32" Name="indiceGastoCostPlanning" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Escribir gasto Cost Planning" sap2010:WorkflowViewState.IdRef="Sequence_CP_019">
+              <ui:MultipleAssign DisplayName="Preparar gasto fijo" sap2010:WorkflowViewState.IdRef="MultipleAssign_CP_013">
+                <ui:MultipleAssign.AssignOperations>
+                  <scg:List x:TypeArguments="ui:AssignOperation" Capacity="2">
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_061">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:String">[descripcionCostPlanning]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:String">[ordenGastosCostPlanning(indiceGastoCostPlanning)]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_062">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:String">[tipoGastoCostPlanning]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:String">[If(System.Text.RegularExpressions.Regex.IsMatch(descripcionCostPlanning, "Viajes|Agencia|Travel", System.Text.RegularExpressions.RegexOptions.IgnoreCase), "Travelling Expenses", "Otros")]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                  </scg:List>
+                </ui:MultipleAssign.AssignOperations>
+              </ui:MultipleAssign>
+              <ui:MultipleAssign DisplayName="Escribir gasto fijo PC y AT" sap2010:WorkflowViewState.IdRef="MultipleAssign_CP_014">
+                <ui:MultipleAssign.AssignOperations>
+                  <scg:List x:TypeArguments="ui:AssignOperation" Capacity="6">
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_063">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningPCGastosFijos.Rows(indiceGastoCostPlanning)(0)]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Object">[tipoGastoCostPlanning]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_064">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningPCGastosFijos.Rows(indiceGastoCostPlanning)(1)]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Object">[descripcionCostPlanning]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_065">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningPCGastosFijos.Rows(indiceGastoCostPlanning)(2)]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Object">["PPO"]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_066">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningATGastosFijos.Rows(indiceGastoCostPlanning)(0)]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Object">[tipoGastoCostPlanning]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_067">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningATGastosFijos.Rows(indiceGastoCostPlanning)(1)]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Object">[descripcionCostPlanning]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_068">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningATGastosFijos.Rows(indiceGastoCostPlanning)(2)]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Object">["PPO"]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                  </scg:List>
+                </ui:MultipleAssign.AssignOperations>
+              </ui:MultipleAssign>
+              <ui:ForEach x:TypeArguments="x:Int32" CurrentIndex="{x:Null}" DisplayName="Recorrer meses gasto" sap2010:WorkflowViewState.IdRef="ForEach_CP_007" Values="[System.Linq.Enumerable.Range(0, duracionCostPlanning)]">
+                <ui:ForEach.Body>
+                  <ActivityAction x:TypeArguments="x:Int32">
+                    <ActivityAction.Argument>
+                      <DelegateInArgument x:TypeArguments="x:Int32" Name="mesGastoCostPlanning" />
+                    </ActivityAction.Argument>
+                    <Sequence DisplayName="Escribir importe gasto mensual" sap2010:WorkflowViewState.IdRef="Sequence_CP_020">
+                      <Assign DisplayName="Resolver anio gasto mensual" sap2010:WorkflowViewState.IdRef="Assign_CP_051">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:Int32">[anioMesCostPlanning]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:Int32">[aniosMesesCostPlanning(mesGastoCostPlanning)]</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <Assign DisplayName="Preparar clave gasto mensual" sap2010:WorkflowViewState.IdRef="Assign_CP_052">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:String">[claveAgrupacionCostPlanning]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:String">[descripcionCostPlanning + separadorClaveCostPlanning + anioMesCostPlanning.ToString()]</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <Assign DisplayName="Detectar gasto del mes" sap2010:WorkflowViewState.IdRef="Assign_CP_053">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:Boolean">[importeDisponibleCostPlanning]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:Boolean">[gastosPorClaveCostPlanning.ContainsKey(claveAgrupacionCostPlanning) AndAlso conteoPorAnioCostPlanning.ContainsKey(anioMesCostPlanning) AndAlso conteoPorAnioCostPlanning(anioMesCostPlanning) &gt; 0]</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <Assign DisplayName="Calcular gasto prorrateado" sap2010:WorkflowViewState.IdRef="Assign_CP_054">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:Double">[importeDistribuidoCostPlanning]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:Double">[If(importeDisponibleCostPlanning, gastosPorClaveCostPlanning(claveAgrupacionCostPlanning) / conteoPorAnioCostPlanning(anioMesCostPlanning), 0.0)]</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <If Condition="[importeDisponibleCostPlanning]" DisplayName="Escribir gasto prorrateado" sap2010:WorkflowViewState.IdRef="If_CP_022">
+                        <If.Then>
+                          <ui:MultipleAssign DisplayName="Volcar gasto mensual PC y AT" sap2010:WorkflowViewState.IdRef="MultipleAssign_CP_015">
+                            <ui:MultipleAssign.AssignOperations>
+                              <scg:List x:TypeArguments="ui:AssignOperation" Capacity="2">
+                                <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_069">
+                                  <ui:AssignOperation.To>
+                                    <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningPCGastosMeses.Rows(indiceGastoCostPlanning)(mesGastoCostPlanning)]</OutArgument>
+                                  </ui:AssignOperation.To>
+                                  <ui:AssignOperation.Value>
+                                    <InArgument x:TypeArguments="x:Object">[If(System.Math.Abs(importeDistribuidoCostPlanning) &lt;= 0.0000001, CType(0.0, Object), CType(importeDistribuidoCostPlanning, Object))]</InArgument>
+                                  </ui:AssignOperation.Value>
+                                </ui:AssignOperation>
+                                <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_070">
+                                  <ui:AssignOperation.To>
+                                    <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningATGastosMeses.Rows(indiceGastoCostPlanning)(mesGastoCostPlanning)]</OutArgument>
+                                  </ui:AssignOperation.To>
+                                  <ui:AssignOperation.Value>
+                                    <InArgument x:TypeArguments="x:Object">[If(System.Math.Abs(importeDistribuidoCostPlanning) &lt;= 0.0000001, CType(0.0, Object), CType(importeDistribuidoCostPlanning, Object))]</InArgument>
+                                  </ui:AssignOperation.Value>
+                                </ui:AssignOperation>
+                              </scg:List>
+                            </ui:MultipleAssign.AssignOperations>
+                          </ui:MultipleAssign>
+                        </If.Then>
+                      </If>
+                    </Sequence>
+                  </ActivityAction>
+                </ui:ForEach.Body>
+              </ui:ForEach>
+            </Sequence>
+          </ActivityAction>
+        </ui:ForEach.Body>
+      </ui:ForEach>
+    </Sequence>
+    <Sequence sap2010:Annotation.AnnotationText="Objetivo: cargar compras fijas SAP/PPO y prorratear importes por anualidad." DisplayName="Cargar compras Cost Planning" sap:VirtualizedContainerService.HintSize="758,130.66666666666666" sap2010:WorkflowViewState.IdRef="Sequence_CP_021">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <ui:ForEach x:TypeArguments="x:Int32" CurrentIndex="{x:Null}" DisplayName="Recorrer compras preparadas" sap2010:WorkflowViewState.IdRef="ForEach_CP_008" Values="[System.Linq.Enumerable.Range(0, ordenComprasCostPlanning.Count)]">
+        <ui:ForEach.Body>
+          <ActivityAction x:TypeArguments="x:Int32">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="x:Int32" Name="indiceCompraCostPlanning" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Escribir compra Cost Planning" sap2010:WorkflowViewState.IdRef="Sequence_CP_022">
+              <ui:MultipleAssign DisplayName="Preparar compra fija" sap2010:WorkflowViewState.IdRef="MultipleAssign_CP_016">
+                <ui:MultipleAssign.AssignOperations>
+                  <scg:List x:TypeArguments="ui:AssignOperation" Capacity="2">
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_071">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:String">[claveCompraCostPlanning]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:String">[ordenComprasCostPlanning(indiceCompraCostPlanning)]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_072">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:String">[descripcionCostPlanning]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:String">[compraDescripcionPorClaveCostPlanning(claveCompraCostPlanning)]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                  </scg:List>
+                </ui:MultipleAssign.AssignOperations>
+              </ui:MultipleAssign>
+              <ui:MultipleAssign DisplayName="Escribir compra fija PC y AT" sap2010:WorkflowViewState.IdRef="MultipleAssign_CP_017">
+                <ui:MultipleAssign.AssignOperations>
+                  <scg:List x:TypeArguments="ui:AssignOperation" Capacity="8">
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_073">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningPCComprasFijos.Rows(indiceCompraCostPlanning)(0)]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Object">[proveedorCompraCostPlanning]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_074">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningPCComprasFijos.Rows(indiceCompraCostPlanning)(1)]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Object">[descripcionCostPlanning]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_075">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningPCComprasFijos.Rows(indiceCompraCostPlanning)(2)]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Object">[pedidoCompraCostPlanning]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_076">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningPCComprasFijos.Rows(indiceCompraCostPlanning)(3)]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Object">[codigoAribaCostPlanning]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_077">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningATComprasFijos.Rows(indiceCompraCostPlanning)(0)]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Object">[proveedorCompraCostPlanning]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_078">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningATComprasFijos.Rows(indiceCompraCostPlanning)(1)]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Object">[descripcionCostPlanning]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_079">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningATComprasFijos.Rows(indiceCompraCostPlanning)(2)]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Object">[pedidoCompraCostPlanning]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_080">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningATComprasFijos.Rows(indiceCompraCostPlanning)(3)]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Object">[codigoAribaCostPlanning]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                  </scg:List>
+                </ui:MultipleAssign.AssignOperations>
+              </ui:MultipleAssign>
+              <ui:ForEach x:TypeArguments="x:Int32" CurrentIndex="{x:Null}" DisplayName="Recorrer meses compra" sap2010:WorkflowViewState.IdRef="ForEach_CP_009" Values="[System.Linq.Enumerable.Range(0, duracionCostPlanning)]">
+                <ui:ForEach.Body>
+                  <ActivityAction x:TypeArguments="x:Int32">
+                    <ActivityAction.Argument>
+                      <DelegateInArgument x:TypeArguments="x:Int32" Name="mesCompraCostPlanning" />
+                    </ActivityAction.Argument>
+                    <Sequence DisplayName="Escribir importe compra mensual" sap2010:WorkflowViewState.IdRef="Sequence_CP_023">
+                      <Assign DisplayName="Resolver anio compra mensual" sap2010:WorkflowViewState.IdRef="Assign_CP_055">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:Int32">[anioMesCostPlanning]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:Int32">[aniosMesesCostPlanning(mesCompraCostPlanning)]</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <Assign DisplayName="Preparar clave compra mensual" sap2010:WorkflowViewState.IdRef="Assign_CP_056">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:String">[claveAgrupacionCostPlanning]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:String">[claveCompraCostPlanning + separadorClaveCostPlanning + anioMesCostPlanning.ToString()]</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <Assign DisplayName="Detectar compra del mes" sap2010:WorkflowViewState.IdRef="Assign_CP_057">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:Boolean">[importeDisponibleCostPlanning]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:Boolean">[comprasPorClaveCostPlanning.ContainsKey(claveAgrupacionCostPlanning) AndAlso conteoPorAnioCostPlanning.ContainsKey(anioMesCostPlanning) AndAlso conteoPorAnioCostPlanning(anioMesCostPlanning) &gt; 0]</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <Assign DisplayName="Calcular compra prorrateada" sap2010:WorkflowViewState.IdRef="Assign_CP_058">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:Double">[importeDistribuidoCostPlanning]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:Double">[If(importeDisponibleCostPlanning, comprasPorClaveCostPlanning(claveAgrupacionCostPlanning) / conteoPorAnioCostPlanning(anioMesCostPlanning), 0.0)]</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <If Condition="[importeDisponibleCostPlanning]" DisplayName="Escribir compra prorrateada" sap2010:WorkflowViewState.IdRef="If_CP_023">
+                        <If.Then>
+                          <ui:MultipleAssign DisplayName="Volcar compra mensual PC y AT" sap2010:WorkflowViewState.IdRef="MultipleAssign_CP_018">
+                            <ui:MultipleAssign.AssignOperations>
+                              <scg:List x:TypeArguments="ui:AssignOperation" Capacity="2">
+                                <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_081">
+                                  <ui:AssignOperation.To>
+                                    <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningPCComprasMeses.Rows(indiceCompraCostPlanning)(mesCompraCostPlanning)]</OutArgument>
+                                  </ui:AssignOperation.To>
+                                  <ui:AssignOperation.Value>
+                                    <InArgument x:TypeArguments="x:Object">[If(System.Math.Abs(importeDistribuidoCostPlanning) &lt;= 0.0000001, CType(0.0, Object), CType(importeDistribuidoCostPlanning, Object))]</InArgument>
+                                  </ui:AssignOperation.Value>
+                                </ui:AssignOperation>
+                                <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_082">
+                                  <ui:AssignOperation.To>
+                                    <OutArgument x:TypeArguments="x:Object">[out_dt_CostPlanningATComprasMeses.Rows(indiceCompraCostPlanning)(mesCompraCostPlanning)]</OutArgument>
+                                  </ui:AssignOperation.To>
+                                  <ui:AssignOperation.Value>
+                                    <InArgument x:TypeArguments="x:Object">[If(System.Math.Abs(importeDistribuidoCostPlanning) &lt;= 0.0000001, CType(0.0, Object), CType(importeDistribuidoCostPlanning, Object))]</InArgument>
+                                  </ui:AssignOperation.Value>
+                                </ui:AssignOperation>
+                              </scg:List>
+                            </ui:MultipleAssign.AssignOperations>
+                          </ui:MultipleAssign>
+                        </If.Then>
+                      </If>
+                    </Sequence>
+                  </ActivityAction>
+                </ui:ForEach.Body>
+              </ui:ForEach>
+            </Sequence>
+          </ActivityAction>
+        </ui:ForEach.Body>
+      </ui:ForEach>
+    </Sequence>
+    <ui:MultipleAssign DisplayName="Publicar contadores Cost Planning" sap:VirtualizedContainerService.HintSize="758,209.33333333333334" sap2010:WorkflowViewState.IdRef="MultipleAssign_CP_019">
+      <ui:MultipleAssign.AssignOperations>
+        <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
+          <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_083">
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:Int32">[out_CantidadPerfiles]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:Int32">[perfilesDetectadosCostPlanning]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_084">
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:Int32">[out_DuracionMeses]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:Int32">[duracionCostPlanning]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_085">
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:Int32">[out_CantidadGastos]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:Int32">[ordenGastosCostPlanning.Count]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_086">
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:Int32">[out_CantidadCompras]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:Int32">[ordenComprasCostPlanning.Count]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+        </scg:List>
+      </ui:MultipleAssign.AssignOperations>
+    </ui:MultipleAssign>
+    <ui:LogMessage DisplayName="Registrar Cost Planning preparado" sap2010:WorkflowViewState.IdRef="LogMessage_CP_001" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;S07 Cost Planning preparado | Tipo=&quot; + in_TipoProyectoNormalizado + &quot; | Perfiles=&quot; + perfilesDetectadosCostPlanning.ToString() + &quot; | Meses=&quot; + duracionCostPlanning.ToString() + &quot; | Gastos=&quot; + ordenGastosCostPlanning.Count.ToString() + &quot; | Compras=&quot; + ordenComprasCostPlanning.Count.ToString()]" />
+  </Sequence>
+</Activity>

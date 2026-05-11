@@ -1,0 +1,38 @@
+Muy buenas Alvaro,
+
+Tal y como hemos comentado os adjunto las plantillas y ejemplos que hemos visto en la call para que las puedas tomar como base de cara a la elaboración del documento de automatización del CORE y el IPF.
+
+
+CORE:
+
+Las plantillas base son : 
+
+•	PMBox_plantilla CORE_PC_v1_04 : Para Proyectos Cerrados.
+•	PMBox_plantilla CORE_AT_v1_04    :  Para proyectos de Asistencias Técnicas. Que abordaremos una ves tengamos automatizado el de PC (Proyectos Cerrados)
+
+El ejemplo que hemos visto:
+
+•	Core : ZEV-PCE0012-1001_CORE_GAP_NuevaTerminalPVR_202602_-v1 – EJEMPLOCOREFORMACION
+•	PPO : 20250256445  PPO_NuevaTerminalPVR v2
+
+Por cierto, a algo que no hemos comentado en la reunión de antes es que para proyectos cerrados tenemos una plantilla “normal”, para sirve para prácticamente la totalidad de proyectos. Pero hay algunos casos de proyectos en los que el número de perfiles/ personas que intervienen es superior a 40 (40 líneas del CORE), y para estos no se puede utilizar ese CORE sino otros que están habilitado para más “líneas” . El CORE es exactamente igual, pero permite introducir más líneas de perfiles recursos (hay una versión con un máximo de 60 líneas y una tercera versión con un máximo de 150)
+
+
+IPF:
+
+Plantilla
+
+•	Plantilla IPF
+
+Ejemplo
+
+•	IPF - ICT - GAP - ZEV-PCE0012 - Despliegue Smart Airport nueva terminal-  FEB26 v1
+
+
+Esto nos permitiría poder cumplimentar la plantilla del IPF con los datos básicos que debe utilizar el JP.  
+
+Tal y como hemos comentado, la parte del “Summary Text”, pero sobre todo la de “Text Narrative” deberemos revisarlo con más detenimiento ya que será complicado que la podamos automatizar pues ahí debe aparecer el texto e importes exactos que debe aparecer en la factura (muy posiblemente en el PPO no estén detallados los Hito e importes de facturación, ni tampoco estará Billing Plan correctamente informado en el momento que se lance el proceso de creación de IPF automático).
+
+Cualquier duda que te surja lo comentamos.
+
+Muchas Gracias

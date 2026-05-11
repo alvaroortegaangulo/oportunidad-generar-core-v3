@@ -1,0 +1,445 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="ejemplo_generar_core_ipf" VisualBasic.Settings="{x:Null}" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>UiPath.Platform.ResourceHandling</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Collections</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.TypeConverter</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.Common</AssemblyReference>
+      <AssemblyReference>System.Linq</AssemblyReference>
+      <AssemblyReference>System.ObjectModel</AssemblyReference>
+      <AssemblyReference>System.Private.CoreLib</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Workflow</AssemblyReference>
+      <AssemblyReference>UiPath.Platform</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="ejemplo_generar_core_ipf" sap2010:Annotation.AnnotationText="Ejemplo ejecutable S13. Simula una fila ya preparada por el proceso padre, genera primero CORE y despues IPF solo si la oportunidad lo requiere.">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="RutaSalida" />
+      <Variable x:TypeArguments="x:String" Name="RutaPPO" />
+      <Variable x:TypeArguments="x:String" Name="RutaPlantillaPC" />
+      <Variable x:TypeArguments="x:String" Name="RutaPlantillaAT" />
+      <Variable x:TypeArguments="x:String" Name="RutaPlantillaIPF" />
+      <Variable x:TypeArguments="x:String" Name="RutaCORE" />
+      <Variable x:TypeArguments="x:String" Name="RutaIPF" />
+      <Variable x:TypeArguments="x:Boolean" Name="GenerarIPF" />
+      <Variable x:TypeArguments="x:String" Name="TipoProyectoFila" />
+      <Variable x:TypeArguments="x:String" Name="WbsFila" />
+      <Variable x:TypeArguments="x:String" Name="FechaInicioSAP" />
+      <Variable x:TypeArguments="x:String" Name="FechaFinSAP" />
+      <Variable x:TypeArguments="x:String" Name="CodigoClienteSAP" />
+      <Variable x:TypeArguments="x:String" Name="PedidoSalesOrder" />
+      <Variable x:TypeArguments="x:String" Name="CodigoEmpleadoPM" />
+      <Variable x:TypeArguments="x:String" Name="NombrePM" />
+      <Variable x:TypeArguments="x:String" Name="CodigoEmpleadoPL" />
+      <Variable x:TypeArguments="x:String" Name="NombrePL" />
+      <Variable x:TypeArguments="x:String" Name="CodigoEmpleadoSM" />
+      <Variable x:TypeArguments="x:String" Name="NombreSM" />
+      <Variable x:TypeArguments="x:String" Name="AccountNameSF" />
+      <Variable x:TypeArguments="x:String" Name="PracticaSF" />
+      <Variable x:TypeArguments="x:String" Name="CorreoResponsable" />
+      <Variable x:TypeArguments="x:String" Name="ProveedorCompra" />
+      <Variable x:TypeArguments="x:String" Name="PedidoCompra" />
+      <Variable x:TypeArguments="x:String" Name="CodigoAriba" />
+      <Variable x:TypeArguments="x:String" Name="CodigosEmpleadoJson" />
+      <Variable x:TypeArguments="x:String" Name="IPFRequestType" />
+      <Variable x:TypeArguments="x:String" Name="IPFBillType" />
+      <Variable x:TypeArguments="x:String" Name="IPFCompanyIssuer" />
+      <Variable x:TypeArguments="x:String" Name="IPFMoneda" />
+      <Variable x:TypeArguments="x:String" Name="IPFPO" />
+      <Variable x:TypeArguments="x:String" Name="IPFSummaryText" />
+      <Variable x:TypeArguments="x:String" Name="IPFTextNarrative" />
+      <Variable x:TypeArguments="x:String" Name="IPFImporteNeto" />
+      <Variable x:TypeArguments="x:String" Name="IPFComentariosFacturacion" />
+      <Variable x:TypeArguments="x:String" Name="NumeroSFLeidoCore" />
+      <Variable x:TypeArguments="x:String" Name="NumeroSFLeidoIPF" />
+    </Sequence.Variables>
+    <ui:MultipleAssign DisplayName="00 Simular fila padre para CORE e IPF">
+      <ui:MultipleAssign.AssignOperations>
+        <scg:List x:TypeArguments="ui:AssignOperation" Capacity="40">
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[RutaSalida]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">[Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, ".local", "handover-core-ipf-output"))]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[RutaPPO]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">[Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "ficheros-auxiliares", "20250256445  PPO_NuevaTerminalPVR v2.xlsm"))]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[RutaPlantillaPC]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">[Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "ficheros-auxiliares", "PMBox_plantilla CORE_PC_v1_04 (2).xlsx"))]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[RutaPlantillaAT]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">[Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "ficheros-auxiliares", "PMBox_plantilla CORE_AT_v1_04.xlsx"))]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[RutaPlantillaIPF]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">[Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "ficheros-auxiliares", "Plantilla IPF.xlsx"))]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[TipoProyectoFila]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">PC</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[WbsFila]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">ZEV-PCE0012-1001</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[RutaCORE]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">[Path.Combine(RutaSalida, "CORE_PC_" + WbsFila + "_core_ipf.xlsx")]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[RutaIPF]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">[Path.Combine(RutaSalida, "IPF_" + WbsFila + "_core_ipf.xlsx")]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:Boolean">[GenerarIPF]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:Boolean">True</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[FechaInicioSAP]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">[String.Empty]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[FechaFinSAP]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">[String.Empty]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[CodigoClienteSAP]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">461530</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[PedidoSalesOrder]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">714603126</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[CodigoEmpleadoPM]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">E90001</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[NombrePM]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">PM Test</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[CodigoEmpleadoPL]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">E90002</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[NombrePL]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">Practice Leader Test</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[CodigoEmpleadoSM]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">E90003</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[NombreSM]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">Joan Marcer</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[AccountNameSF]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">SERVICIOS A LA INFRAESTRUCTURA</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[PracticaSF]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">Software Development</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[CorreoResponsable]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">test.core.ipf@example.invalid</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[ProveedorCompra]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">Proveedor Test</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[PedidoCompra]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">PVR-OC-0005647</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[CodigoAriba]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">ARIBA-TEST-001</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[CodigosEmpleadoJson]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">{"JP":"E91010","CSS":"E91011","CJSS":"E91012","A":"E91013","II":"E91014","P":"E91015","DG":"E91016"}</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[IPFRequestType]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">Invoice</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[IPFBillType]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">Fixed</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[IPFCompanyIssuer]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">[String.Empty]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[IPFMoneda]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">EUR</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[IPFPO]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">PVR-OC-0005647</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[IPFSummaryText]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">Hito 1 : Integracion de las Bandas de Reclamo</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[IPFTextNarrative]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">Hito 1 : Integracion de las Bandas de Reclamo</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[IPFImporteNeto]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">22320,40</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[IPFComentariosFacturacion]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">Enviar copia de las facturas a responsable del proyecto.</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+        </scg:List>
+      </ui:MultipleAssign.AssignOperations>
+    </ui:MultipleAssign>
+    <ui:CreateDirectory ContinueOnError="{x:Null}" Output="{x:Null}" DisplayName="01 Asegurar carpeta destino ya resuelta por el padre" Path="[RutaSalida]" />
+    <ui:LogMessage DisplayName="02 Log padre antes de invocar CORE" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Padre CORE+IPF | inicio CORE | PPO=&quot; + RutaPPO + &quot; | Tipo=&quot; + TipoProyectoFila + &quot; | CORE=&quot; + RutaCORE]" />
+    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="03 Invoke Workflow File - oportunidad-generar-core.xaml" UnSafe="False" WorkflowFileName="oportunidad-generar-core.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_RutaPPO">[RutaPPO]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_RutaPlantillaCorePC">[RutaPlantillaPC]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_RutaPlantillaCoreAT">[RutaPlantillaAT]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_RutaCORE">[RutaCORE]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_TipoProyecto">[TipoProyectoFila]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_FechaInicio">[FechaInicioSAP]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_FechaFin">[FechaFinSAP]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoPEP_WBS">[WbsFila]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoCliente">[CodigoClienteSAP]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_PedidoSalesOrder">[PedidoSalesOrder]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoEmpleadoJefeProyecto">[CodigoEmpleadoPM]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_NombreJefeProyecto">[NombrePM]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoEmpleadoPracticeLeader">[CodigoEmpleadoPL]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_NombrePracticeLeader">[NombrePL]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SF_CodigoEmpleadoSalesManager">[CodigoEmpleadoSM]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SF_NombreSalesManager">[NombreSM]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SF_AccountName">[AccountNameSF]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SF_Practica">[PracticaSF]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SF_RutaProyecto">[RutaSalida]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SF_CorreoResponsable">[CorreoResponsable]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_ProveedorCompra">[ProveedorCompra]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_PedidoCompra">[PedidoCompra]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoAriba">[CodigoAriba]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigosEmpleadoRecursosJson">[CodigosEmpleadoJson]</InArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_NumeroSFLeido">[NumeroSFLeidoCore]</OutArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:LogMessage DisplayName="04 Log padre despues de invocar CORE" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Padre CORE+IPF | fin CORE OK | CORE=&quot; + RutaCORE + &quot; | NumeroSFLeido=&quot; + NumeroSFLeidoCore]" />
+    <If DisplayName="05 Generar IPF si el caso lo requiere" Condition="[GenerarIPF]">
+      <If.Then>
+        <Sequence DisplayName="Generar IPF tras CORE">
+          <ui:LogMessage DisplayName="05.1 Log padre antes de invocar IPF" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Padre CORE+IPF | inicio IPF | Plantilla=&quot; + RutaPlantillaIPF + &quot; | IPF=&quot; + RutaIPF]" />
+          <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="05.2 Invoke Workflow File - oportunidad-generar-ipf.xaml" UnSafe="False" WorkflowFileName="oportunidad-generar-ipf.xaml">
+            <ui:InvokeWorkflowFile.Arguments>
+              <InArgument x:TypeArguments="x:String" x:Key="in_RutaPlantillaIPF">[RutaPlantillaIPF]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_RutaIPF">[RutaIPF]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_NumeroSF">[If(String.IsNullOrWhiteSpace(NumeroSFLeidoCore), "20250256445", NumeroSFLeidoCore)]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_IPFRequestType">[IPFRequestType]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_IPFBillType">[IPFBillType]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_IPFCompanyIssuer">[IPFCompanyIssuer]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_SFAccountName">[AccountNameSF]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_SAPCodigoCliente">[CodigoClienteSAP]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_SAPCodigoPEPWBS">[WbsFila]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_SAPNombreJefeProyecto">[NombrePM]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_IPFMoneda">[IPFMoneda]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_SAPPedidoSalesOrder">[PedidoSalesOrder]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_IPFPO">[IPFPO]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_IPFSummaryText">[IPFSummaryText]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_IPFTextNarrative">[IPFTextNarrative]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_IPFImporteNeto">[IPFImporteNeto]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_IPFComentariosFacturacion">[IPFComentariosFacturacion]</InArgument>
+              <OutArgument x:TypeArguments="x:String" x:Key="out_NumeroSFLeido">[NumeroSFLeidoIPF]</OutArgument>
+            </ui:InvokeWorkflowFile.Arguments>
+          </ui:InvokeWorkflowFile>
+          <ui:LogMessage DisplayName="05.3 Log padre despues de invocar IPF" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Padre CORE+IPF | fin IPF OK | IPF=&quot; + RutaIPF + &quot; | NumeroSFLeidoIPF=&quot; + NumeroSFLeidoIPF]" />
+        </Sequence>
+      </If.Then>
+      <If.Else>
+        <ui:LogMessage DisplayName="05.4 Log padre IPF no requerido" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Padre CORE+IPF | IPF no requerido para WBS=&quot; + WbsFila]" />
+      </If.Else>
+    </If>
+  </Sequence>
+</Activity>

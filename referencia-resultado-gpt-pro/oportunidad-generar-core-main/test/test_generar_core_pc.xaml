@@ -1,0 +1,141 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="test_generar_core_pc" VisualBasic.Settings="{x:Null}" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>UiPath.Platform.ResourceHandling</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Collections</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.TypeConverter</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.Common</AssemblyReference>
+      <AssemblyReference>System.Linq</AssemblyReference>
+      <AssemblyReference>System.ObjectModel</AssemblyReference>
+      <AssemblyReference>System.Private.CoreLib</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Workflow</AssemblyReference>
+      <AssemblyReference>UiPath.Platform</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="test_generar_core_pc" sap2010:Annotation.AnnotationText="Wrapper local para validar el submodulo oportunidad-generar-core.xaml con el PPO PC 20250256445. Usa salida controlada bajo data\output\test y no modifica ficheros fuente.">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="RutaSalida" />
+      <Variable x:TypeArguments="x:String" Name="RutaPPO" />
+      <Variable x:TypeArguments="x:String" Name="RutaPlantillaCorePC" />
+      <Variable x:TypeArguments="x:String" Name="RutaPlantillaCoreAT" />
+      <Variable x:TypeArguments="x:String" Name="RutaCORE" />
+      <Variable x:TypeArguments="x:String" Name="CodigosEmpleadoRecursosJson" />
+      <Variable x:TypeArguments="x:String" Name="NumeroSFLeido" />
+    </Sequence.Variables>
+    <ui:MultipleAssign DisplayName="00 Preparar rutas y datos de prueba PC">
+      <ui:MultipleAssign.AssignOperations>
+        <scg:List x:TypeArguments="ui:AssignOperation" Capacity="8">
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[RutaSalida]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">[Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "data", "output", "test"))]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[RutaPPO]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">[Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "data", "input", "20250256445_PPO_NuevaTerminalPVR_v2.xlsm"))]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[RutaPlantillaCorePC]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">[Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "data", "templates", "CORE_PC_template.xlsx"))]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[RutaPlantillaCoreAT]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">[Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "data", "templates", "CORE_AT_template.xlsx"))]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[RutaCORE]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">[Path.Combine(RutaSalida, "CORE_PC_20250256445_test.xlsx")]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[CodigosEmpleadoRecursosJson]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">{"JP":"E91010","CSS":"E91011","CJSS":"E91012","A":"E91013","II":"E91014","P":"E91015","DG":"E91016"}</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+        </scg:List>
+      </ui:MultipleAssign.AssignOperations>
+    </ui:MultipleAssign>
+    <ui:CreateDirectory ContinueOnError="{x:Null}" Output="{x:Null}" DisplayName="01 Crear carpeta local de salida" Path="[RutaSalida]" />
+    <ui:LogMessage DisplayName="02 Registrar inicio de prueba CORE PC" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Inicio test CORE PC | PPO=&quot; + RutaPPO + &quot; | CORE=&quot; + RutaCORE]" />
+    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="03 Invocar oportunidad-generar-core.xaml con datos PC de ejemplo" UnSafe="False" WorkflowFileName="lib\oportunidad-generar-core.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_RutaPPO">[RutaPPO]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_RutaPlantillaCorePC">[RutaPlantillaCorePC]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_RutaPlantillaCoreAT">[RutaPlantillaCoreAT]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_RutaCORE">[RutaCORE]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_TipoProyecto">PC</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_FechaInicio">[String.Empty]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_FechaFin">[String.Empty]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoPEP_WBS">ZEV-PCE0012-1001</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoCliente">CUST-GAP-TEST</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_PedidoSalesOrder">SO-TEST-20250256445</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoEmpleadoJefeProyecto">E90001</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_NombreJefeProyecto">PM Test</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoEmpleadoPracticeLeader">E90002</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_NombrePracticeLeader">Practice Leader Test</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SF_CodigoEmpleadoSalesManager">E90003</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SF_NombreSalesManager">Joan Marcer</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SF_AccountName">GAP</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SF_Practica">Software Development</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SF_RutaProyecto">[RutaSalida]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SF_CorreoResponsable">test.core@example.invalid</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_ProveedorCompra">Proveedor Test</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_PedidoCompra">PO-TEST-001</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoAriba">ARIBA-TEST-001</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigosEmpleadoRecursosJson">[CodigosEmpleadoRecursosJson]</InArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_NumeroSFLeido">[NumeroSFLeido]</OutArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:LogMessage DisplayName="04 Registrar fin de prueba CORE PC" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Fin test CORE PC | CORE=&quot; + RutaCORE + &quot; | NumeroSFLeido=&quot; + NumeroSFLeido]" />
+  </Sequence>
+</Activity>

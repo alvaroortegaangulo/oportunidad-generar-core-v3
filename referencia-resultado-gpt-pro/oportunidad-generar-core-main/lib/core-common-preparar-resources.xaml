@@ -1,0 +1,1134 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="core_common_preparar_resources" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data.Common" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="in_dt_CabeceraPPO" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="in_dt_PerfilesPPO" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="in_dt_CostesPorAnio" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="in_dt_TarifasAT" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="in_dt_MesesPPO" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="in_dt_MatrizIntercompany" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="in_TipoProyectoNormalizado" Type="InArgument(x:String)" />
+    <x:Property Name="in_FechaInicioSAP" Type="InArgument(x:String)" />
+    <x:Property Name="in_CodigosEmpleadoRecursosJson" Type="InArgument(x:String)" />
+    <x:Property Name="in_CodigoPEP_WBS" Type="InArgument(x:String)" />
+    <x:Property Name="in_CapacidadResourcesFilas" Type="InArgument(x:Int32)" />
+    <x:Property Name="in_CapacidadResourcesPerfiles" Type="InArgument(x:Int32)" />
+    <x:Property Name="out_dt_ResourcesPCFijos" Type="OutArgument(sd:DataTable)" />
+    <x:Property Name="out_dt_ResourcesPCMeses" Type="OutArgument(sd:DataTable)" />
+    <x:Property Name="out_dt_ResourcesATFijos" Type="OutArgument(sd:DataTable)" />
+    <x:Property Name="out_dt_ResourcesATMeses" Type="OutArgument(sd:DataTable)" />
+    <x:Property Name="out_CantidadPerfiles" Type="OutArgument(x:Int32)" />
+    <x:Property Name="out_DuracionMeses" Type="OutArgument(x:Int32)" />
+  </x:Members>
+  <VisualBasic.Settings>
+    <x:Null />
+  </VisualBasic.Settings>
+  <sap:VirtualizedContainerService.HintSize>1220,2950.6666666666665</sap:VirtualizedContainerService.HintSize>
+  <sap2010:WorkflowViewState.IdRef>ActivityBuilder_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Activities</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Globalization</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>System.Text.Json</x:String>
+      <x:String>System.Text.RegularExpressions</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>GlobalVariablesNamespace</x:String>
+      <x:String>GlobalConstantsNamespace</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Activities.Statements</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Collections</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.TypeConverter</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.Common</AssemblyReference>
+      <AssemblyReference>System.Linq</AssemblyReference>
+      <AssemblyReference>System.ObjectModel</AssemblyReference>
+      <AssemblyReference>System.Private.CoreLib</AssemblyReference>
+      <AssemblyReference>System.Text.Json</AssemblyReference>
+      <AssemblyReference>System.Text.RegularExpressions</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Workflow</AssemblyReference>
+      <AssemblyReference>UiPath.Studio.Constants</AssemblyReference>
+      <AssemblyReference>System.Collections.NonGeneric</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence sap2010:Annotation.AnnotationText="Objetivo: preparar Resources una sola vez para PC y AT.&#xA;Entradas: modelo PPO, matriz intercompany, códigos de empleado y capacidad de plantilla.&#xA;Salida: tablas PC/AT listas para que los workflows de escritura solo escriban rangos." DisplayName="core-common-preparar-resources" sap:VirtualizedContainerService.HintSize="602.6666666666666,2886" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="scg:List(s:Object[])" Name="recursosTablasDefinicion" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_ResourcesActual" />
+      <Variable x:TypeArguments="sd:DataRow" Name="filaPerfilResources" />
+      <Variable x:TypeArguments="scg:Dictionary(x:String, x:String)" Name="codigosEmpleadoResources" />
+      <Variable x:TypeArguments="x:Object" Name="valorCabeceraResources" />
+      <Variable x:TypeArguments="x:Object" Name="valorNumeroResources" />
+      <Variable x:TypeArguments="x:Int32" Name="columnasResourcesActual" />
+      <Variable x:TypeArguments="x:Int32" Name="filasResourcesActual" />
+      <Variable x:TypeArguments="x:Int32" Name="duracionResources" />
+      <Variable x:TypeArguments="x:Int32" Name="perfilesDetectadosResources" />
+      <Variable x:TypeArguments="x:Int32" Name="capacidadFilasResources" />
+      <Variable x:TypeArguments="x:Int32" Name="capacidadPerfilesResources" />
+      <Variable x:TypeArguments="x:Int32" Name="anioInicioResources" />
+      <Variable x:TypeArguments="x:Int32" Name="anioCosteResources" />
+      <Variable x:TypeArguments="x:Int32" Name="primerAnioCosteResources" />
+      <Variable x:TypeArguments="x:Int32" Name="filaATResources" />
+      <Variable x:TypeArguments="x:Double" Name="numeroTemporalResources" />
+      <Variable x:TypeArguments="x:Double" Name="costePerfilResources" />
+      <Variable x:TypeArguments="x:Double" Name="costeFilaResources" />
+      <Variable x:TypeArguments="x:Double" Name="primerCosteResources" />
+      <Variable x:TypeArguments="x:Double" Name="tarifaPerfilResources" />
+      <Variable x:TypeArguments="x:Boolean" Name="esProyectoATResources" />
+      <Variable x:TypeArguments="x:Boolean" Name="numeroValidoResources" />
+      <Variable x:TypeArguments="x:Boolean" Name="fechaInicioParseadaResources" />
+      <Variable x:TypeArguments="x:Boolean" Name="intercoEncontradoRes" />
+      <Variable x:TypeArguments="x:Boolean" Name="costeDisponibleResources" />
+      <Variable x:TypeArguments="x:Boolean" Name="costeFilaDisponibleResources" />
+      <Variable x:TypeArguments="x:Boolean" Name="primerCosteDisponibleResources" />
+      <Variable x:TypeArguments="x:Boolean" Name="tarifaDisponibleResources" />
+      <Variable x:TypeArguments="x:Boolean" Name="tarifaFilaDisponibleResources" />
+      <Variable x:TypeArguments="s:DateTime" Name="fechaInicioResources" />
+      <Variable x:TypeArguments="x:String" Name="fechaInicioTextoResources" />
+      <Variable x:TypeArguments="x:String" Name="textoCompaniaNorm" />
+      <Variable x:TypeArguments="x:String" Name="companiaProyectoNormalizada" />
+      <Variable x:TypeArguments="x:String" Name="textoEntidadRecursoNormalizado" />
+      <Variable x:TypeArguments="x:String" Name="entidadRecursoNormalizada" />
+      <Variable x:TypeArguments="x:String" Name="siglaResources" />
+      <Variable x:TypeArguments="x:String" Name="perfilResources" />
+      <Variable x:TypeArguments="x:String" Name="entidadResources" />
+      <Variable x:TypeArguments="x:String" Name="intercompanyResources" />
+      <Variable x:TypeArguments="x:String" Name="codigoEmpleadoResources" />
+    </Sequence.Variables>
+    <sap:WorkflowViewStateService.ViewState>
+      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+      </scg:Dictionary>
+    </sap:WorkflowViewStateService.ViewState>
+    <Sequence sap2010:Annotation.AnnotationText="Objetivo: validar meses, perfiles y capacidad antes de tocar tablas destino.&#xA;Salida: duracion, perfiles detectados y capacidad normalizada para PC/AT." DisplayName="Validar estructura de Resources" sap:VirtualizedContainerService.HintSize="540.6666666666666,1530.6666666666667" sap2010:WorkflowViewState.IdRef="Sequence_RES_001">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <ui:MultipleAssign DisplayName="Inicializar capacidad Resources" sap:VirtualizedContainerService.HintSize="478.6666666666667,240" sap2010:WorkflowViewState.IdRef="MultipleAssign_RES_001">
+        <ui:MultipleAssign.AssignOperations>
+          <scg:List x:TypeArguments="ui:AssignOperation" Capacity="5">
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_001">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:Int32">[duracionResources]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:Int32">[If(in_dt_MesesPPO Is Nothing, 0, in_dt_MesesPPO.Rows.Count)]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_002">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:Int32">[perfilesDetectadosResources]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:Int32">[If(in_dt_PerfilesPPO Is Nothing, 0, in_dt_PerfilesPPO.Rows.Count)]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_003">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:Boolean">[esProyectoATResources]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:Boolean">[String.Equals(in_TipoProyectoNormalizado, "AT", System.StringComparison.OrdinalIgnoreCase)]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_004">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:Int32">[capacidadFilasResources]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:Int32">[If(in_CapacidadResourcesFilas &gt; 0, in_CapacidadResourcesFilas, If(esProyectoATResources, 30, 37))]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_005">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:Int32">[capacidadPerfilesResources]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:Int32">[If(in_CapacidadResourcesPerfiles &gt; 0, in_CapacidadResourcesPerfiles, If(esProyectoATResources, 15, 30))]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+          </scg:List>
+        </ui:MultipleAssign.AssignOperations>
+      </ui:MultipleAssign>
+      <If Condition="[duracionResources &lt;= 0]" DisplayName="Validar duracion Resources" sap:VirtualizedContainerService.HintSize="478.6666666666667,276" sap2010:WorkflowViewState.IdRef="If_RES_001">
+        <If.Then>
+          <Throw DisplayName="Error duracion Resources" Exception="[New Exception(&quot;No se ha podido determinar la duración de Resources desde dtMesesPPO.&quot;)]" sap:VirtualizedContainerService.HintSize="334,92" sap2010:WorkflowViewState.IdRef="Throw_RES_001" />
+        </If.Then>
+        <If.Else>
+          <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_2" />
+        </If.Else>
+      </If>
+      <If Condition="[duracionResources &gt; 60]" DisplayName="Validar limite de meses Resources" sap:VirtualizedContainerService.HintSize="478.6666666666667,276" sap2010:WorkflowViewState.IdRef="If_RES_002">
+        <If.Then>
+          <Throw DisplayName="Error limite meses Resources" Exception="[New Exception(&quot;La plantilla CORE incluida soporta hasta 60 meses. Duración detectada en PPO: &quot; + duracionResources.ToString())]" sap:VirtualizedContainerService.HintSize="334,92" sap2010:WorkflowViewState.IdRef="Throw_RES_002" />
+        </If.Then>
+        <If.Else>
+          <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_3" />
+        </If.Else>
+      </If>
+      <If Condition="[perfilesDetectadosResources &gt; capacidadPerfilesResources]" DisplayName="Validar capacidad de perfiles Resources" sap:VirtualizedContainerService.HintSize="478.6666666666667,234" sap2010:WorkflowViewState.IdRef="If_RES_003">
+        <If.Then>
+          <Throw DisplayName="Error capacidad perfiles Resources" Exception="[New Exception(&quot;La plantilla CORE &quot; + If(esProyectoATResources, &quot;AT&quot;, &quot;PC&quot;) + &quot; recibida soporta &quot; + capacidadPerfilesResources.ToString() + &quot; perfiles útiles en Resources. Perfiles detectados: &quot; + perfilesDetectadosResources.ToString())]" sap2010:WorkflowViewState.IdRef="Throw_RES_003" />
+        </If.Then>
+        <If.Else>
+          <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_4" />
+        </If.Else>
+      </If>
+      <If Condition="[capacidadFilasResources &lt;= 0]" DisplayName="Validar filas utiles Resources" sap:VirtualizedContainerService.HintSize="478.6666666666667,234" sap2010:WorkflowViewState.IdRef="If_RES_004">
+        <If.Then>
+          <Throw DisplayName="Error filas Resources" Exception="[New Exception(&quot;La plantilla CORE &quot; + If(esProyectoATResources, &quot;AT&quot;, &quot;PC&quot;) + &quot; recibida no tiene filas útiles detectables en Resources.&quot;)]" sap2010:WorkflowViewState.IdRef="Throw_RES_004" />
+        </If.Then>
+        <If.Else>
+          <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_5" />
+        </If.Else>
+      </If>
+    </Sequence>
+    <Sequence sap2010:Annotation.AnnotationText="Objetivo: resolver el año de referencia, parsear códigos de empleado y normalizar la compañía del proyecto desde WBS/SAP.&#xA;Salida: anioInicioResources, codigosEmpleadoResources y companiaProyectoNormalizada." DisplayName="Preparar calendario, códigos e intercompany base" sap:VirtualizedContainerService.HintSize="540.6666666666666,370.6666666666667" sap2010:WorkflowViewState.IdRef="Sequence_RES_002">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <ui:MultipleAssign DisplayName="Inicializar fecha inicio y codigos" sap2010:WorkflowViewState.IdRef="MultipleAssign_RES_002">
+        <ui:MultipleAssign.AssignOperations>
+          <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_006">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[fechaInicioTextoResources]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[If(in_FechaInicioSAP Is Nothing, "", in_FechaInicioSAP.Trim())]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_007">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:Boolean">[fechaInicioParseadaResources]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:Boolean">[False]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_008">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">[codigosEmpleadoResources]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="scg:Dictionary(x:String, x:String)" xml:space="preserve">[If(String.IsNullOrWhiteSpace(in_CodigosEmpleadoRecursosJson),
+    New System.Collections.Generic.Dictionary(Of String, String)(System.StringComparer.OrdinalIgnoreCase),
+    New System.Collections.Generic.Dictionary(Of String, String)(
+        System.Text.Json.JsonSerializer.Deserialize(Of System.Collections.Generic.Dictionary(Of String, Object))(in_CodigosEmpleadoRecursosJson).
+            ToDictionary(
+                Function(codigoEmpleadoJson) codigoEmpleadoJson.Key,
+                Function(codigoEmpleadoJson) If(codigoEmpleadoJson.Value Is Nothing, "", codigoEmpleadoJson.Value.ToString().Trim()),
+                System.StringComparer.OrdinalIgnoreCase
+            ),
+        System.StringComparer.OrdinalIgnoreCase
+    )
+)]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_009">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[textoCompaniaNorm]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[New String(If(in_CodigoPEP_WBS Is Nothing, "", in_CodigoPEP_WBS.Trim()).ToUpperInvariant().Normalize(System.Text.NormalizationForm.FormD).ToCharArray().Where(Function(caracter) System.Globalization.CharUnicodeInfo.GetUnicodeCategory(caracter) &lt;&gt; System.Globalization.UnicodeCategory.NonSpacingMark).ToArray())]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+          </scg:List>
+        </ui:MultipleAssign.AssignOperations>
+      </ui:MultipleAssign>
+      <If Condition="[Not String.IsNullOrWhiteSpace(fechaInicioTextoResources)]" DisplayName="Intentar fecha inicio SAP" sap2010:WorkflowViewState.IdRef="If_RES_005">
+        <If.Then>
+          <Assign DisplayName="Parsear fecha inicio SAP" sap2010:WorkflowViewState.IdRef="Assign_RES_001">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:Boolean">[fechaInicioParseadaResources]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:Boolean">[System.DateTime.TryParse(fechaInicioTextoResources, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), System.Globalization.DateTimeStyles.None, fechaInicioResources) OrElse System.DateTime.TryParse(fechaInicioTextoResources, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, fechaInicioResources) OrElse System.DateTime.TryParse(fechaInicioTextoResources, fechaInicioResources)]</InArgument>
+            </Assign.Value>
+          </Assign>
+        </If.Then>
+      </If>
+      <If Condition="[Not fechaInicioParseadaResources]" DisplayName="Usar startDate de cabecera PPO" sap2010:WorkflowViewState.IdRef="If_RES_006">
+        <If.Then>
+          <Sequence DisplayName="Resolver startDate cabecera PPO" sap2010:WorkflowViewState.IdRef="Sequence_RES_003">
+            <Assign DisplayName="Leer startDate cabecera PPO" sap2010:WorkflowViewState.IdRef="Assign_RES_002">
+              <Assign.To>
+                <OutArgument x:TypeArguments="x:Object">[valorCabeceraResources]</OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="x:Object">[If(in_dt_CabeceraPPO Is Nothing, Nothing, in_dt_CabeceraPPO.Rows.Cast(Of System.Data.DataRow)().Where(Function(filaCabecera) String.Equals(Convert.ToString(filaCabecera("Campo")).Trim(), "startDate", System.StringComparison.OrdinalIgnoreCase)).Select(Function(filaCabecera) filaCabecera("Valor")).DefaultIfEmpty(CType(Nothing, Object)).First())]</InArgument>
+              </Assign.Value>
+            </Assign>
+            <Assign DisplayName="Normalizar startDate cabecera" sap2010:WorkflowViewState.IdRef="Assign_RES_003">
+              <Assign.To>
+                <OutArgument x:TypeArguments="x:String">[fechaInicioTextoResources]</OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="x:String">[If(valorCabeceraResources Is Nothing OrElse TypeOf valorCabeceraResources Is DBNull, "", Convert.ToString(valorCabeceraResources).Trim())]</InArgument>
+              </Assign.Value>
+            </Assign>
+            <If Condition="[Not String.IsNullOrWhiteSpace(fechaInicioTextoResources)]" DisplayName="Intentar startDate cabecera" sap2010:WorkflowViewState.IdRef="If_RES_007">
+              <If.Then>
+                <Assign DisplayName="Parsear startDate cabecera" sap2010:WorkflowViewState.IdRef="Assign_RES_004">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:Boolean">[fechaInicioParseadaResources]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:Boolean">[System.DateTime.TryParse(fechaInicioTextoResources, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), System.Globalization.DateTimeStyles.None, fechaInicioResources) OrElse System.DateTime.TryParse(fechaInicioTextoResources, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, fechaInicioResources) OrElse System.DateTime.TryParse(fechaInicioTextoResources, fechaInicioResources)]</InArgument>
+                  </Assign.Value>
+                </Assign>
+              </If.Then>
+            </If>
+          </Sequence>
+        </If.Then>
+      </If>
+      <If Condition="[fechaInicioParseadaResources]" DisplayName="Resolver año desde fecha" sap2010:WorkflowViewState.IdRef="If_RES_008">
+        <If.Then>
+          <Assign DisplayName="Asignar año inicio desde fecha" sap2010:WorkflowViewState.IdRef="Assign_RES_005">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:Int32">[anioInicioResources]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:Int32">[fechaInicioResources.Year]</InArgument>
+            </Assign.Value>
+          </Assign>
+        </If.Then>
+        <If.Else>
+          <Sequence DisplayName="Resolver año desde cabecera PPO" sap2010:WorkflowViewState.IdRef="Sequence_RES_004">
+            <Assign DisplayName="Leer startYear cabecera PPO" sap2010:WorkflowViewState.IdRef="Assign_RES_006">
+              <Assign.To>
+                <OutArgument x:TypeArguments="x:Object">[valorCabeceraResources]</OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="x:Object">[If(in_dt_CabeceraPPO Is Nothing, Nothing, in_dt_CabeceraPPO.Rows.Cast(Of System.Data.DataRow)().Where(Function(filaCabecera) String.Equals(Convert.ToString(filaCabecera("Campo")).Trim(), "startYear", System.StringComparison.OrdinalIgnoreCase)).Select(Function(filaCabecera) filaCabecera("Valor")).DefaultIfEmpty(CType(Nothing, Object)).First())]</InArgument>
+              </Assign.Value>
+            </Assign>
+            <Assign DisplayName="Validar startYear cabecera" sap2010:WorkflowViewState.IdRef="Assign_RES_007">
+              <Assign.To>
+                <OutArgument x:TypeArguments="x:Boolean">[numeroValidoResources]</OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="x:Boolean">[(valorCabeceraResources IsNot Nothing AndAlso Not TypeOf valorCabeceraResources Is DBNull AndAlso Not String.IsNullOrWhiteSpace(Convert.ToString(valorCabeceraResources)) AndAlso (Double.TryParse(Convert.ToString(valorCabeceraResources), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, numeroTemporalResources) OrElse Double.TryParse(Convert.ToString(valorCabeceraResources), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), numeroTemporalResources) OrElse Double.TryParse(Convert.ToString(valorCabeceraResources), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalResources)))]</InArgument>
+              </Assign.Value>
+            </Assign>
+            <Assign DisplayName="Asignar año inicio cabecera" sap2010:WorkflowViewState.IdRef="Assign_RES_008">
+              <Assign.To>
+                <OutArgument x:TypeArguments="x:Int32">[anioInicioResources]</OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="x:Int32">[If(numeroValidoResources, CInt(System.Math.Round(numeroTemporalResources, 0)), System.DateTime.Today.Year)]</InArgument>
+              </Assign.Value>
+            </Assign>
+          </Sequence>
+        </If.Else>
+      </If>
+      <Assign DisplayName="Normalizar compañía proyecto" sap2010:WorkflowViewState.IdRef="Assign_RES_009">
+        <Assign.To>
+          <OutArgument x:TypeArguments="x:String">[companiaProyectoNormalizada]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(textoCompaniaNorm), "", If(textoCompaniaNorm.StartsWith("ZEZ") OrElse textoCompaniaNorm.Contains("EZZ") OrElse textoCompaniaNorm.Contains("GLOBAL ROSETTA") OrElse textoCompaniaNorm.Contains("ROSETTA"), "Global Rosetta", If(textoCompaniaNorm.StartsWith("ZEV") OrElse textoCompaniaNorm.Contains("ZV") OrElse textoCompaniaNorm.Contains("ICT") OrElse textoCompaniaNorm.Contains("CONNECTIS"), "ICT/Connectis", "")))]</InArgument>
+        </Assign.Value>
+      </Assign>
+    </Sequence>
+    <Sequence sap2010:Annotation.AnnotationText="Objetivo: crear tablas rectangulares con columnas dinamicas Col01..ColNN y filas vacias hasta la capacidad real.&#xA;Salida: las cuatro tablas PC/AT mantienen el layout estable para Write Range." DisplayName="Construir tablas rectangulares Resources" sap:VirtualizedContainerService.HintSize="540.6666666666666,250.66666666666666" sap2010:WorkflowViewState.IdRef="Sequence_RES_005">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <ui:MultipleAssign DisplayName="Inicializar DataTables Resources" sap2010:WorkflowViewState.IdRef="MultipleAssign_RES_003">
+        <ui:MultipleAssign.AssignOperations>
+          <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_010">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="sd:DataTable">[out_dt_ResourcesPCFijos]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="sd:DataTable">[New System.Data.DataTable("dtResourcesPCFijos")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_011">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="sd:DataTable">[out_dt_ResourcesPCMeses]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="sd:DataTable">[New System.Data.DataTable("dtResourcesPCMeses")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_012">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="sd:DataTable">[out_dt_ResourcesATFijos]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="sd:DataTable">[New System.Data.DataTable("dtResourcesATFijos")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_013">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="sd:DataTable">[out_dt_ResourcesATMeses]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="sd:DataTable">[New System.Data.DataTable("dtResourcesATMeses")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+          </scg:List>
+        </ui:MultipleAssign.AssignOperations>
+      </ui:MultipleAssign>
+      <Assign DisplayName="Definir tablas Resources" sap2010:WorkflowViewState.IdRef="Assign_RES_010">
+        <Assign.To>
+          <OutArgument x:TypeArguments="scg:List(s:Object[])">[recursosTablasDefinicion]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="scg:List(s:Object[])" xml:space="preserve">[New System.Collections.Generic.List(Of Object()) From {
+    New Object() {out_dt_ResourcesPCFijos, 4, capacidadFilasResources},
+    New Object() {out_dt_ResourcesPCMeses, duracionResources, capacidadFilasResources},
+    New Object() {out_dt_ResourcesATFijos, 4, capacidadFilasResources},
+    New Object() {out_dt_ResourcesATMeses, duracionResources, capacidadFilasResources}
+}]</InArgument>
+        </Assign.Value>
+      </Assign>
+      <ui:ForEach x:TypeArguments="s:Object[]" CurrentIndex="{x:Null}" DisplayName="Recorrer tablas Resources" sap2010:WorkflowViewState.IdRef="ForEach_RES_001" Values="[recursosTablasDefinicion]">
+        <ui:ForEach.Body>
+          <ActivityAction x:TypeArguments="s:Object[]">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="s:Object[]" Name="tablaResourcesDefinicion" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Preparar tabla Resources" sap2010:WorkflowViewState.IdRef="Sequence_RES_006">
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+              <ui:MultipleAssign DisplayName="Resolver definicion tabla Resources" sap2010:WorkflowViewState.IdRef="MultipleAssign_RES_004">
+                <ui:MultipleAssign.AssignOperations>
+                  <scg:List x:TypeArguments="ui:AssignOperation" Capacity="3">
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_014">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="sd:DataTable">[dt_ResourcesActual]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="sd:DataTable">[CType(tablaResourcesDefinicion(0), System.Data.DataTable)]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_015">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Int32">[columnasResourcesActual]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Int32">[CInt(tablaResourcesDefinicion(1))]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_016">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Int32">[filasResourcesActual]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Int32">[CInt(tablaResourcesDefinicion(2))]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                  </scg:List>
+                </ui:MultipleAssign.AssignOperations>
+              </ui:MultipleAssign>
+              <ui:ForEach x:TypeArguments="x:Int32" CurrentIndex="{x:Null}" DisplayName="Crear columnas Resources" sap2010:WorkflowViewState.IdRef="ForEach_RES_002" Values="[System.Linq.Enumerable.Range(1, columnasResourcesActual)]">
+                <ui:ForEach.Body>
+                  <ActivityAction x:TypeArguments="x:Int32">
+                    <ActivityAction.Argument>
+                      <DelegateInArgument x:TypeArguments="x:Int32" Name="columnaResourcesIndice" />
+                    </ActivityAction.Argument>
+                    <ui:AddDataColumn x:TypeArguments="x:Object" AllowDBNull="{x:Null}" AutoIncrement="{x:Null}" Column="{x:Null}" DefaultValue="{x:Null}" MaxLength="{x:Null}" Unique="{x:Null}" ColumnName="[&quot;Col&quot; + columnaResourcesIndice.ToString(&quot;00&quot;)]" DataTable="[dt_ResourcesActual]" DisplayName="Agregar columna Resources" sap2010:WorkflowViewState.IdRef="AddDataColumn_RES_001" />
+                  </ActivityAction>
+                </ui:ForEach.Body>
+              </ui:ForEach>
+              <ui:ForEach x:TypeArguments="x:Int32" CurrentIndex="{x:Null}" DisplayName="Crear filas vacias Resources" sap2010:WorkflowViewState.IdRef="ForEach_RES_003" Values="[System.Linq.Enumerable.Range(0, filasResourcesActual)]">
+                <ui:ForEach.Body>
+                  <ActivityAction x:TypeArguments="x:Int32">
+                    <ActivityAction.Argument>
+                      <DelegateInArgument x:TypeArguments="x:Int32" Name="filaResourcesIndice" />
+                    </ActivityAction.Argument>
+                    <ui:AddDataRow DataRow="{x:Null}" ArrayRow="[System.Linq.Enumerable.Repeat(CType(&quot;&quot;, Object), columnasResourcesActual).ToArray()]" DataTable="[dt_ResourcesActual]" DisplayName="Agregar fila vacia Resources" sap2010:WorkflowViewState.IdRef="AddDataRow_RES_001" />
+                  </ActivityAction>
+                </ui:ForEach.Body>
+              </ui:ForEach>
+            </Sequence>
+          </ActivityAction>
+        </ui:ForEach.Body>
+      </ui:ForEach>
+    </Sequence>
+    <Sequence sap2010:Annotation.AnnotationText="Objetivo: recorrer los perfiles PPO y volcar código empleado, sigla, intercompany, perfil, coste y tarifa en tablas PC/AT.&#xA;Regla: PC ocupa una fila por perfil; AT reserva dos filas por perfil para coste y tarifa." DisplayName="Cargar perfiles en Resources PC y AT" sap:VirtualizedContainerService.HintSize="540.6666666666666,130.66666666666666" sap2010:WorkflowViewState.IdRef="Sequence_RES_007">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <ui:ForEach x:TypeArguments="x:Int32" CurrentIndex="{x:Null}" DisplayName="Recorrer perfiles Resources" sap2010:WorkflowViewState.IdRef="ForEach_RES_004" Values="[System.Linq.Enumerable.Range(0, If(in_dt_PerfilesPPO Is Nothing, 0, in_dt_PerfilesPPO.Rows.Count))]">
+        <ui:ForEach.Body>
+          <ActivityAction x:TypeArguments="x:Int32">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="x:Int32" Name="indicePerfilResources" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Preparar perfil Resources" sap2010:WorkflowViewState.IdRef="Sequence_RES_008">
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+              <ui:MultipleAssign DisplayName="Leer perfil PPO Resources" sap2010:WorkflowViewState.IdRef="MultipleAssign_RES_005">
+                <ui:MultipleAssign.AssignOperations>
+                  <scg:List x:TypeArguments="ui:AssignOperation" Capacity="6">
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_017">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="sd:DataRow">[filaPerfilResources]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="sd:DataRow">[in_dt_PerfilesPPO.Rows(indicePerfilResources)]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_018">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:String">[siglaResources]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:String">[If(filaPerfilResources("Sigla") Is Nothing OrElse TypeOf filaPerfilResources("Sigla") Is DBNull, "", Convert.ToString(filaPerfilResources("Sigla")).Trim())]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_019">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:String">[perfilResources]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:String">[If(filaPerfilResources("Perfil") Is Nothing OrElse TypeOf filaPerfilResources("Perfil") Is DBNull, "", Convert.ToString(filaPerfilResources("Perfil")).Trim())]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_020">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:String">[entidadResources]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:String">[If(filaPerfilResources("Entidad") Is Nothing OrElse TypeOf filaPerfilResources("Entidad") Is DBNull, "", Convert.ToString(filaPerfilResources("Entidad")).Trim())]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_021">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Int32">[filaATResources]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Int32">[indicePerfilResources * 2]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_022">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:String">[textoEntidadRecursoNormalizado]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:String">[New String(entidadResources.ToUpperInvariant().Normalize(System.Text.NormalizationForm.FormD).ToCharArray().Where(Function(caracter) System.Globalization.CharUnicodeInfo.GetUnicodeCategory(caracter) &lt;&gt; System.Globalization.UnicodeCategory.NonSpacingMark).ToArray())]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                  </scg:List>
+                </ui:MultipleAssign.AssignOperations>
+              </ui:MultipleAssign>
+              <Assign DisplayName="Normalizar entidad recurso" sap2010:WorkflowViewState.IdRef="Assign_RES_011">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:String">[entidadRecursoNormalizada]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(textoEntidadRecursoNormalizado), "", If(textoEntidadRecursoNormalizado.StartsWith("ZEZ") OrElse textoEntidadRecursoNormalizado.Contains("EZZ") OrElse textoEntidadRecursoNormalizado.Contains("GLOBAL ROSETTA") OrElse textoEntidadRecursoNormalizado.Contains("ROSETTA"), "Global Rosetta", If(textoEntidadRecursoNormalizado.StartsWith("ZEV") OrElse textoEntidadRecursoNormalizado.Contains("ZV") OrElse textoEntidadRecursoNormalizado.Contains("ICT") OrElse textoEntidadRecursoNormalizado.Contains("CONNECTIS"), "ICT/Connectis", "")))]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <Sequence sap2010:Annotation.AnnotationText="Objetivo: resolver el valor NO/INTERCO visible en plantilla usando WBS/SAP y la matriz mantenida en la fachada." DisplayName="Resolver intercompany del perfil" sap2010:WorkflowViewState.IdRef="Sequence_RES_009">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <ui:MultipleAssign DisplayName="Inicializar intercompany perfil" sap2010:WorkflowViewState.IdRef="MultipleAssign_RES_006">
+                  <ui:MultipleAssign.AssignOperations>
+                    <scg:List x:TypeArguments="ui:AssignOperation" Capacity="2">
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_023">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:String">[intercompanyResources]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(companiaProyectoNormalizada), "Intercompany no determinable", If(String.IsNullOrWhiteSpace(entidadRecursoNormalizada), "Entidad recurso no disponible", If(String.Equals(companiaProyectoNormalizada, entidadRecursoNormalizada, System.StringComparison.OrdinalIgnoreCase), "NO", "INTERCO")))]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_024">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:Boolean">[intercoEncontradoRes]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:Boolean">[False]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                    </scg:List>
+                  </ui:MultipleAssign.AssignOperations>
+                </ui:MultipleAssign>
+                <If Condition="[Not String.IsNullOrWhiteSpace(companiaProyectoNormalizada) AndAlso Not String.IsNullOrWhiteSpace(entidadRecursoNormalizada) AndAlso in_dt_MatrizIntercompany IsNot Nothing]" DisplayName="Buscar intercompany en matriz" sap2010:WorkflowViewState.IdRef="If_RES_009">
+                  <If.Then>
+                    <ui:ForEachRow ColumnNames="{x:Null}" CurrentIndex="{x:Null}" DataTable="[in_dt_MatrizIntercompany]" DisplayName="Recorrer matriz intercompany Resources" sap2010:WorkflowViewState.IdRef="ForEachRow_RES_001">
+                      <ui:ForEachRow.Body>
+                        <ActivityAction x:TypeArguments="sd:DataRow">
+                          <ActivityAction.Argument>
+                            <DelegateInArgument x:TypeArguments="sd:DataRow" Name="filaMatrizResources" />
+                          </ActivityAction.Argument>
+                          <If Condition="[Not intercoEncontradoRes AndAlso String.Equals(Convert.ToString(filaMatrizResources(&quot;CompaniaProyecto&quot;)).Trim(), companiaProyectoNormalizada, System.StringComparison.OrdinalIgnoreCase) AndAlso String.Equals(Convert.ToString(filaMatrizResources(&quot;EntidadRecurso&quot;)).Trim(), entidadRecursoNormalizada, System.StringComparison.OrdinalIgnoreCase)]" DisplayName="La matriz contiene la combinacion" sap2010:WorkflowViewState.IdRef="If_RES_010">
+                            <If.Then>
+                              <ui:MultipleAssign DisplayName="Asignar intercompany desde matriz" sap2010:WorkflowViewState.IdRef="MultipleAssign_RES_007">
+                                <ui:MultipleAssign.AssignOperations>
+                                  <scg:List x:TypeArguments="ui:AssignOperation" Capacity="2">
+                                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_025">
+                                      <ui:AssignOperation.To>
+                                        <OutArgument x:TypeArguments="x:String">[intercompanyResources]</OutArgument>
+                                      </ui:AssignOperation.To>
+                                      <ui:AssignOperation.Value>
+                                        <InArgument x:TypeArguments="x:String">[If(filaMatrizResources("ValorPlantilla") Is Nothing OrElse TypeOf filaMatrizResources("ValorPlantilla") Is DBNull, "", Convert.ToString(filaMatrizResources("ValorPlantilla")).Trim())]</InArgument>
+                                      </ui:AssignOperation.Value>
+                                    </ui:AssignOperation>
+                                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_026">
+                                      <ui:AssignOperation.To>
+                                        <OutArgument x:TypeArguments="x:Boolean">[intercoEncontradoRes]</OutArgument>
+                                      </ui:AssignOperation.To>
+                                      <ui:AssignOperation.Value>
+                                        <InArgument x:TypeArguments="x:Boolean">[True]</InArgument>
+                                      </ui:AssignOperation.Value>
+                                    </ui:AssignOperation>
+                                  </scg:List>
+                                </ui:MultipleAssign.AssignOperations>
+                              </ui:MultipleAssign>
+                            </If.Then>
+                          </If>
+                        </ActivityAction>
+                      </ui:ForEachRow.Body>
+                    </ui:ForEachRow>
+                  </If.Then>
+                </If>
+              </Sequence>
+              <Assign DisplayName="Resolver codigo empleado" sap2010:WorkflowViewState.IdRef="Assign_RES_012">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:String">[codigoEmpleadoResources]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:String">[If(codigosEmpleadoResources.ContainsKey(siglaResources) AndAlso Not String.IsNullOrWhiteSpace(codigosEmpleadoResources(siglaResources)), codigosEmpleadoResources(siglaResources), "Código empleado no disponible")]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <Sequence sap2010:Annotation.AnnotationText="Objetivo: elegir el coste base del año de inicio o, si no existe, el primer coste anual disponible para la sigla." DisplayName="Resolver coste base del perfil" sap2010:WorkflowViewState.IdRef="Sequence_RES_010">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <ui:MultipleAssign DisplayName="Inicializar coste perfil" sap2010:WorkflowViewState.IdRef="MultipleAssign_RES_008">
+                  <ui:MultipleAssign.AssignOperations>
+                    <scg:List x:TypeArguments="ui:AssignOperation" Capacity="5">
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_027">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:Boolean">[costeDisponibleResources]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:Boolean">[False]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_028">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:Double">[costePerfilResources]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:Double">[0]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_029">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:Boolean">[primerCosteDisponibleResources]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:Boolean">[False]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_030">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:Double">[primerCosteResources]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:Double">[0]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_031">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:Int32">[primerAnioCosteResources]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:Int32">[System.Int32.MaxValue]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                    </scg:List>
+                  </ui:MultipleAssign.AssignOperations>
+                </ui:MultipleAssign>
+                <If Condition="[in_dt_CostesPorAnio IsNot Nothing]" DisplayName="Hay costes por año" sap2010:WorkflowViewState.IdRef="If_RES_011">
+                  <If.Then>
+                    <ui:ForEachRow ColumnNames="{x:Null}" CurrentIndex="{x:Null}" DataTable="[in_dt_CostesPorAnio]" DisplayName="Recorrer costes por año" sap2010:WorkflowViewState.IdRef="ForEachRow_RES_002">
+                      <ui:ForEachRow.Body>
+                        <ActivityAction x:TypeArguments="sd:DataRow">
+                          <ActivityAction.Argument>
+                            <DelegateInArgument x:TypeArguments="sd:DataRow" Name="filaCosteResources" />
+                          </ActivityAction.Argument>
+                          <If Condition="[Not costeDisponibleResources AndAlso String.Equals(Convert.ToString(filaCosteResources(&quot;Sigla&quot;)).Trim(), siglaResources, System.StringComparison.OrdinalIgnoreCase)]" DisplayName="El coste corresponde a la sigla" sap2010:WorkflowViewState.IdRef="If_RES_012">
+                            <If.Then>
+                              <Sequence DisplayName="Evaluar coste por año" sap2010:WorkflowViewState.IdRef="Sequence_RES_011">
+                                <Assign DisplayName="Leer año coste" sap2010:WorkflowViewState.IdRef="Assign_RES_013">
+                                  <Assign.To>
+                                    <OutArgument x:TypeArguments="x:Object">[valorNumeroResources]</OutArgument>
+                                  </Assign.To>
+                                  <Assign.Value>
+                                    <InArgument x:TypeArguments="x:Object">[filaCosteResources("Anio")]</InArgument>
+                                  </Assign.Value>
+                                </Assign>
+                                <Assign DisplayName="Validar año coste" sap2010:WorkflowViewState.IdRef="Assign_RES_014">
+                                  <Assign.To>
+                                    <OutArgument x:TypeArguments="x:Boolean">[numeroValidoResources]</OutArgument>
+                                  </Assign.To>
+                                  <Assign.Value>
+                                    <InArgument x:TypeArguments="x:Boolean">[(valorNumeroResources IsNot Nothing AndAlso Not TypeOf valorNumeroResources Is DBNull AndAlso Not String.IsNullOrWhiteSpace(Convert.ToString(valorNumeroResources)) AndAlso (Double.TryParse(Convert.ToString(valorNumeroResources), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, numeroTemporalResources) OrElse Double.TryParse(Convert.ToString(valorNumeroResources), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), numeroTemporalResources) OrElse Double.TryParse(Convert.ToString(valorNumeroResources), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalResources)))]</InArgument>
+                                  </Assign.Value>
+                                </Assign>
+                                <Assign DisplayName="Normalizar año coste" sap2010:WorkflowViewState.IdRef="Assign_RES_015">
+                                  <Assign.To>
+                                    <OutArgument x:TypeArguments="x:Int32">[anioCosteResources]</OutArgument>
+                                  </Assign.To>
+                                  <Assign.Value>
+                                    <InArgument x:TypeArguments="x:Int32">[If(numeroValidoResources, CInt(System.Math.Round(numeroTemporalResources, 0)), 0)]</InArgument>
+                                  </Assign.Value>
+                                </Assign>
+                                <Assign DisplayName="Leer coste hora" sap2010:WorkflowViewState.IdRef="Assign_RES_016">
+                                  <Assign.To>
+                                    <OutArgument x:TypeArguments="x:Object">[valorNumeroResources]</OutArgument>
+                                  </Assign.To>
+                                  <Assign.Value>
+                                    <InArgument x:TypeArguments="x:Object">[filaCosteResources("CosteHora")]</InArgument>
+                                  </Assign.Value>
+                                </Assign>
+                                <Assign DisplayName="Validar coste hora" sap2010:WorkflowViewState.IdRef="Assign_RES_017">
+                                  <Assign.To>
+                                    <OutArgument x:TypeArguments="x:Boolean">[costeFilaDisponibleResources]</OutArgument>
+                                  </Assign.To>
+                                  <Assign.Value>
+                                    <InArgument x:TypeArguments="x:Boolean">[(valorNumeroResources IsNot Nothing AndAlso Not TypeOf valorNumeroResources Is DBNull AndAlso Not String.IsNullOrWhiteSpace(Convert.ToString(valorNumeroResources)) AndAlso (Double.TryParse(Convert.ToString(valorNumeroResources), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, numeroTemporalResources) OrElse Double.TryParse(Convert.ToString(valorNumeroResources), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), numeroTemporalResources) OrElse Double.TryParse(Convert.ToString(valorNumeroResources), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalResources)))]</InArgument>
+                                  </Assign.Value>
+                                </Assign>
+                                <Assign DisplayName="Asignar coste hora temporal" sap2010:WorkflowViewState.IdRef="Assign_RES_018">
+                                  <Assign.To>
+                                    <OutArgument x:TypeArguments="x:Double">[costeFilaResources]</OutArgument>
+                                  </Assign.To>
+                                  <Assign.Value>
+                                    <InArgument x:TypeArguments="x:Double">[If(costeFilaDisponibleResources, numeroTemporalResources, 0)]</InArgument>
+                                  </Assign.Value>
+                                </Assign>
+                                <If Condition="[costeFilaDisponibleResources]" DisplayName="El coste anual es valido" sap2010:WorkflowViewState.IdRef="If_RES_013">
+                                  <If.Then>
+                                    <If Condition="[anioCosteResources = anioInicioResources]" DisplayName="Es coste del año de inicio" sap2010:WorkflowViewState.IdRef="If_RES_014">
+                                      <If.Then>
+                                        <ui:MultipleAssign DisplayName="Asignar coste exacto" sap2010:WorkflowViewState.IdRef="MultipleAssign_RES_009">
+                                          <ui:MultipleAssign.AssignOperations>
+                                            <scg:List x:TypeArguments="ui:AssignOperation" Capacity="2">
+                                              <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_032">
+                                                <ui:AssignOperation.To>
+                                                  <OutArgument x:TypeArguments="x:Double">[costePerfilResources]</OutArgument>
+                                                </ui:AssignOperation.To>
+                                                <ui:AssignOperation.Value>
+                                                  <InArgument x:TypeArguments="x:Double">[costeFilaResources]</InArgument>
+                                                </ui:AssignOperation.Value>
+                                              </ui:AssignOperation>
+                                              <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_033">
+                                                <ui:AssignOperation.To>
+                                                  <OutArgument x:TypeArguments="x:Boolean">[costeDisponibleResources]</OutArgument>
+                                                </ui:AssignOperation.To>
+                                                <ui:AssignOperation.Value>
+                                                  <InArgument x:TypeArguments="x:Boolean">[True]</InArgument>
+                                                </ui:AssignOperation.Value>
+                                              </ui:AssignOperation>
+                                            </scg:List>
+                                          </ui:MultipleAssign.AssignOperations>
+                                        </ui:MultipleAssign>
+                                      </If.Then>
+                                      <If.Else>
+                                        <If Condition="[anioCosteResources &gt; 0 AndAlso anioCosteResources &lt; primerAnioCosteResources]" DisplayName="Es el primer coste disponible" sap2010:WorkflowViewState.IdRef="If_RES_015">
+                                          <If.Then>
+                                            <ui:MultipleAssign DisplayName="Guardar primer coste disponible" sap2010:WorkflowViewState.IdRef="MultipleAssign_RES_010">
+                                              <ui:MultipleAssign.AssignOperations>
+                                                <scg:List x:TypeArguments="ui:AssignOperation" Capacity="3">
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_034">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:Int32">[primerAnioCosteResources]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:Int32">[anioCosteResources]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_035">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:Double">[primerCosteResources]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:Double">[costeFilaResources]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_036">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:Boolean">[primerCosteDisponibleResources]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:Boolean">[True]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                </scg:List>
+                                              </ui:MultipleAssign.AssignOperations>
+                                            </ui:MultipleAssign>
+                                          </If.Then>
+                                        </If>
+                                      </If.Else>
+                                    </If>
+                                  </If.Then>
+                                </If>
+                              </Sequence>
+                            </If.Then>
+                          </If>
+                        </ActivityAction>
+                      </ui:ForEachRow.Body>
+                    </ui:ForEachRow>
+                  </If.Then>
+                </If>
+                <If Condition="[Not costeDisponibleResources AndAlso primerCosteDisponibleResources]" DisplayName="Usar primer coste disponible" sap2010:WorkflowViewState.IdRef="If_RES_016">
+                  <If.Then>
+                    <ui:MultipleAssign DisplayName="Asignar coste alternativo" sap2010:WorkflowViewState.IdRef="MultipleAssign_RES_011">
+                      <ui:MultipleAssign.AssignOperations>
+                        <scg:List x:TypeArguments="ui:AssignOperation" Capacity="2">
+                          <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_037">
+                            <ui:AssignOperation.To>
+                              <OutArgument x:TypeArguments="x:Double">[costePerfilResources]</OutArgument>
+                            </ui:AssignOperation.To>
+                            <ui:AssignOperation.Value>
+                              <InArgument x:TypeArguments="x:Double">[primerCosteResources]</InArgument>
+                            </ui:AssignOperation.Value>
+                          </ui:AssignOperation>
+                          <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_038">
+                            <ui:AssignOperation.To>
+                              <OutArgument x:TypeArguments="x:Boolean">[costeDisponibleResources]</OutArgument>
+                            </ui:AssignOperation.To>
+                            <ui:AssignOperation.Value>
+                              <InArgument x:TypeArguments="x:Boolean">[True]</InArgument>
+                            </ui:AssignOperation.Value>
+                          </ui:AssignOperation>
+                        </scg:List>
+                      </ui:MultipleAssign.AssignOperations>
+                    </ui:MultipleAssign>
+                  </If.Then>
+                </If>
+              </Sequence>
+              <Sequence sap2010:Annotation.AnnotationText="Objetivo: priorizar la tarifa AT directa del perfil y, si falta, buscar la tarifa agregada por sigla." DisplayName="Resolver tarifa AT del perfil" sap2010:WorkflowViewState.IdRef="Sequence_RES_012">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <Assign DisplayName="Leer tarifa AT directa" sap2010:WorkflowViewState.IdRef="Assign_RES_019">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:Object">[valorNumeroResources]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:Object">[filaPerfilResources("TarifaAT")]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <Assign DisplayName="Validar tarifa AT directa" sap2010:WorkflowViewState.IdRef="Assign_RES_020">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:Boolean">[tarifaDisponibleResources]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:Boolean">[(valorNumeroResources IsNot Nothing AndAlso Not TypeOf valorNumeroResources Is DBNull AndAlso Not String.IsNullOrWhiteSpace(Convert.ToString(valorNumeroResources)) AndAlso (Double.TryParse(Convert.ToString(valorNumeroResources), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, numeroTemporalResources) OrElse Double.TryParse(Convert.ToString(valorNumeroResources), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), numeroTemporalResources) OrElse Double.TryParse(Convert.ToString(valorNumeroResources), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalResources)))]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <Assign DisplayName="Asignar tarifa AT directa" sap2010:WorkflowViewState.IdRef="Assign_RES_021">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:Double">[tarifaPerfilResources]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:Double">[If(tarifaDisponibleResources, numeroTemporalResources, 0)]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <If Condition="[Not tarifaDisponibleResources AndAlso in_dt_TarifasAT IsNot Nothing]" DisplayName="Buscar tarifa AT por sigla" sap2010:WorkflowViewState.IdRef="If_RES_017">
+                  <If.Then>
+                    <ui:ForEachRow ColumnNames="{x:Null}" CurrentIndex="{x:Null}" DataTable="[in_dt_TarifasAT]" DisplayName="Recorrer tarifas AT" sap2010:WorkflowViewState.IdRef="ForEachRow_RES_003">
+                      <ui:ForEachRow.Body>
+                        <ActivityAction x:TypeArguments="sd:DataRow">
+                          <ActivityAction.Argument>
+                            <DelegateInArgument x:TypeArguments="sd:DataRow" Name="filaTarifaResources" />
+                          </ActivityAction.Argument>
+                          <If Condition="[Not tarifaDisponibleResources AndAlso String.Equals(Convert.ToString(filaTarifaResources(&quot;Sigla&quot;)).Trim(), siglaResources, System.StringComparison.OrdinalIgnoreCase)]" DisplayName="La tarifa corresponde a la sigla" sap2010:WorkflowViewState.IdRef="If_RES_018">
+                            <If.Then>
+                              <Sequence DisplayName="Evaluar tarifa AT por sigla" sap2010:WorkflowViewState.IdRef="Sequence_RES_013">
+                                <Assign DisplayName="Leer tarifa AT agregada" sap2010:WorkflowViewState.IdRef="Assign_RES_022">
+                                  <Assign.To>
+                                    <OutArgument x:TypeArguments="x:Object">[valorNumeroResources]</OutArgument>
+                                  </Assign.To>
+                                  <Assign.Value>
+                                    <InArgument x:TypeArguments="x:Object">[filaTarifaResources("TarifaAT")]</InArgument>
+                                  </Assign.Value>
+                                </Assign>
+                                <Assign DisplayName="Validar tarifa AT agregada" sap2010:WorkflowViewState.IdRef="Assign_RES_023">
+                                  <Assign.To>
+                                    <OutArgument x:TypeArguments="x:Boolean">[tarifaFilaDisponibleResources]</OutArgument>
+                                  </Assign.To>
+                                  <Assign.Value>
+                                    <InArgument x:TypeArguments="x:Boolean">[(valorNumeroResources IsNot Nothing AndAlso Not TypeOf valorNumeroResources Is DBNull AndAlso Not String.IsNullOrWhiteSpace(Convert.ToString(valorNumeroResources)) AndAlso (Double.TryParse(Convert.ToString(valorNumeroResources), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, numeroTemporalResources) OrElse Double.TryParse(Convert.ToString(valorNumeroResources), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), numeroTemporalResources) OrElse Double.TryParse(Convert.ToString(valorNumeroResources), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, numeroTemporalResources)))]</InArgument>
+                                  </Assign.Value>
+                                </Assign>
+                                <If Condition="[tarifaFilaDisponibleResources]" DisplayName="La tarifa AT agregada es valida" sap2010:WorkflowViewState.IdRef="If_RES_019">
+                                  <If.Then>
+                                    <ui:MultipleAssign DisplayName="Asignar tarifa AT agregada" sap2010:WorkflowViewState.IdRef="MultipleAssign_RES_012">
+                                      <ui:MultipleAssign.AssignOperations>
+                                        <scg:List x:TypeArguments="ui:AssignOperation" Capacity="2">
+                                          <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_039">
+                                            <ui:AssignOperation.To>
+                                              <OutArgument x:TypeArguments="x:Double">[tarifaPerfilResources]</OutArgument>
+                                            </ui:AssignOperation.To>
+                                            <ui:AssignOperation.Value>
+                                              <InArgument x:TypeArguments="x:Double">[numeroTemporalResources]</InArgument>
+                                            </ui:AssignOperation.Value>
+                                          </ui:AssignOperation>
+                                          <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_040">
+                                            <ui:AssignOperation.To>
+                                              <OutArgument x:TypeArguments="x:Boolean">[tarifaDisponibleResources]</OutArgument>
+                                            </ui:AssignOperation.To>
+                                            <ui:AssignOperation.Value>
+                                              <InArgument x:TypeArguments="x:Boolean">[True]</InArgument>
+                                            </ui:AssignOperation.Value>
+                                          </ui:AssignOperation>
+                                        </scg:List>
+                                      </ui:MultipleAssign.AssignOperations>
+                                    </ui:MultipleAssign>
+                                  </If.Then>
+                                </If>
+                              </Sequence>
+                            </If.Then>
+                          </If>
+                        </ActivityAction>
+                      </ui:ForEachRow.Body>
+                    </ui:ForEachRow>
+                  </If.Then>
+                </If>
+              </Sequence>
+              <Sequence sap2010:Annotation.AnnotationText="Objetivo: escribir los campos fijos y repetir coste/tarifa durante los meses reales de duración." DisplayName="Escribir perfil en tablas Resources" sap2010:WorkflowViewState.IdRef="Sequence_RES_014">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <ui:MultipleAssign DisplayName="Escribir datos fijos PC" sap2010:WorkflowViewState.IdRef="MultipleAssign_RES_013">
+                  <ui:MultipleAssign.AssignOperations>
+                    <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_041">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:Object">[out_dt_ResourcesPCFijos.Rows(indicePerfilResources)(0)]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:Object">[codigoEmpleadoResources]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_042">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:Object">[out_dt_ResourcesPCFijos.Rows(indicePerfilResources)(1)]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:Object">[siglaResources]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_043">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:Object">[out_dt_ResourcesPCFijos.Rows(indicePerfilResources)(2)]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:Object">[intercompanyResources]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_044">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:Object">[out_dt_ResourcesPCFijos.Rows(indicePerfilResources)(3)]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:Object">[perfilResources]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                    </scg:List>
+                  </ui:MultipleAssign.AssignOperations>
+                </ui:MultipleAssign>
+                <If Condition="[filaATResources + 1 &lt; out_dt_ResourcesATFijos.Rows.Count]" DisplayName="Hay filas AT para el perfil" sap2010:WorkflowViewState.IdRef="If_RES_020">
+                  <If.Then>
+                    <ui:MultipleAssign DisplayName="Escribir datos fijos AT" sap2010:WorkflowViewState.IdRef="MultipleAssign_RES_014">
+                      <ui:MultipleAssign.AssignOperations>
+                        <scg:List x:TypeArguments="ui:AssignOperation" Capacity="8">
+                          <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_045">
+                            <ui:AssignOperation.To>
+                              <OutArgument x:TypeArguments="x:Object">[out_dt_ResourcesATFijos.Rows(filaATResources)(0)]</OutArgument>
+                            </ui:AssignOperation.To>
+                            <ui:AssignOperation.Value>
+                              <InArgument x:TypeArguments="x:Object">[codigoEmpleadoResources]</InArgument>
+                            </ui:AssignOperation.Value>
+                          </ui:AssignOperation>
+                          <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_046">
+                            <ui:AssignOperation.To>
+                              <OutArgument x:TypeArguments="x:Object">[out_dt_ResourcesATFijos.Rows(filaATResources)(1)]</OutArgument>
+                            </ui:AssignOperation.To>
+                            <ui:AssignOperation.Value>
+                              <InArgument x:TypeArguments="x:Object">[siglaResources]</InArgument>
+                            </ui:AssignOperation.Value>
+                          </ui:AssignOperation>
+                          <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_047">
+                            <ui:AssignOperation.To>
+                              <OutArgument x:TypeArguments="x:Object">[out_dt_ResourcesATFijos.Rows(filaATResources)(2)]</OutArgument>
+                            </ui:AssignOperation.To>
+                            <ui:AssignOperation.Value>
+                              <InArgument x:TypeArguments="x:Object">[intercompanyResources]</InArgument>
+                            </ui:AssignOperation.Value>
+                          </ui:AssignOperation>
+                          <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_048">
+                            <ui:AssignOperation.To>
+                              <OutArgument x:TypeArguments="x:Object">[out_dt_ResourcesATFijos.Rows(filaATResources)(3)]</OutArgument>
+                            </ui:AssignOperation.To>
+                            <ui:AssignOperation.Value>
+                              <InArgument x:TypeArguments="x:Object">[perfilResources]</InArgument>
+                            </ui:AssignOperation.Value>
+                          </ui:AssignOperation>
+                          <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_049">
+                            <ui:AssignOperation.To>
+                              <OutArgument x:TypeArguments="x:Object">[out_dt_ResourcesATFijos.Rows(filaATResources + 1)(0)]</OutArgument>
+                            </ui:AssignOperation.To>
+                            <ui:AssignOperation.Value>
+                              <InArgument x:TypeArguments="x:Object">[codigoEmpleadoResources]</InArgument>
+                            </ui:AssignOperation.Value>
+                          </ui:AssignOperation>
+                          <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_050">
+                            <ui:AssignOperation.To>
+                              <OutArgument x:TypeArguments="x:Object">[out_dt_ResourcesATFijos.Rows(filaATResources + 1)(1)]</OutArgument>
+                            </ui:AssignOperation.To>
+                            <ui:AssignOperation.Value>
+                              <InArgument x:TypeArguments="x:Object">[siglaResources]</InArgument>
+                            </ui:AssignOperation.Value>
+                          </ui:AssignOperation>
+                          <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_051">
+                            <ui:AssignOperation.To>
+                              <OutArgument x:TypeArguments="x:Object">[out_dt_ResourcesATFijos.Rows(filaATResources + 1)(2)]</OutArgument>
+                            </ui:AssignOperation.To>
+                            <ui:AssignOperation.Value>
+                              <InArgument x:TypeArguments="x:Object">[intercompanyResources]</InArgument>
+                            </ui:AssignOperation.Value>
+                          </ui:AssignOperation>
+                          <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_052">
+                            <ui:AssignOperation.To>
+                              <OutArgument x:TypeArguments="x:Object">[out_dt_ResourcesATFijos.Rows(filaATResources + 1)(3)]</OutArgument>
+                            </ui:AssignOperation.To>
+                            <ui:AssignOperation.Value>
+                              <InArgument x:TypeArguments="x:Object">[perfilResources]</InArgument>
+                            </ui:AssignOperation.Value>
+                          </ui:AssignOperation>
+                        </scg:List>
+                      </ui:MultipleAssign.AssignOperations>
+                    </ui:MultipleAssign>
+                  </If.Then>
+                </If>
+                <ui:ForEach x:TypeArguments="x:Int32" CurrentIndex="{x:Null}" DisplayName="Recorrer meses Resources" sap2010:WorkflowViewState.IdRef="ForEach_RES_005" Values="[System.Linq.Enumerable.Range(0, duracionResources)]">
+                  <ui:ForEach.Body>
+                    <ActivityAction x:TypeArguments="x:Int32">
+                      <ActivityAction.Argument>
+                        <DelegateInArgument x:TypeArguments="x:Int32" Name="mesResourcesIndice" />
+                      </ActivityAction.Argument>
+                      <Sequence DisplayName="Escribir mes Resources" sap2010:WorkflowViewState.IdRef="Sequence_RES_015">
+                        <Assign DisplayName="Escribir coste mensual PC" sap2010:WorkflowViewState.IdRef="Assign_RES_024">
+                          <Assign.To>
+                            <OutArgument x:TypeArguments="x:Object">[out_dt_ResourcesPCMeses.Rows(indicePerfilResources)(mesResourcesIndice)]</OutArgument>
+                          </Assign.To>
+                          <Assign.Value>
+                            <InArgument x:TypeArguments="x:Object">[If(costeDisponibleResources, CType(costePerfilResources, Object), CType("Coste no disponible", Object))]</InArgument>
+                          </Assign.Value>
+                        </Assign>
+                        <If Condition="[filaATResources + 1 &lt; out_dt_ResourcesATMeses.Rows.Count]" DisplayName="Hay filas AT para el mes" sap2010:WorkflowViewState.IdRef="If_RES_021">
+                          <If.Then>
+                            <ui:MultipleAssign DisplayName="Escribir coste y tarifa AT" sap2010:WorkflowViewState.IdRef="MultipleAssign_RES_015">
+                              <ui:MultipleAssign.AssignOperations>
+                                <scg:List x:TypeArguments="ui:AssignOperation" Capacity="2">
+                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_053">
+                                    <ui:AssignOperation.To>
+                                      <OutArgument x:TypeArguments="x:Object">[out_dt_ResourcesATMeses.Rows(filaATResources)(mesResourcesIndice)]</OutArgument>
+                                    </ui:AssignOperation.To>
+                                    <ui:AssignOperation.Value>
+                                      <InArgument x:TypeArguments="x:Object">[If(costeDisponibleResources, CType(costePerfilResources, Object), CType("Coste no disponible", Object))]</InArgument>
+                                    </ui:AssignOperation.Value>
+                                  </ui:AssignOperation>
+                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_054">
+                                    <ui:AssignOperation.To>
+                                      <OutArgument x:TypeArguments="x:Object">[out_dt_ResourcesATMeses.Rows(filaATResources + 1)(mesResourcesIndice)]</OutArgument>
+                                    </ui:AssignOperation.To>
+                                    <ui:AssignOperation.Value>
+                                      <InArgument x:TypeArguments="x:Object">[If(tarifaDisponibleResources, CType(tarifaPerfilResources, Object), CType("Tarifa AT no disponible", Object))]</InArgument>
+                                    </ui:AssignOperation.Value>
+                                  </ui:AssignOperation>
+                                </scg:List>
+                              </ui:MultipleAssign.AssignOperations>
+                            </ui:MultipleAssign>
+                          </If.Then>
+                        </If>
+                      </Sequence>
+                    </ActivityAction>
+                  </ui:ForEach.Body>
+                </ui:ForEach>
+              </Sequence>
+            </Sequence>
+          </ActivityAction>
+        </ui:ForEach.Body>
+      </ui:ForEach>
+    </Sequence>
+    <ui:MultipleAssign DisplayName="Publicar contadores Resources" sap:VirtualizedContainerService.HintSize="540.6666666666666,148" sap2010:WorkflowViewState.IdRef="MultipleAssign_RES_016">
+      <ui:MultipleAssign.AssignOperations>
+        <scg:List x:TypeArguments="ui:AssignOperation" Capacity="2">
+          <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_055">
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:Int32">[out_CantidadPerfiles]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:Int32">[perfilesDetectadosResources]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_056">
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:Int32">[out_DuracionMeses]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:Int32">[duracionResources]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+        </scg:List>
+      </ui:MultipleAssign.AssignOperations>
+    </ui:MultipleAssign>
+    <ui:LogMessage DisplayName="Registrar Resources preparado" sap:VirtualizedContainerService.HintSize="540.6666666666666,144.66666666666666" sap2010:WorkflowViewState.IdRef="LogMessage_RES_001" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;S06 Resources preparado | Tipo=&quot; + in_TipoProyectoNormalizado + &quot; | Perfiles=&quot; + perfilesDetectadosResources.ToString() + &quot; | Meses=&quot; + duracionResources.ToString() + &quot; | Filas=&quot; + capacidadFilasResources.ToString()]" />
+  </Sequence>
+</Activity>

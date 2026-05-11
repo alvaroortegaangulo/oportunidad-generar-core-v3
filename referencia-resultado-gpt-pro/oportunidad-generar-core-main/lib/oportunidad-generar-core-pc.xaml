@@ -1,0 +1,280 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="oportunidad_generar_core_pc" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data.Common" xmlns:ue="clr-namespace:UiPath.Excel;assembly=UiPath.Excel.Activities" xmlns:ueab="clr-namespace:UiPath.Excel.Activities.Business;assembly=UiPath.Excel.Activities" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="rutaCORETrabajo" Type="InArgument(x:String)" />
+    <x:Property Name="TipoProyectoNormalizado" Type="InArgument(x:String)" />
+    <x:Property Name="fechaInicioSAPTrabajo" Type="InArgument(x:String)" />
+    <x:Property Name="codigosRecursosJsonTrabajo" Type="InArgument(x:String)" />
+    <x:Property Name="codigoPEPTrabajo" Type="InArgument(x:String)" />
+    <x:Property Name="proveedorCompraSAPTrabajo" Type="InArgument(x:String)" />
+    <x:Property Name="pedidoCompraSAPTrabajo" Type="InArgument(x:String)" />
+    <x:Property Name="codigoAribaSAPTrabajo" Type="InArgument(x:String)" />
+    <x:Property Name="ppoRiesgosValor" Type="InArgument(x:Object)" />
+    <x:Property Name="ppoGarantiaValor" Type="InArgument(x:Object)" />
+    <x:Property Name="dtCabeceraPPO" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="dtPerfilesPPO" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="dtCostesPorAnio" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="dtHorasPorAnio" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="dtGastos" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="dtCompras" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="dtTarifasAT" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="dtMesesPPO" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="dtMatrizIntercompany" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="capacidadResourcesFilas" Type="InArgument(x:Int32)" />
+    <x:Property Name="capacidadResourcesPerfiles" Type="InArgument(x:Int32)" />
+    <x:Property Name="capacidadCostPlanningPerfiles" Type="InArgument(x:Int32)" />
+    <x:Property Name="capacidadCostPlanningGastos" Type="InArgument(x:Int32)" />
+    <x:Property Name="capacidadCostPlanningCompras" Type="InArgument(x:Int32)" />
+  </x:Members>
+  <VisualBasic.Settings>
+    <x:Null />
+  </VisualBasic.Settings>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>GlobalVariablesNamespace</x:String>
+      <x:String>GlobalConstantsNamespace</x:String>
+      <x:String>System.Runtime.Serialization</x:String>
+      <x:String>System.Reflection</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>System.Text.RegularExpressions</x:String>
+      <x:String>System.Text.Json</x:String>
+      <x:String>System.Text.Json.Nodes</x:String>
+      <x:String>UiPath.DataTableUtilities</x:String>
+      <x:String>UiPath.Excel</x:String>
+      <x:String>UiPath.Excel.Activities</x:String>
+      <x:String>UiPath.Excel.Activities.Business</x:String>
+      <x:String>UiPath.Platform.ResourceHandling</x:String>
+      <x:String>UiPath.Core.Activities.Orchestrator</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Collections</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.TypeConverter</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.Common</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Drawing.Common</AssemblyReference>
+      <AssemblyReference>System.Drawing.Primitives</AssemblyReference>
+      <AssemblyReference>System.Linq</AssemblyReference>
+      <AssemblyReference>System.Net.Mail</AssemblyReference>
+      <AssemblyReference>System.ObjectModel</AssemblyReference>
+      <AssemblyReference>System.Private.CoreLib</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>UiPath.Studio.Constants</AssemblyReference>
+      <AssemblyReference>System.Private.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization.Formatters</AssemblyReference>
+      <AssemblyReference>System.Private.DataContractSerialization</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization.Primitives</AssemblyReference>
+      <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Testing.Activities</AssemblyReference>
+      <AssemblyReference>System.ComponentModel</AssemblyReference>
+      <AssemblyReference>System.Private.Xml</AssemblyReference>
+      <AssemblyReference>System.Reflection.Metadata</AssemblyReference>
+      <AssemblyReference>System.Runtime.InteropServices</AssemblyReference>
+      <AssemblyReference>System.Text.Json</AssemblyReference>
+      <AssemblyReference>System.Text.RegularExpressions</AssemblyReference>
+      <AssemblyReference>UiPath.Workflow</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>UiPath.Platform</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence sap2010:Annotation.AnnotationText="Workflow específico de CORE PC. Recibe el modelo común, prepara Resources y Cost Planning, y escribe ambos rangos abriendo Excel una sola vez." DisplayName="oportunidad-generar-core-pc">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_ResourcesPCFijos" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_ResourcesPCMeses" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_ResourcesATFijos" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_ResourcesATMeses" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_CostPlanningPCHoras" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dtCPPCRiesgos" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_CostPlanningPCGastosFijos" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_CostPlanningPCGastosMeses" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_CostPlanningPCComprasFijos" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_CostPlanningPCComprasMeses" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_CabeceraMesesPPO" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_CostPlanningATRecursosFijos" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_CostPlanningATHoras" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dtCPATRiesgos" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_CostPlanningATGastosFijos" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_CostPlanningATGastosMeses" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_CostPlanningATComprasFijos" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_CostPlanningATComprasMeses" />
+      <Variable x:TypeArguments="x:Int32" Name="resourcesCantidadPerfiles" />
+      <Variable x:TypeArguments="x:Int32" Name="resourcesDuracionMeses" />
+      <Variable x:TypeArguments="x:Int32" Name="costPlanningCantidadPerfiles" />
+      <Variable x:TypeArguments="x:Int32" Name="costPlanningDuracionMeses" />
+      <Variable x:TypeArguments="x:Int32" Name="costPlanningCantidadGastos" />
+      <Variable x:TypeArguments="x:Int32" Name="costPlanningCantidadCompras" />
+      <Variable x:TypeArguments="x:String" Name="columnaFinResourcesMeses" />
+      <Variable x:TypeArguments="x:String" Name="columnaFinCostPlanningMeses" />
+    </Sequence.Variables>
+    <Sequence sap2010:Annotation.AnnotationText="Objetivo: preparar las tablas rectangulares PC antes de abrir Excel.&#xA;Entradas: modelo PPO común, capacidades de plantilla y datos SAP.&#xA;Salida: tablas Resources y Cost Planning listas para Write Range." DisplayName="06 Preparar Resources y Cost Planning PC" sap2010:WorkflowViewState.IdRef="Sequence_E05_PC_01">
+      <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Preparar tablas comunes de Resources" UnSafe="False" WorkflowFileName="lib\core-common-preparar-resources.xaml">
+        <ui:InvokeWorkflowFile.Arguments>
+          <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_CabeceraPPO">[dtCabeceraPPO]</InArgument>
+          <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_PerfilesPPO">[dtPerfilesPPO]</InArgument>
+          <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_CostesPorAnio">[dtCostesPorAnio]</InArgument>
+          <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_TarifasAT">[dtTarifasAT]</InArgument>
+          <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_MesesPPO">[dtMesesPPO]</InArgument>
+          <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_MatrizIntercompany">[dtMatrizIntercompany]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_TipoProyectoNormalizado">[TipoProyectoNormalizado]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_FechaInicioSAP">[fechaInicioSAPTrabajo]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_CodigosEmpleadoRecursosJson">[codigosRecursosJsonTrabajo]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_CodigoPEP_WBS">[codigoPEPTrabajo]</InArgument>
+          <InArgument x:TypeArguments="x:Int32" x:Key="in_CapacidadResourcesFilas">[capacidadResourcesFilas]</InArgument>
+          <InArgument x:TypeArguments="x:Int32" x:Key="in_CapacidadResourcesPerfiles">[capacidadResourcesPerfiles]</InArgument>
+          <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_ResourcesPCFijos">[dt_ResourcesPCFijos]</OutArgument>
+          <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_ResourcesPCMeses">[dt_ResourcesPCMeses]</OutArgument>
+          <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_ResourcesATFijos">[dt_ResourcesATFijos]</OutArgument>
+          <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_ResourcesATMeses">[dt_ResourcesATMeses]</OutArgument>
+          <OutArgument x:TypeArguments="x:Int32" x:Key="out_CantidadPerfiles">[resourcesCantidadPerfiles]</OutArgument>
+          <OutArgument x:TypeArguments="x:Int32" x:Key="out_DuracionMeses">[resourcesDuracionMeses]</OutArgument>
+        </ui:InvokeWorkflowFile.Arguments>
+      </ui:InvokeWorkflowFile>
+      <ui:LogMessage DisplayName="Registrar tablas de Resources preparadas" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Resources preparado | Tipo=&quot; + TipoProyectoNormalizado + &quot; | Perfiles=&quot; + resourcesCantidadPerfiles.ToString() + &quot; | CapacidadPerfiles=&quot; + capacidadResourcesPerfiles.ToString() + &quot; | Meses=&quot; + resourcesDuracionMeses.ToString()]" />
+      <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Preparar tablas comunes de Cost Planning" UnSafe="False" WorkflowFileName="lib\core-common-preparar-cost-planning.xaml">
+              <ui:InvokeWorkflowFile.Arguments>
+                <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_PerfilesPPO">[dtPerfilesPPO]</InArgument>
+                <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_ResourcesATFijos">[dt_ResourcesATFijos]</InArgument>
+                <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_HorasPorAnio">[dtHorasPorAnio]</InArgument>
+                <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_Gastos">[dtGastos]</InArgument>
+                <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_Compras">[dtCompras]</InArgument>
+                <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_MesesPPO">[dtMesesPPO]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="in_TipoProyectoNormalizado">[TipoProyectoNormalizado]</InArgument>
+                <InArgument x:TypeArguments="x:Int32" x:Key="in_CapacidadCostPlanningPerfiles">[capacidadCostPlanningPerfiles]</InArgument>
+                <InArgument x:TypeArguments="x:Int32" x:Key="in_CapacidadCostPlanningGastos">[capacidadCostPlanningGastos]</InArgument>
+                <InArgument x:TypeArguments="x:Int32" x:Key="in_CapacidadCostPlanningCompras">[capacidadCostPlanningCompras]</InArgument>
+                <InArgument x:TypeArguments="x:Object" x:Key="in_Riesgos">[ppoRiesgosValor]</InArgument>
+                <InArgument x:TypeArguments="x:Object" x:Key="in_Garantia">[ppoGarantiaValor]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="in_ProveedorCompraSAP">[proveedorCompraSAPTrabajo]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="in_PedidoCompraSAP">[pedidoCompraSAPTrabajo]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="in_CodigoAribaSAP">[codigoAribaSAPTrabajo]</InArgument>
+                <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_CostPlanningPCHoras">[dt_CostPlanningPCHoras]</OutArgument>
+                <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_CostPlanningPCRiesgosGarantia">[dtCPPCRiesgos]</OutArgument>
+                <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_CostPlanningPCGastosFijos">[dt_CostPlanningPCGastosFijos]</OutArgument>
+                <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_CostPlanningPCGastosMeses">[dt_CostPlanningPCGastosMeses]</OutArgument>
+                <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_CostPlanningPCComprasFijos">[dt_CostPlanningPCComprasFijos]</OutArgument>
+                <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_CostPlanningPCComprasMeses">[dt_CostPlanningPCComprasMeses]</OutArgument>
+                <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_CostPlanningATRecursosFijos">[dt_CostPlanningATRecursosFijos]</OutArgument>
+                <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_CostPlanningATHoras">[dt_CostPlanningATHoras]</OutArgument>
+                <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_CostPlanningATRiesgosGarantia">[dtCPATRiesgos]</OutArgument>
+                <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_CostPlanningATGastosFijos">[dt_CostPlanningATGastosFijos]</OutArgument>
+                <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_CostPlanningATGastosMeses">[dt_CostPlanningATGastosMeses]</OutArgument>
+                <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_CostPlanningATComprasFijos">[dt_CostPlanningATComprasFijos]</OutArgument>
+                <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_CostPlanningATComprasMeses">[dt_CostPlanningATComprasMeses]</OutArgument>
+                <OutArgument x:TypeArguments="x:Int32" x:Key="out_CantidadPerfiles">[costPlanningCantidadPerfiles]</OutArgument>
+                <OutArgument x:TypeArguments="x:Int32" x:Key="out_DuracionMeses">[costPlanningDuracionMeses]</OutArgument>
+                <OutArgument x:TypeArguments="x:Int32" x:Key="out_CantidadGastos">[costPlanningCantidadGastos]</OutArgument>
+                <OutArgument x:TypeArguments="x:Int32" x:Key="out_CantidadCompras">[costPlanningCantidadCompras]</OutArgument>
+              </ui:InvokeWorkflowFile.Arguments>
+            </ui:InvokeWorkflowFile>
+      <ui:LogMessage DisplayName="Registrar tablas de Cost Planning preparadas" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Cost Planning preparado | Tipo=&quot; + TipoProyectoNormalizado + &quot; | Perfiles=&quot; + costPlanningCantidadPerfiles.ToString() + &quot; | CapacidadPerfiles=&quot; + capacidadCostPlanningPerfiles.ToString() + &quot; | Meses=&quot; + costPlanningDuracionMeses.ToString() + &quot; | Gastos=&quot; + costPlanningCantidadGastos.ToString() + &quot;/&quot; + capacidadCostPlanningGastos.ToString() + &quot; | Compras=&quot; + costPlanningCantidadCompras.ToString() + &quot;/&quot; + capacidadCostPlanningCompras.ToString()]" />
+      <ui:InvokeCode ContinueOnError="{x:Null}" DisplayName="Preparar cabecera mensual CORE PC" Language="CSharp" Code="var tabla = new System.Data.DataTable();&#xD;&#xA;if (arg_MesesPPO != null)&#xD;&#xA;{&#xD;&#xA;    int indiceColumna = 1;&#xD;&#xA;    foreach (System.Data.DataRow mes in arg_MesesPPO.Rows)&#xD;&#xA;    {&#xD;&#xA;        tabla.Columns.Add(&quot;M&quot; + indiceColumna.ToString(), typeof(object));&#xD;&#xA;        indiceColumna++;&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    if (tabla.Columns.Count &gt; 0)&#xD;&#xA;    {&#xD;&#xA;        var fila = tabla.NewRow();&#xD;&#xA;        int indiceMes = 0;&#xD;&#xA;        foreach (System.Data.DataRow mes in arg_MesesPPO.Rows)&#xD;&#xA;        {&#xD;&#xA;            string textoFecha = System.Convert.ToString(mes[&quot;Fecha&quot;]).Trim();&#xD;&#xA;            System.DateTime fecha;&#xD;&#xA;            if (System.DateTime.TryParse(textoFecha, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out fecha))&#xD;&#xA;            {&#xD;&#xA;                fila[indiceMes] = fecha;&#xD;&#xA;            }&#xD;&#xA;            else&#xD;&#xA;            {&#xD;&#xA;                fila[indiceMes] = textoFecha;&#xD;&#xA;            }&#xD;&#xA;            indiceMes++;&#xD;&#xA;        }&#xD;&#xA;        tabla.Rows.Add(fila);&#xD;&#xA;    }&#xD;&#xA;}&#xD;&#xA;arg_CabeceraMeses = tabla;">
+        <ui:InvokeCode.Arguments>
+          <scg:Dictionary x:TypeArguments="x:String, Argument">
+            <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_MesesPPO">[dtMesesPPO]</InArgument>
+            <OutArgument x:TypeArguments="sd:DataTable" x:Key="arg_CabeceraMeses">[dt_CabeceraMesesPPO]</OutArgument>
+          </scg:Dictionary>
+        </ui:InvokeCode.Arguments>
+      </ui:InvokeCode>
+    </Sequence>
+    <Sequence sap2010:Annotation.AnnotationText="Objetivo: limpiar y escribir Resources y Cost Planning PC abriendo el CORE una sola vez.&#xA;Entradas: tablas rectangulares ya preparadas.&#xA;Salida: rangos PC escritos y libro guardado para el recálculo final de la fachada." DisplayName="07 Escribir Resources y Cost Planning PC" sap2010:WorkflowViewState.IdRef="Sequence_E05_PC_02">
+      <ui:MultipleAssign DisplayName="Resolver columnas mensuales PC" sap2010:WorkflowViewState.IdRef="MultipleAssign_E05_PC_01">
+        <ui:MultipleAssign.AssignOperations>
+          <scg:List x:TypeArguments="ui:AssignOperation" Capacity="2">
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_E05_PC_01">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[columnaFinResourcesMeses]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[If(5 + resourcesDuracionMeses &lt;= 26, Microsoft.VisualBasic.ChrW(64 + 5 + resourcesDuracionMeses).ToString(), Microsoft.VisualBasic.ChrW(64 + ((5 + resourcesDuracionMeses - 1) \ 26)).ToString() + Microsoft.VisualBasic.ChrW(65 + ((5 + resourcesDuracionMeses - 1) Mod 26)).ToString())]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_E05_PC_02">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[columnaFinCostPlanningMeses]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[If(6 + costPlanningDuracionMeses &lt;= 26, Microsoft.VisualBasic.ChrW(64 + 6 + costPlanningDuracionMeses).ToString(), Microsoft.VisualBasic.ChrW(64 + ((6 + costPlanningDuracionMeses - 1) \ 26)).ToString() + Microsoft.VisualBasic.ChrW(65 + ((6 + costPlanningDuracionMeses - 1) Mod 26)).ToString())]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+          </scg:List>
+        </ui:MultipleAssign.AssignOperations>
+      </ui:MultipleAssign>
+      <ueab:ExcelProcessScopeX DisplayAlerts="{x:Null}" ExistingProcessAction="{x:Null}" FileConflictResolution="{x:Null}" LaunchMethod="{x:Null}" LaunchTimeout="{x:Null}" MacroSettings="{x:Null}" ProcessMode="{x:Null}" ShowExcelWindow="{x:Null}" DisplayName="Abrir Excel para escribir CORE PC" sap2010:WorkflowViewState.IdRef="ExcelProcessScopeX_E05_PC">
+        <ueab:ExcelProcessScopeX.Body>
+          <ActivityAction x:TypeArguments="ui:IExcelProcess">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="ui:IExcelProcess" Name="ExcelProcessPC" />
+            </ActivityAction.Argument>
+            <ueab:ExcelApplicationCard Password="{x:Null}" ReadFormatting="{x:Null}" DisplayName="Usar CORE para escritura PC" sap2010:WorkflowViewState.IdRef="ExcelApplicationCard_E05_PC" ResizeWindow="None" WorkbookPath="[rutaCORETrabajo]">
+              <ueab:ExcelApplicationCard.Body>
+                <ActivityAction x:TypeArguments="ue:IWorkbookQuickHandle">
+                  <ActivityAction.Argument>
+                    <DelegateInArgument x:TypeArguments="ue:IWorkbookQuickHandle" Name="ExcelCorePC" />
+                  </ActivityAction.Argument>
+                  <Sequence DisplayName="Limpiar y escribir CORE PC" sap2010:WorkflowViewState.IdRef="Sequence_E05_PC_03">
+                    <ueab:WriteRangeX Destination="[ExcelCorePC.Sheet(&quot;Resources&quot;).Range(&quot;F6&quot;)]" DisplayName="Escribir cabeceras mensuales Resources PC" ExcludeHeaders="True" sap2010:WorkflowViewState.IdRef="WriteRangeX_E05_PC_20" IgnoreEmptySource="False" Source="[dt_CabeceraMesesPPO]" />
+                    <ueab:WriteRangeX Destination="[ExcelCorePC.Sheet(&quot;Cost Planning&quot;).Range(&quot;G8&quot;)]" DisplayName="Escribir cabeceras mensuales Cost Planning PC" ExcludeHeaders="True" sap2010:WorkflowViewState.IdRef="WriteRangeX_E05_PC_21" IgnoreEmptySource="False" Source="[dt_CabeceraMesesPPO]" />
+                    <ueab:WriteRangeX Destination="[ExcelCorePC.Sheet(&quot;Monthly View&quot;).Range(&quot;E5&quot;)]" DisplayName="Escribir cabeceras mensuales Monthly View PC" ExcludeHeaders="True" sap2010:WorkflowViewState.IdRef="WriteRangeX_E05_PC_22" IgnoreEmptySource="False" Source="[dt_CabeceraMesesPPO]" />
+                    <ueab:ClearRangeX DisplayName="Limpiar Resources PC según capacidad" HasHeaders="False" sap2010:WorkflowViewState.IdRef="ClearRangeX_E05_PC_01" TargetRange="[ExcelCorePC.Sheet(&quot;Resources&quot;).Range(&quot;B7:&quot; + columnaFinResourcesMeses + (6 + capacidadResourcesFilas).ToString())]" />
+                    <ueab:WriteRangeX Destination="[ExcelCorePC.Sheet(&quot;Resources&quot;).Range(&quot;B7&quot;)]" DisplayName="Escribir datos fijos Resources PC" ExcludeHeaders="True" sap2010:WorkflowViewState.IdRef="WriteRangeX_E05_PC_01" IgnoreEmptySource="False" Source="[dt_ResourcesPCFijos]" />
+                    <ueab:WriteRangeX Destination="[ExcelCorePC.Sheet(&quot;Resources&quot;).Range(&quot;F7&quot;)]" DisplayName="Escribir costes mensuales Resources PC" ExcludeHeaders="True" sap2010:WorkflowViewState.IdRef="WriteRangeX_E05_PC_02" IgnoreEmptySource="False" Source="[dt_ResourcesPCMeses]" />
+                    <ueab:ClearRangeX DisplayName="Limpiar horas Cost Planning PC según capacidad" HasHeaders="False" sap2010:WorkflowViewState.IdRef="ClearRangeX_E05_PC_02" TargetRange="[ExcelCorePC.Sheet(&quot;Cost Planning&quot;).Range(&quot;G10:&quot; + columnaFinCostPlanningMeses + (9 + capacidadCostPlanningPerfiles).ToString())]" />
+                    <ueab:ClearRangeX DisplayName="Limpiar riesgos y garantía PC según duración" HasHeaders="False" sap2010:WorkflowViewState.IdRef="ClearRangeX_E05_PC_03" TargetRange="[ExcelCorePC.Sheet(&quot;Cost Planning&quot;).Range(&quot;G47:&quot; + columnaFinCostPlanningMeses + &quot;48&quot;)]" />
+                    <ueab:ClearRangeX DisplayName="Limpiar gastos Cost Planning PC según capacidad" HasHeaders="False" sap2010:WorkflowViewState.IdRef="ClearRangeX_E05_PC_04" TargetRange="[ExcelCorePC.Sheet(&quot;Cost Planning&quot;).Range(&quot;B53:D&quot; + (52 + capacidadCostPlanningGastos).ToString())]" />
+                    <ueab:ClearRangeX DisplayName="Limpiar meses gastos PC según capacidad" HasHeaders="False" sap2010:WorkflowViewState.IdRef="ClearRangeX_E05_PC_05" TargetRange="[ExcelCorePC.Sheet(&quot;Cost Planning&quot;).Range(&quot;G53:&quot; + columnaFinCostPlanningMeses + (52 + capacidadCostPlanningGastos).ToString())]" />
+                    <ueab:ClearRangeX DisplayName="Limpiar compras Cost Planning PC según capacidad" HasHeaders="False" sap2010:WorkflowViewState.IdRef="ClearRangeX_E05_PC_06" TargetRange="[ExcelCorePC.Sheet(&quot;Cost Planning&quot;).Range(&quot;B64:E&quot; + (63 + capacidadCostPlanningCompras).ToString())]" />
+                    <ueab:ClearRangeX DisplayName="Limpiar meses compras PC según capacidad" HasHeaders="False" sap2010:WorkflowViewState.IdRef="ClearRangeX_E05_PC_07" TargetRange="[ExcelCorePC.Sheet(&quot;Cost Planning&quot;).Range(&quot;G64:&quot; + columnaFinCostPlanningMeses + (63 + capacidadCostPlanningCompras).ToString())]" />
+                    <ueab:WriteRangeX Destination="[ExcelCorePC.Sheet(&quot;Cost Planning&quot;).Range(&quot;G10&quot;)]" DisplayName="Escribir horas recursos PC" ExcludeHeaders="True" sap2010:WorkflowViewState.IdRef="WriteRangeX_E05_PC_03" IgnoreEmptySource="False" Source="[dt_CostPlanningPCHoras]" />
+                    <ueab:WriteRangeX Destination="[ExcelCorePC.Sheet(&quot;Cost Planning&quot;).Range(&quot;G47&quot;)]" DisplayName="Escribir riesgos y garantía PC" ExcludeHeaders="True" sap2010:WorkflowViewState.IdRef="WriteRangeX_E05_PC_04" IgnoreEmptySource="False" Source="[dtCPPCRiesgos]" />
+                    <ueab:WriteRangeX Destination="[ExcelCorePC.Sheet(&quot;Cost Planning&quot;).Range(&quot;B53&quot;)]" DisplayName="Escribir datos de gastos PC" ExcludeHeaders="True" sap2010:WorkflowViewState.IdRef="WriteRangeX_E05_PC_05" IgnoreEmptySource="False" Source="[dt_CostPlanningPCGastosFijos]" />
+                    <ueab:WriteRangeX Destination="[ExcelCorePC.Sheet(&quot;Cost Planning&quot;).Range(&quot;G53&quot;)]" DisplayName="Escribir prorrateo gastos PC" ExcludeHeaders="True" sap2010:WorkflowViewState.IdRef="WriteRangeX_E05_PC_06" IgnoreEmptySource="False" Source="[dt_CostPlanningPCGastosMeses]" />
+                    <ueab:WriteRangeX Destination="[ExcelCorePC.Sheet(&quot;Cost Planning&quot;).Range(&quot;B64&quot;)]" DisplayName="Escribir datos de compras PC" ExcludeHeaders="True" sap2010:WorkflowViewState.IdRef="WriteRangeX_E05_PC_07" IgnoreEmptySource="False" Source="[dt_CostPlanningPCComprasFijos]" />
+                    <ueab:WriteRangeX Destination="[ExcelCorePC.Sheet(&quot;Cost Planning&quot;).Range(&quot;G64&quot;)]" DisplayName="Escribir prorrateo compras PC" ExcludeHeaders="True" sap2010:WorkflowViewState.IdRef="WriteRangeX_E05_PC_08" IgnoreEmptySource="False" Source="[dt_CostPlanningPCComprasMeses]" />
+                    <ueab:SaveExcelFileX DisplayName="Guardar CORE PC" sap2010:WorkflowViewState.IdRef="SaveExcelFileX_E05_PC" Workbook="[ExcelCorePC]" />
+                  </Sequence>
+                </ActivityAction>
+              </ueab:ExcelApplicationCard.Body>
+            </ueab:ExcelApplicationCard>
+          </ActivityAction>
+        </ueab:ExcelProcessScopeX.Body>
+      </ueab:ExcelProcessScopeX>
+    </Sequence>
+  </Sequence>
+</Activity>
+

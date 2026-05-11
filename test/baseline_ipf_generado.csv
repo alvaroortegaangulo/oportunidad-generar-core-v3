@@ -1,0 +1,41 @@
+Escenario,Hoja,Celda,Tipo,Esperado,Tolerancia,Comentario
+Completo,Invoice Request,C3,Text,Invoice,,Request Type valido
+Completo,Invoice Request,C6,Text,Fixed,,Bill Type por entrada del wrapper
+Completo,Invoice Request,C8,Text,Connectis ICT Services SAU,,Company Issuer valido
+Completo,Invoice Request,C11,Text,SERVICIOS A LA INFRAESTRUCTURA,,Customer aportado
+Completo,Invoice Request,F11,Text,461530,,Sold-to aportado
+Completo,Invoice Request,F14,Text,PVR-OC-0005647,,PO aportada
+Completo,Invoice Request,C16,Text,PM Test,,Requested by aportado
+Completo,Invoice Request,F16,Text,EUR,,Currency aportada
+Completo,Invoice Request,C18,Blank,,,Direccion de ejemplo limpiada
+Completo,Invoice Request,C24,Blank,,,Direccion de ejemplo limpiada
+Completo,Invoice Request,C26,Text,Hito 1 : Integracion de las Bandas de Reclamo,,Summary Text solo porque el wrapper lo aporta
+Completo,Invoice Request,C29,Blank,,,Linea narrativa no usada permanece vacia
+Completo,Invoice Request,C30,Text,Pedido : PVR-OC-0005647,,Linea PO generada desde PO aportada
+Completo,Invoice Request,C32,Text,Hito 1 : Integracion de las Bandas de Reclamo,,Narrativa solo porque el wrapper la aporta
+Completo,Invoice Request,F32,Number,22320.40,0.01,Importe neto aportado
+Completo,Invoice Request,D46,Text,714603126,,Sales Order aportado
+Completo,Invoice Request,D47,Text,ZEV-PCE0012-1001,,WBS aportado
+Completo,Invoice Request,F47,Text,Enviar copia de las facturas a responsable del proyecto.,,Comentarios solo porque el wrapper los aporta
+Completo,Invoice Request,D52,Formula,=F41,,Formula preservada
+Completo,Invoice Request,C61,Text,Iberiabilling @getronics.com,,Mailbox de plantilla preservado
+DatosIncompletos,Invoice Request,C3,Text,Invoice,,Default valido sin marcar rojo
+DatosIncompletos,Invoice Request,C6,Text,Fixed,,Default valido sin marcar rojo
+DatosIncompletos,Invoice Request,C8,RedText,Company issuer no disponible,,Falta company issuer y WBS para inferir
+DatosIncompletos,Invoice Request,C11,RedText,Cliente no disponible,,Customer funcional faltante
+DatosIncompletos,Invoice Request,F11,RedText,Sold-to no disponible,,Sold-to funcional faltante
+DatosIncompletos,Invoice Request,F14,Blank,,,PO no aportada queda vacia
+DatosIncompletos,Invoice Request,C16,RedText,Solicitante no disponible,,Requested by funcional faltante
+DatosIncompletos,Invoice Request,F16,Text,EUR,,Default valido sin marcar rojo
+DatosIncompletos,Invoice Request,C18,Blank,,,Direccion de ejemplo limpiada
+DatosIncompletos,Invoice Request,C24,Blank,,,Direccion de ejemplo limpiada
+DatosIncompletos,Invoice Request,C26,Blank,,,Summary Text no se inventa
+DatosIncompletos,Invoice Request,C29,Blank,,,Narrativa no aportada permanece vacia
+DatosIncompletos,Invoice Request,C30,Blank,,,Linea PO no se inventa sin PO
+DatosIncompletos,Invoice Request,C32,Blank,,,Text Narrative no se inventa
+DatosIncompletos,Invoice Request,F32,Blank,,,Importe no se inventa
+DatosIncompletos,Invoice Request,D46,RedText,Sales Order no disponible,,Sales Order funcional faltante
+DatosIncompletos,Invoice Request,D47,RedText,WBS no disponible,,WBS funcional faltante
+DatosIncompletos,Invoice Request,F47,Blank,,,Comentarios no se inventan
+DatosIncompletos,Invoice Request,D52,Formula,=F41,,Formula preservada
+DatosIncompletos,Invoice Request,C61,Text,Iberiabilling @getronics.com,,Mailbox de plantilla preservado
