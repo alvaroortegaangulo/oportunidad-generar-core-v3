@@ -942,14 +942,14 @@
         <Assign.Value>
           <InArgument x:TypeArguments="scg:List(s:Object[])" xml:space="preserve">[New System.Collections.Generic.List(Of Object()) From {
     New Object() {out_dt_CostPlanningPCHoras, duracionCostPlanning, capacidadFilasCostPlanningRecursos},
-    New Object() {out_dt_CostPlanningPCRiesgosGarantia, 25, 2},
+    New Object() {out_dt_CostPlanningPCRiesgosGarantia, duracionCostPlanning, 2},
     New Object() {out_dt_CostPlanningPCGastosFijos, 3, capacidadGastosCostPlanning},
     New Object() {out_dt_CostPlanningPCGastosMeses, duracionCostPlanning, capacidadGastosCostPlanning},
     New Object() {out_dt_CostPlanningPCComprasFijos, 4, capacidadComprasCostPlanning},
     New Object() {out_dt_CostPlanningPCComprasMeses, duracionCostPlanning, capacidadComprasCostPlanning},
     New Object() {out_dt_CostPlanningATRecursosFijos, 5, capacidadFilasCostPlanningRecursos},
     New Object() {out_dt_CostPlanningATHoras, duracionCostPlanning, capacidadFilasCostPlanningRecursos},
-    New Object() {out_dt_CostPlanningATRiesgosGarantia, 25, 2},
+    New Object() {out_dt_CostPlanningATRiesgosGarantia, duracionCostPlanning, 2},
     New Object() {out_dt_CostPlanningATGastosFijos, 6, capacidadGastosCostPlanning},
     New Object() {out_dt_CostPlanningATGastosMeses, duracionCostPlanning, capacidadGastosCostPlanning},
     New Object() {out_dt_CostPlanningATComprasFijos, 6, capacidadComprasCostPlanning},
