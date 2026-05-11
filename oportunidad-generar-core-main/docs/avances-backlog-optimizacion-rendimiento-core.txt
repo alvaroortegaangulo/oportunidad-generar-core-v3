@@ -1,0 +1,24 @@
+2026-05-12 - Epica 0 iniciada.
+- Alcance acordado: implementar EP0-T01, EP0-T02 y EP0-T03 en una unica entrega porque el usuario pidio completar toda la epica.
+- Estado inicial: `docs/backlog-optimizacion-rendimiento-core.md` ya contiene el backlog base; `docs/avances-backlog-optimizacion-rendimiento-core.txt` estaba vacio.
+- Validadores existentes revisados: `test/validar_calidad_e06.ps1` y `test/validar_salida_core_at_48_meses_e04.ps1` ya usan OpenXML/ZIP y sirven como patron tecnico.
+- Decision de comparador: usar OpenXML/ZIP en modo lectura, sin COM ni interfaz Excel, para no modificar outputs.
+- Hojas clave del contrato EP0: `Project Infor`, `Resources`, `Cost Planning`, `Monthly View`, `Cost Summary`.
+- Rangos de fuente roja a proteger: `Project Infor!A1:J80`, `Resources!A1:CA120`, `Cost Planning!A1:CB140`.
+- Exclusion variable detectada: `Cost Summary!B18` contiene `Generado por RPA: yyyy-MM-dd HH:mm:ss`; se normalizara solo ese timestamp, manteniendo contractual el resto de la trazabilidad.
+
+2026-05-12 - Epica 0 completada.
+- EP0-T01: contrato operativo anadido a `docs/backlog-optimizacion-rendimiento-core.md`.
+- EP0-T02: creado `test/comparar_outputs_core_equivalencia.ps1`.
+- EP0-T03: procedimiento baseline/candidato documentado en el backlog.
+- Comparador implementado sobre OpenXML/ZIP en modo lectura; no usa COM ni abre Excel por interfaz.
+- Comparador cubre valores cached/visibles de hojas clave, formulas, presencia de `#REF!` y fuente roja en los rangos contractuales.
+- Tolerancia numerica codificada: `0.000001`.
+- Exclusion codificada: solo timestamp de `Cost Summary!B18`; el resto de la celda se compara.
+- Validacion copia identica PC: OK. Celdas valor comparadas `3499`, formulas `3010`, posiciones de rojo `21480`, diferencias `0`.
+- Validacion copia identica AT: OK. Celdas valor comparadas `4043`, formulas `2979`, posiciones de rojo `21480`, diferencias `0`.
+- Prueba negativa valor: KO controlado en `Project Infor!C28`.
+- Prueba negativa formula: KO controlado en `Cost Summary!D12`.
+- Prueba negativa fuente roja: KO controlado en `Project Infor!D4`.
+- Prueba timestamp: OK al cambiar solo la fecha/hora normalizada de `Cost Summary!B18`.
+- Temporales usados para validacion eliminados de `data/output`.

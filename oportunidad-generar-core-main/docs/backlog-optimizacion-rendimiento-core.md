@@ -99,6 +99,25 @@ Si se empaqueta y ejecuta con UiRobot, usar la version de paquete que correspond
 
 Objetivo: crear una red de seguridad automatica antes de tocar rendimiento. Ninguna optimizacion relevante debe implementarse antes de que exista un comparador pre/post razonable.
 
+### Contrato operativo de equivalencia EP0
+
+El comparador EP0 debe tratar como contrato funcional las hojas `Project Infor`, `Resources`, `Cost Planning`, `Monthly View` y `Cost Summary`.
+
+Reglas de comparacion:
+
+- Valores visibles/cached: se comparan las celdas usadas de las hojas clave. Las celdas ausentes y vacias son equivalentes solo si ambas quedan vacias. Los valores numericos admiten una tolerancia absoluta maxima de `0.000001` para evitar ruido de serializacion OpenXML; textos, errores y booleanos se comparan de forma exacta.
+- Formulas: se compara la presencia de formula en las mismas celdas de las hojas clave y el texto de formula cuando OpenXML lo expone. Una celda que pasa de formula a valor fijo, aunque conserve el valor visible, es diferencia funcional.
+- Errores `#REF!`: la presencia de `#REF!` en baseline o candidato invalida la comparacion. Un baseline con `#REF!` no es una referencia aceptable para optimizar.
+- Fuente roja: se compara el estado rojo/no rojo de cada celda dentro de los rangos contractuales `Project Infor!A1:J80`, `Resources!A1:CA120` y `Cost Planning!A1:CB140`. La deteccion se basa en el estilo de celda persistido en `xl/styles.xml`, que es el mecanismo usado por las salidas actuales para el marcado funcional.
+- Estructura minima: deben existir las cinco hojas clave en ambos libros. El comparador no valida plantillas ni argumentos UiPath; eso queda cubierto por los validadores existentes.
+- Reporte: cada diferencia debe indicar `Hoja`, `Celda`, `Tipo`, valor baseline, valor candidato y detalle tecnico breve.
+
+Exclusiones codificadas y justificadas:
+
+- `Cost Summary!B18`: se normaliza solo el timestamp del fragmento `Generado por RPA: yyyy-MM-dd HH:mm:ss`. El resto de la trazabilidad de la celda se compara completo porque contiene informacion funcional relevante.
+
+No hay otras exclusiones permitidas en EP0. Cualquier nueva exclusion debe documentarse aqui, implementarse explicitamente en `test/comparar_outputs_core_equivalencia.ps1` y explicar por que no relaja una regla de negocio.
+
 ### EP0-T01 - Definir contrato de equivalencia funcional
 
 Contexto: el proyecto ya tiene validadores de calidad, pero no un comparador generico entre dos CORE. Antes de optimizar hay que documentar que se considera diferencia funcional.
@@ -221,6 +240,35 @@ git diff -- docs
 Evidencia esperada:
 
 - Pasos documentados para generar y comparar baseline/candidato.
+
+### Procedimiento operativo de baseline pre/post
+
+Antes de ejecutar cualquier tarea de rendimiento que pueda alterar un CORE:
+
+1. Generar outputs baseline desde Studio o desde el flujo acordado, sin cambios de rendimiento aplicados.
+2. Crear una carpeta local de trabajo para referencias, por ejemplo `data\baseline`. Esta carpeta es operativa y no debe versionarse salvo decision explicita del responsable del proyecto.
+3. Copiar los ficheros generados con convencion estable:
+
+```powershell
+New-Item -ItemType Directory -Path .\data\baseline -Force
+Copy-Item .\data\output\CORE_PC_20250256445.xlsx .\data\baseline\CORE_PC_20250256445_baseline.xlsx -Force
+Copy-Item .\data\output\CORE_AT_20251160543.xlsx .\data\baseline\CORE_AT_20251160543_baseline.xlsx -Force
+```
+
+4. Aplicar la tarea de optimizacion concreta y regenerar los outputs candidatos en `data\output`.
+5. Comparar PC y AT contra sus baselines:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\test\comparar_outputs_core_equivalencia.ps1 -BaselinePath .\data\baseline\CORE_PC_20250256445_baseline.xlsx -CandidatePath .\data\output\CORE_PC_20250256445.xlsx -Kind PC
+```
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\test\comparar_outputs_core_equivalencia.ps1 -BaselinePath .\data\baseline\CORE_AT_20251160543_baseline.xlsx -CandidatePath .\data\output\CORE_AT_20251160543.xlsx -Kind AT
+```
+
+6. Si se quiere conservar tambien el candidato fuera de `data\output`, usar la convencion `*_candidate.xlsx`, por ejemplo `CORE_PC_20250256445_candidate.xlsx`. No sustituir `data\output` como fuente operativa del proyecto sin dejarlo indicado en la evidencia de la tarea.
+
+Una tarea de rendimiento no queda cerrada si el comparador falla, salvo que la diferencia este aprobada por negocio, documentada y codificada como exclusion explicita.
 
 ## Epica 1 - Escaneo final de errores en batch
 
@@ -896,4 +944,3 @@ Una tarea se considera cerrada solo si:
 - los outputs CORE se mantienen equivalentes cuando la tarea toca comportamiento;
 - no quedan procesos Excel residuales cuando se ejecuta runtime;
 - se aporta evidencia suficiente para que otra conversacion pueda continuar desde el siguiente ID de tarea.
-
