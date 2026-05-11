@@ -1,28 +1,26 @@
-<Activity mc:Ignorable="sap sap2010" x:Class="Main" VisualBasic.Settings="{x:Null}" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<Activity mc:Ignorable="sap sap2010" x:Class="Main" VisualBasic.Settings="{x:Null}" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
       <x:String>System.Activities</x:String>
       <x:String>System.Activities.Statements</x:String>
-      <x:String>System.Activities.Expressions</x:String>
-      <x:String>System.Activities.Validation</x:String>
-      <x:String>System.Activities.XamlIntegration</x:String>
-      <x:String>Microsoft.VisualBasic</x:String>
-      <x:String>Microsoft.VisualBasic.Activities</x:String>
-      <x:String>System</x:String>
       <x:String>System.Collections</x:String>
       <x:String>System.Collections.Generic</x:String>
       <x:String>System.Collections.ObjectModel</x:String>
       <x:String>System.Data</x:String>
       <x:String>System.Diagnostics</x:String>
       <x:String>System.Drawing</x:String>
+      <x:String>System.Globalization</x:String>
       <x:String>System.IO</x:String>
       <x:String>System.Linq</x:String>
       <x:String>System.Net.Mail</x:String>
       <x:String>System.Xml</x:String>
       <x:String>System.Xml.Linq</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
       <x:String>UiPath.Core</x:String>
       <x:String>UiPath.Core.Activities</x:String>
-      <x:String>System.Windows.Markup</x:String>
+      <x:String>UiPath.Platform.ResourceHandling</x:String>
       <x:String>GlobalVariablesNamespace</x:String>
       <x:String>GlobalConstantsNamespace</x:String>
     </sco:Collection>
@@ -53,14 +51,464 @@
       <AssemblyReference>System.Xml.Linq</AssemblyReference>
       <AssemblyReference>UiPath.System.Activities</AssemblyReference>
       <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Workflow</AssemblyReference>
+      <AssemblyReference>UiPath.Platform</AssemblyReference>
       <AssemblyReference>WindowsBase</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Main Sequence" sap2010:WorkflowViewState.IdRef="Sequence_1">
-    <sap:WorkflowViewStateService.ViewState>
-      <scg:Dictionary x:TypeArguments="x:String, x:Object">
-        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-      </scg:Dictionary>
-    </sap:WorkflowViewStateService.ViewState>
+  <Sequence DisplayName="Main - generar CORE PC y CORE AT" sap2010:Annotation.AnnotationText="Proceso padre de ejemplo para E07. Construye rutas relativas al proyecto, valida los inputs locales, declara datos SAP/Salesforce de prueba no productivos e invoca dos veces la fachada lib\oportunidad-generar-core.xaml. No genera IPF.">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="RutaProyecto" />
+      <Variable x:TypeArguments="x:String" Name="RutaInput" />
+      <Variable x:TypeArguments="x:String" Name="RutaTemplates" />
+      <Variable x:TypeArguments="x:String" Name="RutaOutput" />
+      <Variable x:TypeArguments="x:String" Name="RutaLib" />
+      <Variable x:TypeArguments="x:String" Name="RutaWorkflowCore" />
+      <Variable x:TypeArguments="x:String" Name="RutaPPOPC" />
+      <Variable x:TypeArguments="x:String" Name="RutaPPOAT" />
+      <Variable x:TypeArguments="x:String" Name="RutaPlantillaCorePC" />
+      <Variable x:TypeArguments="x:String" Name="RutaPlantillaCoreAT" />
+      <Variable x:TypeArguments="x:String" Name="RutaCOREPC" />
+      <Variable x:TypeArguments="x:String" Name="RutaCOREAT" />
+      <Variable x:TypeArguments="x:Boolean" Name="ExisteInput" />
+      <Variable x:TypeArguments="x:Boolean" Name="ExisteTemplates" />
+      <Variable x:TypeArguments="x:Boolean" Name="ExisteLib" />
+      <Variable x:TypeArguments="x:Boolean" Name="ExistePPOPC" />
+      <Variable x:TypeArguments="x:Boolean" Name="ExistePPOAT" />
+      <Variable x:TypeArguments="x:Boolean" Name="ExistePlantillaPC" />
+      <Variable x:TypeArguments="x:Boolean" Name="ExistePlantillaAT" />
+      <Variable x:TypeArguments="x:String" Name="pcFechaInicioSap" />
+      <Variable x:TypeArguments="x:String" Name="pcFechaFinSap" />
+      <Variable x:TypeArguments="x:String" Name="pcWbs" />
+      <Variable x:TypeArguments="x:String" Name="pcCodigoCliente" />
+      <Variable x:TypeArguments="x:String" Name="pcSalesOrder" />
+      <Variable x:TypeArguments="x:String" Name="pcCodigoPm" />
+      <Variable x:TypeArguments="x:String" Name="pcNombrePm" />
+      <Variable x:TypeArguments="x:String" Name="pcCodigoPl" />
+      <Variable x:TypeArguments="x:String" Name="pcNombrePl" />
+      <Variable x:TypeArguments="x:String" Name="pcCodigoSm" />
+      <Variable x:TypeArguments="x:String" Name="pcNombreSm" />
+      <Variable x:TypeArguments="x:String" Name="pcAccount" />
+      <Variable x:TypeArguments="x:String" Name="pcPractica" />
+      <Variable x:TypeArguments="x:String" Name="pcCorreoResponsable" />
+      <Variable x:TypeArguments="x:String" Name="pcProveedorCompra" />
+      <Variable x:TypeArguments="x:String" Name="pcPedidoCompra" />
+      <Variable x:TypeArguments="x:String" Name="pcCodigoAriba" />
+      <Variable x:TypeArguments="x:String" Name="pcCodigosEmpleadoJson" />
+      <Variable x:TypeArguments="x:String" Name="atFechaInicioSap" />
+      <Variable x:TypeArguments="x:String" Name="atFechaFinSap" />
+      <Variable x:TypeArguments="x:String" Name="atWbs" />
+      <Variable x:TypeArguments="x:String" Name="atCodigoCliente" />
+      <Variable x:TypeArguments="x:String" Name="atSalesOrder" />
+      <Variable x:TypeArguments="x:String" Name="atCodigoPm" />
+      <Variable x:TypeArguments="x:String" Name="atNombrePm" />
+      <Variable x:TypeArguments="x:String" Name="atCodigoPl" />
+      <Variable x:TypeArguments="x:String" Name="atNombrePl" />
+      <Variable x:TypeArguments="x:String" Name="atCodigoSm" />
+      <Variable x:TypeArguments="x:String" Name="atNombreSm" />
+      <Variable x:TypeArguments="x:String" Name="atAccount" />
+      <Variable x:TypeArguments="x:String" Name="atPractica" />
+      <Variable x:TypeArguments="x:String" Name="atCorreoResponsable" />
+      <Variable x:TypeArguments="x:String" Name="atProveedorCompra" />
+      <Variable x:TypeArguments="x:String" Name="atPedidoCompra" />
+      <Variable x:TypeArguments="x:String" Name="atCodigoAriba" />
+      <Variable x:TypeArguments="x:String" Name="atCodigosEmpleadoJson" />
+      <Variable x:TypeArguments="x:String" Name="NumeroSFLeidoPC" />
+      <Variable x:TypeArguments="x:String" Name="NumeroSFLeidoAT" />
+    </Sequence.Variables>
+    <Sequence DisplayName="00 Preparar rutas" sap2010:Annotation.AnnotationText="Construye todas las rutas desde Environment.CurrentDirectory. En ejecucion empaquetada debe apuntar al content del paquete UiPath, por eso no se usan rutas absolutas.">
+      <ui:MultipleAssign DisplayName="Resolver rutas relativas del proyecto">
+        <ui:MultipleAssign.AssignOperations>
+          <scg:List x:TypeArguments="ui:AssignOperation" Capacity="12">
+            <ui:AssignOperation>
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[RutaProyecto]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[Path.GetFullPath(Environment.CurrentDirectory)]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[RutaInput]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[Path.GetFullPath(Path.Combine(RutaProyecto, "data", "input"))]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[RutaTemplates]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[Path.GetFullPath(Path.Combine(RutaProyecto, "data", "templates"))]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[RutaOutput]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[Path.GetFullPath(Path.Combine(RutaProyecto, "data", "output"))]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[RutaLib]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[Path.GetFullPath(Path.Combine(RutaProyecto, "lib"))]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[RutaWorkflowCore]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[Path.Combine(RutaLib, "oportunidad-generar-core.xaml")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[RutaPPOPC]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[Path.Combine(RutaInput, "20250256445" + New String(" "c, 2) + "PPO_NuevaTerminalPVR v2 1.xlsm")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[RutaPPOAT]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[Path.Combine(RutaInput, "20251160543_PPO_CEducaci" + ChrW(243).ToString() + "n_AMS_SI_Lote 2_v01.xlsm")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[RutaPlantillaCorePC]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[Path.Combine(RutaTemplates, "CORE_PC_template.xlsx")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[RutaPlantillaCoreAT]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[Path.Combine(RutaTemplates, "CORE_AT_template.xlsx")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[RutaCOREPC]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[Path.Combine(RutaOutput, "CORE_PC_20250256445.xlsx")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[RutaCOREAT]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[Path.Combine(RutaOutput, "CORE_AT_20251160543.xlsx")]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+          </scg:List>
+        </ui:MultipleAssign.AssignOperations>
+      </ui:MultipleAssign>
+      <ui:CreateDirectory ContinueOnError="{x:Null}" Output="{x:Null}" DisplayName="Crear data output si no existe" Path="[RutaOutput]" />
+      <ui:LogMessage DisplayName="Registrar rutas resueltas" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Main E07 | rutas | Proyecto=&quot; + RutaProyecto + &quot; | Input=&quot; + RutaInput + &quot; | Templates=&quot; + RutaTemplates + &quot; | Output=&quot; + RutaOutput + &quot; | Lib=&quot; + RutaLib]" />
+    </Sequence>
+    <Sequence DisplayName="01 Validar inputs locales" sap2010:Annotation.AnnotationText="Falla temprano si falta una carpeta, workflow, PPO o plantilla. Las rutas de PPO son nombres exactos de la entrega, no reglas adaptadas al parser.">
+      <ui:FolderExistsX DisplayName="Comprobar carpeta data input" Exists="[ExisteInput]" Path="[RutaInput]" />
+      <If DisplayName="Validar carpeta data input" Condition="[Not ExisteInput]">
+        <If.Then>
+          <Throw DisplayName="Error carpeta data input inexistente" Exception="[New Exception(&quot;No existe la carpeta data\input resuelta desde el proyecto: &quot; + RutaInput)]" />
+        </If.Then>
+      </If>
+      <ui:FolderExistsX DisplayName="Comprobar carpeta data templates" Exists="[ExisteTemplates]" Path="[RutaTemplates]" />
+      <If DisplayName="Validar carpeta data templates" Condition="[Not ExisteTemplates]">
+        <If.Then>
+          <Throw DisplayName="Error carpeta data templates inexistente" Exception="[New Exception(&quot;No existe la carpeta data\templates resuelta desde el proyecto: &quot; + RutaTemplates)]" />
+        </If.Then>
+      </If>
+      <ui:FolderExistsX DisplayName="Comprobar carpeta lib" Exists="[ExisteLib]" Path="[RutaLib]" />
+      <If DisplayName="Validar carpeta lib" Condition="[Not ExisteLib]">
+        <If.Then>
+          <Throw DisplayName="Error carpeta lib inexistente" Exception="[New Exception(&quot;No existe la carpeta lib resuelta desde el proyecto: &quot; + RutaLib)]" />
+        </If.Then>
+      </If>
+      <If DisplayName="Validar fachada CORE en ejecucion fuente" Condition="[Directory.GetFiles(RutaLib, &quot;*.xaml&quot;).Length &gt; 0 AndAlso Not File.Exists(RutaWorkflowCore)]">
+        <If.Then>
+          <Throw DisplayName="Error fachada CORE inexistente" Exception="[New Exception(&quot;No existe lib\oportunidad-generar-core.xaml: &quot; + RutaWorkflowCore)]" />
+        </If.Then>
+      </If>
+      <ui:FileExistsX DisplayName="Comprobar PPO PC 20250256445" Exists="[ExistePPOPC]" Path="[RutaPPOPC]" />
+      <If DisplayName="Validar PPO PC exacto" Condition="[Not ExistePPOPC]">
+        <If.Then>
+          <Throw DisplayName="Error PPO PC inexistente" Exception="[New Exception(&quot;No existe el PPO PC esperado para 20250256445: &quot; + RutaPPOPC)]" />
+        </If.Then>
+      </If>
+      <ui:FileExistsX DisplayName="Comprobar PPO AT 20251160543" Exists="[ExistePPOAT]" Path="[RutaPPOAT]" />
+      <If DisplayName="Validar PPO AT exacto" Condition="[Not ExistePPOAT]">
+        <If.Then>
+          <Throw DisplayName="Error PPO AT inexistente" Exception="[New Exception(&quot;No existe el PPO AT esperado para 20251160543: &quot; + RutaPPOAT)]" />
+        </If.Then>
+      </If>
+      <ui:FileExistsX DisplayName="Comprobar plantilla CORE PC" Exists="[ExistePlantillaPC]" Path="[RutaPlantillaCorePC]" />
+      <If DisplayName="Validar plantilla CORE PC" Condition="[Not ExistePlantillaPC]">
+        <If.Then>
+          <Throw DisplayName="Error plantilla CORE PC inexistente" Exception="[New Exception(&quot;No existe la plantilla CORE PC: &quot; + RutaPlantillaCorePC)]" />
+        </If.Then>
+      </If>
+      <ui:FileExistsX DisplayName="Comprobar plantilla CORE AT" Exists="[ExistePlantillaAT]" Path="[RutaPlantillaCoreAT]" />
+      <If DisplayName="Validar plantilla CORE AT" Condition="[Not ExistePlantillaAT]">
+        <If.Then>
+          <Throw DisplayName="Error plantilla CORE AT inexistente" Exception="[New Exception(&quot;No existe la plantilla CORE AT: &quot; + RutaPlantillaCoreAT)]" />
+        </If.Then>
+      </If>
+      <ui:LogMessage DisplayName="Registrar validacion local OK" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Main E07 | validacion local OK | PPO PC=&quot; + RutaPPOPC + &quot; | PPO AT=&quot; + RutaPPOAT]" />
+    </Sequence>
+    <Sequence DisplayName="02 Preparar datos SAP/Salesforce de prueba" sap2010:Annotation.AnnotationText="Valores no productivos y faciles de cambiar. Las fechas SAP se dejan vacias para que el calendario venga del PPO; no se usan para compensar errores de lectura.">
+      <ui:MultipleAssign DisplayName="Declarar datos PC de prueba">
+        <ui:MultipleAssign.AssignOperations>
+          <scg:List x:TypeArguments="ui:AssignOperation" Capacity="18">
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[pcFechaInicioSap]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">[String.Empty]</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[pcFechaFinSap]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">[String.Empty]</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[pcWbs]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">ZEV-PCE0012-1001</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[pcCodigoCliente]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">461530</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[pcSalesOrder]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">714603126</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[pcCodigoPm]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">3900331</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[pcNombrePm]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">LLUIS GUERRA GONZALEZ</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[pcCodigoPl]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">3659518</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[pcNombrePl]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">Carlos Alvarez Gonzalez</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[pcCodigoSm]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">458354</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[pcNombreSm]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">Joan MARCER</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[pcAccount]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">GAP</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[pcPractica]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">Smart Integration</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[pcCorreoResponsable]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">core.pc.no.productivo@example.invalid</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[pcProveedorCompra]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">Proveedor Test</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[pcPedidoCompra]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">PVR-OC-0005647</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[pcCodigoAriba]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">ARIBA-TEST-001</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[pcCodigosEmpleadoJson]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">{"JP":"E91010","CSS":"E91011","CJSS":"E91012","A":"E91013","II":"E91014","P":"E91015","DG":"E91016"}</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+          </scg:List>
+        </ui:MultipleAssign.AssignOperations>
+      </ui:MultipleAssign>
+      <ui:MultipleAssign DisplayName="Declarar datos AT de prueba">
+        <ui:MultipleAssign.AssignOperations>
+          <scg:List x:TypeArguments="ui:AssignOperation" Capacity="18">
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[atFechaInicioSap]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">[String.Empty]</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[atFechaFinSap]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">[String.Empty]</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[atWbs]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">ZEV-ATE0012-1001</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[atCodigoCliente]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">CUST-CE-JCYL-TEST</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[atSalesOrder]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">SO-TEST-20251160543</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[atCodigoPm]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">E92001</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[atNombrePm]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">PM AT Test No Productivo</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[atCodigoPl]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">E92002</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[atNombrePl]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">Practice Leader AT Test No Productivo</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[atCodigoSm]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">E92003</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[atNombreSm]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">Sales Manager AT Test No Productivo</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[atAccount]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">Consejeria Educacion JCyL</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[atPractica]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">AMS</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[atCorreoResponsable]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">core.at.no.productivo@example.invalid</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[atProveedorCompra]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">[String.Empty]</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[atPedidoCompra]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">[String.Empty]</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[atCodigoAriba]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">[String.Empty]</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation>
+              <ui:AssignOperation.To><OutArgument x:TypeArguments="x:String">[atCodigosEmpleadoJson]</OutArgument></ui:AssignOperation.To>
+              <ui:AssignOperation.Value><InArgument x:TypeArguments="x:String">{"AP":"E92010","AP|Susana Matarranz":"E92012","AP|Sopore especializado":"E92013","PR":"E92011"}</InArgument></ui:AssignOperation.Value>
+            </ui:AssignOperation>
+          </scg:List>
+        </ui:MultipleAssign.AssignOperations>
+      </ui:MultipleAssign>
+      <ui:LogMessage DisplayName="Registrar datos de prueba preparados" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Main E07 | datos SAP/SF de prueba preparados | PC WBS=&quot; + pcWbs + &quot; | AT WBS=&quot; + atWbs + &quot; | fechas SAP vacias para usar calendario PPO&quot;]" />
+    </Sequence>
+    <Sequence DisplayName="03 Generar CORE PC 20250256445">
+      <ui:LogMessage DisplayName="Inicio CORE PC 20250256445" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Main E07 | inicio CORE PC | PPO=&quot; + RutaPPOPC + &quot; | CORE=&quot; + RutaCOREPC]" />
+      <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Invocar fachada CORE PC" UnSafe="False" WorkflowFileName="lib\oportunidad-generar-core.xaml">
+        <ui:InvokeWorkflowFile.Arguments>
+          <InArgument x:TypeArguments="x:String" x:Key="in_RutaPPO">[RutaPPOPC]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_RutaPlantillaCorePC">[RutaPlantillaCorePC]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_RutaPlantillaCoreAT">[RutaPlantillaCoreAT]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_RutaCORE">[RutaCOREPC]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_TipoProyecto">PC</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_FechaInicio">[pcFechaInicioSap]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_FechaFin">[pcFechaFinSap]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoPEP_WBS">[pcWbs]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoCliente">[pcCodigoCliente]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_PedidoSalesOrder">[pcSalesOrder]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoEmpleadoJefeProyecto">[pcCodigoPm]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_NombreJefeProyecto">[pcNombrePm]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoEmpleadoPracticeLeader">[pcCodigoPl]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_NombrePracticeLeader">[pcNombrePl]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SF_CodigoEmpleadoSalesManager">[pcCodigoSm]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SF_NombreSalesManager">[pcNombreSm]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SF_AccountName">[pcAccount]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SF_Practica">[pcPractica]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SF_RutaProyecto">[RutaOutput]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SF_CorreoResponsable">[pcCorreoResponsable]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_ProveedorCompra">[pcProveedorCompra]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_PedidoCompra">[pcPedidoCompra]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoAriba">[pcCodigoAriba]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigosEmpleadoRecursosJson">[pcCodigosEmpleadoJson]</InArgument>
+          <OutArgument x:TypeArguments="x:String" x:Key="out_NumeroSFLeido">[NumeroSFLeidoPC]</OutArgument>
+        </ui:InvokeWorkflowFile.Arguments>
+      </ui:InvokeWorkflowFile>
+      <If DisplayName="Validar Opportunity PC leida" Condition="[NumeroSFLeidoPC &lt;&gt; &quot;20250256445&quot;]">
+        <If.Then>
+          <Throw DisplayName="Error Opportunity PC inesperada" Exception="[New Exception(&quot;El PPO PC generado no devuelve out_NumeroSFLeido=20250256445. Valor recibido: &quot; + If(NumeroSFLeidoPC Is Nothing, &quot;&lt;null&gt;&quot;, NumeroSFLeidoPC))]" />
+        </If.Then>
+      </If>
+      <ui:LogMessage DisplayName="Fin CORE PC 20250256445" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Main E07 | fin CORE PC | CORE=&quot; + RutaCOREPC + &quot; | NumeroSFLeido=&quot; + NumeroSFLeidoPC]" />
+    </Sequence>
+    <Sequence DisplayName="04 Generar CORE AT 20251160543">
+      <ui:LogMessage DisplayName="Inicio CORE AT 20251160543" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Main E07 | inicio CORE AT | PPO=&quot; + RutaPPOAT + &quot; | CORE=&quot; + RutaCOREAT]" />
+      <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Invocar fachada CORE AT" UnSafe="False" WorkflowFileName="lib\oportunidad-generar-core.xaml">
+        <ui:InvokeWorkflowFile.Arguments>
+          <InArgument x:TypeArguments="x:String" x:Key="in_RutaPPO">[RutaPPOAT]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_RutaPlantillaCorePC">[RutaPlantillaCorePC]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_RutaPlantillaCoreAT">[RutaPlantillaCoreAT]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_RutaCORE">[RutaCOREAT]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_TipoProyecto">AT</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_FechaInicio">[atFechaInicioSap]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_FechaFin">[atFechaFinSap]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoPEP_WBS">[atWbs]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoCliente">[atCodigoCliente]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_PedidoSalesOrder">[atSalesOrder]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoEmpleadoJefeProyecto">[atCodigoPm]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_NombreJefeProyecto">[atNombrePm]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoEmpleadoPracticeLeader">[atCodigoPl]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_NombrePracticeLeader">[atNombrePl]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SF_CodigoEmpleadoSalesManager">[atCodigoSm]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SF_NombreSalesManager">[atNombreSm]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SF_AccountName">[atAccount]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SF_Practica">[atPractica]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SF_RutaProyecto">[RutaOutput]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SF_CorreoResponsable">[atCorreoResponsable]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_ProveedorCompra">[atProveedorCompra]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_PedidoCompra">[atPedidoCompra]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoAriba">[atCodigoAriba]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigosEmpleadoRecursosJson">[atCodigosEmpleadoJson]</InArgument>
+          <OutArgument x:TypeArguments="x:String" x:Key="out_NumeroSFLeido">[NumeroSFLeidoAT]</OutArgument>
+        </ui:InvokeWorkflowFile.Arguments>
+      </ui:InvokeWorkflowFile>
+      <If DisplayName="Validar Opportunity AT leida" Condition="[NumeroSFLeidoAT &lt;&gt; &quot;20251160543&quot;]">
+        <If.Then>
+          <Throw DisplayName="Error Opportunity AT inesperada" Exception="[New Exception(&quot;El PPO AT generado no devuelve out_NumeroSFLeido=20251160543. Valor recibido: &quot; + If(NumeroSFLeidoAT Is Nothing, &quot;&lt;null&gt;&quot;, NumeroSFLeidoAT))]" />
+        </If.Then>
+      </If>
+      <ui:LogMessage DisplayName="Fin CORE AT 20251160543" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Main E07 | fin CORE AT | CORE=&quot; + RutaCOREAT + &quot; | NumeroSFLeido=&quot; + NumeroSFLeidoAT]" />
+    </Sequence>
+    <Sequence DisplayName="05 Registrar fin">
+      <ui:LogMessage DisplayName="Fin Main E07" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Main E07 | fin OK | CORE PC=&quot; + RutaCOREPC + &quot; | CORE AT=&quot; + RutaCOREAT + &quot; | NumeroSF PC=&quot; + NumeroSFLeidoPC + &quot; | NumeroSF AT=&quot; + NumeroSFLeidoAT]" />
+    </Sequence>
   </Sequence>
 </Activity>

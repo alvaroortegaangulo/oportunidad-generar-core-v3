@@ -1,0 +1,4 @@
+oportunidad-generar-core-main: System.Exception: No existe lib\oportunidad-generar-core.xaml: C:\Users\aortega\.nuget\packages\oportunidad-generar-core-main\1.0.30-e07\content\lib\oportunidad-generar-core.xaml   at System.Activities.Statements.Throw.Execute(CodeActivityContext context)
+   at System.Activities.CodeActivity.InternalExecute(ActivityInstance instance, ActivityExecutor executor, BookmarkManager bookmarkManager)
+   at System.Activities.ActivityInstance.Execute(ActivityExecutor executor, BookmarkManager bookmarkManager)
+   at System.Activities.Runtime.ActivityExecutor.ExecuteActivityWorkItem.ExecuteBody(ActivityExecutor executor, BookmarkManager bookmarkManager, Location resultLocation)

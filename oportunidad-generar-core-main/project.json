@@ -14,7 +14,7 @@
   "entitiesStores": [],
   "schemaVersion": "4.0",
   "studioVersion": "23.10.4.0",
-  "projectVersion": "1.0.29-e06",
+  "projectVersion": "1.0.33-e07.1",
   "runtimeOptions": {
     "autoDispose": false,
     "netFrameworkLazyLoading": false,
@@ -37,7 +37,7 @@
     "projectProfile": "Developement",
     "outputType": "Process",
     "libraryOptions": {
-      "includeOriginalXaml": false,
+      "includeOriginalXaml": true,
       "privateWorkflows": []
     },
     "processOptions": {
