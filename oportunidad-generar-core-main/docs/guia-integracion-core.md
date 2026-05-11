@@ -11,7 +11,7 @@ La fachada estable sigue siendo `oportunidad-generar-core.xaml`. El proceso padr
 | XAML | Responsabilidad | Consume | Produce / valida |
 | --- | --- | --- | --- |
 | `oportunidad-generar-core.xaml` | Orquestacion CORE: valida entradas tecnicas, copia plantilla, lee PPO por rangos, prepara Project Infor, delega PC/AT, pinta errores dinamicos y recalcula. | Argumentos `in_`, PPO, plantillas PC/AT y ruta final `in_RutaCORE`. | CORE generado, `out_NumeroSFLeido`, logs de inicio/rendimiento/fin/error y excepciones tecnicas relanzadas. |
-| `lib/core-common-construir-modelo-ppo.xaml` | Interpretacion comun del PPO leido por rangos estables. | `Hoja de datos!A8:B35 (etiqueta + valor; interpretado por etiquetas)`, `Parametros!B18:J58`, `Presupuesto!B3:X53`, `Facturacion y SAP!A1:E10`, `Sintesis Precio!D12:P80`. | `dtMapaLecturaPPO`, `dtCabeceraPPO`, perfiles, costes, horas, gastos, compras, tarifas AT, meses, JSON trazable y tipo detectado. |
+| `lib/core-common-construir-modelo-ppo.xaml` | Interpretacion comun del PPO leido por rangos estables. | `Hoja de datos!A8:D35 (etiqueta, valor y comentarios; interpretado por etiquetas)`, `Parametros!B18:J58`, `Presupuesto!B3:X53`, `Facturacion y SAP!A1:E10`, `Sintesis Precio!D12:P80`. | `dtMapaLecturaPPO`, `dtCabeceraPPO`, perfiles, costes, horas, gastos, compras, tarifas AT, meses, JSON trazable y tipo detectado. |
 | `lib/core-common-preparar-resources.xaml` | Preparacion comun de `Resources` PC/AT. | Modelo PPO, matriz intercompany, WBS, fecha SAP, codigos de empleado y capacidad real de plantilla. | Tablas rectangulares PC/AT para `Write Range`, con errores funcionales preparados como texto corto. |
 | `lib/core-common-preparar-cost-planning.xaml` | Preparacion comun de `Cost Planning` PC/AT. | Perfiles, horas, gastos, compras, meses, riesgos, garantia, datos SAP de compra y tabla AT de Resources. | Tablas PC/AT de horas, riesgos/garantia, gastos y compras. Valida capacidades de perfiles, gastos y compras. |
 | `lib/oportunidad-generar-core-pc.xaml` | Escritura especifica del layout CORE PC. | Tablas comunes y ruta CORE copiada. | Limpieza/escritura consolidada de `Resources` y `Cost Planning` PC con una unica apertura Excel. |
@@ -111,24 +111,24 @@ La lectura del PPO se concentra en `03 Leer PPO por rangos estables` y la interp
 
 | Campo CORE/modelo | Origen PPO | Destino de modelo | Si falta |
 | --- | --- | --- | --- |
-| `company` | `Hoja de datos!B8` | `dtCabeceraPPO.company`, intercompany como apoyo | Queda vacio; intercompany puede usar WBS/SAP. |
-| `unit` | `Hoja de datos!B9` | `dtCabeceraPPO.unit` | Queda vacio. |
-| `location` | `Hoja de datos!B10` | `dtCabeceraPPO.location` | Queda vacio. |
-| `serviceType` | `Hoja de datos!B11` | `dtCabeceraPPO.serviceType` | Queda vacio. |
-| `pepType` | `Hoja de datos!B12` | `dtCabeceraPPO.pepType`, deteccion PC/AT | Si no indica AT, se interpreta como PC salvo tipo oportunidad AT. |
-| `portfolio` | `Hoja de datos!B14` | `dtCabeceraPPO.portfolio` | Queda vacio. |
-| `practice` | `Hoja de datos!B15` | `dtCabeceraPPO.practice`, `Project Infor` con fallback SF | Texto rojo `Practica no disponible` si tambien falta SF. |
-| `subpractice` | `Hoja de datos!B16` | `dtCabeceraPPO.subpractice` | Queda vacio. |
-| `opportunityType` | `Hoja de datos!B17` | `dtCabeceraPPO.opportunityType`, deteccion PC/AT | Si no indica AT, se interpreta como PC salvo PEP AT. |
-| `accountManager` | `Hoja de datos!B18` | Fallback de sales manager | Texto rojo si tambien falta SF. |
-| `applicant` | `Hoja de datos!B19` | Trazabilidad en modelo JSON | Queda vacio. |
-| `subpracticeOrigin` | `Hoja de datos!B20` | Trazabilidad en modelo JSON | Queda vacio. |
-| `opportunityCode` | `Hoja de datos!B22` | `NumeroSFExtraido`, `dtCabeceraPPO.opportunityCode` | Bloqueante: `No se ha podido leer Opportunity Number...`. |
-| `customer` | `Hoja de datos!B23` | Fallback de cuenta/cliente | Texto rojo si tambien falta SF. |
-| `description` | `Hoja de datos!B25` | `Project Infor` descripcion | Texto rojo `Descripcion no disponible en PPO`. |
-| `proposalDelivery` | `Hoja de datos!B26` | Modelo JSON | Queda vacio. |
-| `startMonth` / `startYear` | `Hoja de datos!B27:B28` | Calendario si no hay fecha PPO en SAP | Bloqueante si no hay fecha alternativa. |
-| `duration` | `Hoja de datos!B29` | `dtMesesPPO`, capacidad plantilla | Bloqueante si no es valida. |
+| `company` | Etiqueta `Company` / `Entidad Presentadora` | `dtCabeceraPPO.company`, intercompany como apoyo | Queda vacio; intercompany puede usar WBS/SAP. |
+| `unit` | Etiqueta `Unidad Negocio` / `Business Unit` | `dtCabeceraPPO.unit` | Queda vacio. |
+| `location` | Etiqueta `Customer Location` / `Oficina` | `dtCabeceraPPO.location` | Queda vacio. |
+| `serviceType` | Etiqueta `Project/Service Type` / `Tipo Servicio` | `dtCabeceraPPO.serviceType` | Queda vacio. |
+| `pepType` | Etiqueta `PEP Type` / `Tipo de Contratacion` | `dtCabeceraPPO.pepType`, deteccion PC/AT | Prioriza `in_TipoProyecto`; despues PEP/contratacion y servicio como apoyo. |
+| `portfolio` | Etiqueta `Porfolio` / `Portfolio` / `Tipo Producto` | `dtCabeceraPPO.portfolio` | Queda vacio. |
+| `practice` | Etiqueta `Practice` / `Sector` | `dtCabeceraPPO.practice`, `Project Infor` con fallback SF | Texto rojo `Practica no disponible` si tambien falta SF. |
+| `subpractice` | Etiqueta `Subpractice` / `Zona` | `dtCabeceraPPO.subpractice` | Queda vacio. |
+| `opportunityType` | Etiqueta `Opportunity Type` / `Tipo de Contratacion` | `dtCabeceraPPO.opportunityType`, deteccion PC/AT | Si no indica AT, se interpreta como PC salvo PEP AT. |
+| `accountManager` | Etiqueta `Account Manager` / `Responsable Comercial` | Fallback de sales manager | Texto rojo si tambien falta SF. |
+| `applicant` | Etiqueta `Applicant` / `Responsable Oferta` | Trazabilidad en modelo JSON | Queda vacio. |
+| `subpracticeOrigin` | Etiqueta `Subpractice Origin` / `CEBE` | Trazabilidad en modelo JSON | Queda vacio. |
+| `opportunityCode` | Etiqueta `Opportunity Code` / `Opportunity Number` / `Codigo Oferta/Proyecto` | `NumeroSFExtraido`, `dtCabeceraPPO.opportunityCode` | Si no aparece etiqueta, se infiere desde nombre de fichero con warning; si tampoco existe, bloqueante. |
+| `customer` | Etiqueta `Customer` / `Cliente` | Fallback de cuenta/cliente | Texto rojo si tambien falta SF. |
+| `description` | Etiqueta `Descripcion Oferta` / `Description` | `Project Infor` descripcion | Texto rojo `Descripcion no disponible en PPO`. |
+| `proposalDelivery` | Etiqueta `Date of Proposal Delivery` / `Fecha prevista presentacion al Cliente` | Modelo JSON | Queda vacio. |
+| `startMonth` / `startYear` | Etiquetas `Service Start Month/Year` / `Mes/Ano Inicio servicio` | Calendario si no hay fecha PPO en SAP | Bloqueante si no hay fecha alternativa. |
+| `duration` | Etiqueta `Service Duration` / `Duracion prevista` | `dtMesesPPO`, capacidad plantilla | Bloqueante si no es valida. |
 | `startDate` / `endDate` | `Facturacion y SAP!C4/E4` | `dtCabeceraPPO.startDate/endDate` | Se calcula desde mes/anio/duracion si falta. |
 | `orderAmount` | `Presupuesto!X8` o `Sintesis Precio!D12` | `Project Infor C28`, JSON financiero | Texto rojo `Importe no disponible en PPO`. |
 | `resourceCost` / `hoursEstimated` | `Presupuesto!K4/K5` | `Project Infor C29:C30`, JSON financiero | Texto rojo especifico de horas/coste. |

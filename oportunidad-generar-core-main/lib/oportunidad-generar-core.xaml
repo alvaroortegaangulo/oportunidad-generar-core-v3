@@ -607,7 +607,7 @@
                           <DelegateInArgument x:TypeArguments="ue:IWorkbookQuickHandle" Name="ExcelPPO" />
                         </ActivityAction.Argument>
                         <Sequence DisplayName="Leer rangos PPO con Excel" sap2010:WorkflowViewState.IdRef="Sequence_E02_PPO_ReadRanges">
-                          <ueab:ReadRangeX DisplayName="Leer bloque Hoja de datos A8 B35" HasHeaders="False" sap2010:WorkflowViewState.IdRef="ReadRangeX_E02_PPO_01" Range="[ExcelPPO.Sheet(&quot;Hoja de datos&quot;).Range(&quot;A8:B35&quot;)]" ReadFormatting="DisplayValue" SaveTo="[dtHojaDatosRawPPO]" />
+                          <ueab:ReadRangeX DisplayName="Leer bloque Hoja de datos A8:D35" HasHeaders="False" sap2010:WorkflowViewState.IdRef="ReadRangeX_E02_PPO_01" Range="[ExcelPPO.Sheet(&quot;Hoja de datos&quot;).Range(&quot;A8:D35&quot;)]" ReadFormatting="DisplayValue" SaveTo="[dtHojaDatosRawPPO]" />
                           <ueab:ReadRangeX DisplayName="Leer bloque Parámetros B18 J58" HasHeaders="False" sap2010:WorkflowViewState.IdRef="ReadRangeX_E02_PPO_02" Range="[ExcelPPO.Sheet(&quot;Parametros&quot;).Range(&quot;B18:J58&quot;)]" ReadFormatting="DisplayValue" SaveTo="[dtParametrosRawPPO]" />
                           <ueab:ReadRangeX DisplayName="Leer bloque Presupuesto B3 X53" HasHeaders="False" sap2010:WorkflowViewState.IdRef="ReadRangeX_E02_PPO_03" Range="[ExcelPPO.Sheet(&quot;Presupuesto&quot;).Range(&quot;B3:X53&quot;)]" ReadFormatting="DisplayValue" SaveTo="[dtPresupuestoRawPPO]" />
                           <ueab:ReadRangeX DisplayName="Leer bloque Facturación y SAP A1 E10" HasHeaders="False" sap2010:WorkflowViewState.IdRef="ReadRangeX_E02_PPO_04" Range="[ExcelPPO.Sheet(&quot;Facturación y SAP&quot;).Range(&quot;A1:E10&quot;)]" ReadFormatting="DisplayValue" SaveTo="[dtFacturacionSAPRawPPO]" />
@@ -630,6 +630,7 @@
             <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Invocar common construir modelo PPO" sap:VirtualizedContainerService.HintSize="478.6666666666667,115.33333333333333" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="lib\core-common-construir-modelo-ppo.xaml">
               <ui:InvokeWorkflowFile.Arguments>
                 <InArgument x:TypeArguments="x:String" x:Key="in_RutaPPOTrabajo">[rutaPPOTrabajo]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="in_TipoProyecto">[tipoProyectoTrabajo]</InArgument>
                 <InArgument x:TypeArguments="x:String" x:Key="in_FechaInicioSAP">[fechaInicioSAPTrabajo]</InArgument>
                 <InArgument x:TypeArguments="x:String" x:Key="in_FechaFinSAP">[fechaFinSAPTrabajo]</InArgument>
                 <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_HojaDatosRawPPO">[dtHojaDatosRawPPO]</InArgument>
