@@ -189,11 +189,16 @@
       <Variable x:TypeArguments="sd:DataTable" Name="dtPlantillaHojaObligatoriaRaw" />
       <Variable x:TypeArguments="sd:DataTable" Name="dtPlantillaResourcesRaw" />
       <Variable x:TypeArguments="sd:DataTable" Name="dtPlantillaCostPlanningRaw" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dtPlantillaMonthlyViewRaw" />
       <Variable x:TypeArguments="x:Int32" Name="capacidadResourcesFilas" />
       <Variable x:TypeArguments="x:Int32" Name="capacidadResourcesPerfiles" />
       <Variable x:TypeArguments="x:Int32" Name="capacidadCostPlanningPerfiles" />
       <Variable x:TypeArguments="x:Int32" Name="capacidadCostPlanningGastos" />
       <Variable x:TypeArguments="x:Int32" Name="capacidadCostPlanningCompras" />
+      <Variable x:TypeArguments="x:Int32" Name="capacidadMesesResources" />
+      <Variable x:TypeArguments="x:Int32" Name="capacidadMesesCostPlanning" />
+      <Variable x:TypeArguments="x:Int32" Name="capacidadMesesMonthlyView" />
+      <Variable x:TypeArguments="x:Int32" Name="capacidadMesesPlantilla" />
       <Variable x:TypeArguments="s:DateTime" Name="tiempoInicioLecturaPPO" />
       <Variable x:TypeArguments="s:DateTime" Name="tiempoInicioEscrituraCORE" />
       <Variable x:TypeArguments="s:DateTime" Name="tiempoInicioRecalculoFinal" />
@@ -901,9 +906,9 @@ arg_dtSintesis = sintesis;
               </sap:WorkflowViewStateService.ViewState>
               <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaHojaObligatoriaRaw]" DisplayName="Validar hoja Project Infor" sap:VirtualizedContainerService.HintSize="388,88" sap2010:WorkflowViewState.IdRef="ReadRange_6" Range="A1:A1" SheetName="Project Infor" WorkbookPath="[rutaCORETrabajo]" />
               <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaHojaObligatoriaRaw]" DisplayName="Validar hoja Cost Overview" sap:VirtualizedContainerService.HintSize="388,88" sap2010:WorkflowViewState.IdRef="ReadRange_7" Range="A1:A1" SheetName="Cost Overview" WorkbookPath="[rutaCORETrabajo]" />
-              <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaResourcesRaw]" DisplayName="Leer estructura Resources A1 BZ120" sap:VirtualizedContainerService.HintSize="388,88" sap2010:WorkflowViewState.IdRef="ReadRange_8" Range="A1:BZ120" SheetName="Resources" WorkbookPath="[rutaCORETrabajo]" />
-              <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaCostPlanningRaw]" DisplayName="Leer estructura Cost Planning A1 BZ140" sap:VirtualizedContainerService.HintSize="388,88" sap2010:WorkflowViewState.IdRef="ReadRange_9" Range="A1:BZ140" SheetName="Cost Planning" WorkbookPath="[rutaCORETrabajo]" />
-              <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaHojaObligatoriaRaw]" DisplayName="Validar hoja Monthly View" sap:VirtualizedContainerService.HintSize="388,88" sap2010:WorkflowViewState.IdRef="ReadRange_10" Range="A1:A1" SheetName="Monthly View" WorkbookPath="[rutaCORETrabajo]" />
+              <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaResourcesRaw]" DisplayName="Leer estructura Resources A1 CA140" sap:VirtualizedContainerService.HintSize="388,88" sap2010:WorkflowViewState.IdRef="ReadRange_8" Range="A1:CA140" SheetName="Resources" WorkbookPath="[rutaCORETrabajo]" />
+              <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaCostPlanningRaw]" DisplayName="Leer estructura Cost Planning A1 CB160" sap:VirtualizedContainerService.HintSize="388,88" sap2010:WorkflowViewState.IdRef="ReadRange_9" Range="A1:CB160" SheetName="Cost Planning" WorkbookPath="[rutaCORETrabajo]" />
+              <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaMonthlyViewRaw]" DisplayName="Leer estructura Monthly View A1 CB80" sap:VirtualizedContainerService.HintSize="388,88" sap2010:WorkflowViewState.IdRef="ReadRange_10" Range="A1:CB80" SheetName="Monthly View" WorkbookPath="[rutaCORETrabajo]" />
               <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaHojaObligatoriaRaw]" DisplayName="Validar hoja Cost Summary" sap:VirtualizedContainerService.HintSize="388,88" sap2010:WorkflowViewState.IdRef="ReadRange_11" Range="A1:A1" SheetName="Cost Summary" WorkbookPath="[rutaCORETrabajo]" />
             </Sequence>
             <Sequence sap2010:Annotation.AnnotationText="Objetivo: crear la matriz ICT/Connectis vs Global Rosetta y detectar filas útiles en la plantilla copiada desde rangos leídos por actividades Excel. Entradas: tipo PC/AT y tablas leídas desde Excel de Resources/Cost Planning. Salidas: tabla de matriz y capacidades reales. No hace: no usa COM, no escribe datos de negocio en el CORE ni selecciona plantillas alternativas." DisplayName="Utilidad S08 - preparar matriz intercompany y capacidad plantilla" sap:VirtualizedContainerService.HintSize="750,7176" sap2010:WorkflowViewState.IdRef="Sequence_80">
@@ -973,10 +978,18 @@ arg_dtSintesis = sintesis;
                     <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_97" />
                   </If.Else>
                 </If>
+                <If Condition="[dtPlantillaMonthlyViewRaw Is Nothing OrElse dtPlantillaMonthlyViewRaw.Columns.Count = 0]" DisplayName="Validar lectura Monthly View" sap:VirtualizedContainerService.HintSize="388,276" sap2010:WorkflowViewState.IdRef="If_E04_01">
+                  <If.Then>
+                    <Throw DisplayName="Error hoja Monthly View no leida" Exception="[New Exception(&quot;La plantilla CORE no contiene la hoja obligatoria: Monthly View.&quot;)]" sap:VirtualizedContainerService.HintSize="334,92" sap2010:WorkflowViewState.IdRef="Throw_E04_01" />
+                  </If.Then>
+                  <If.Else>
+                    <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_E04_01" />
+                  </If.Else>
+                </If>
               </Sequence>
               <ui:MultipleAssign DisplayName="Inicializar resultados de capacidad" sap:VirtualizedContainerService.HintSize="688,301.3333333333333" sap2010:WorkflowViewState.IdRef="MultipleAssign_20">
                 <ui:MultipleAssign.AssignOperations>
-                  <scg:List x:TypeArguments="ui:AssignOperation" Capacity="7">
+                  <scg:List x:TypeArguments="ui:AssignOperation" Capacity="11">
                     <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_200">
                       <ui:AssignOperation.To>
                         <OutArgument x:TypeArguments="x:Boolean">[esProyectoAT]</OutArgument>
@@ -1033,9 +1046,84 @@ arg_dtSintesis = sintesis;
                         <InArgument x:TypeArguments="x:Int32">[0]</InArgument>
                       </ui:AssignOperation.Value>
                     </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_E04_001">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Int32">[capacidadMesesResources]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Int32">[0]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_E04_002">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Int32">[capacidadMesesCostPlanning]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Int32">[0]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_E04_003">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Int32">[capacidadMesesMonthlyView]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Int32">[0]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_E04_004">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:Int32">[capacidadMesesPlantilla]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:Int32">[0]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
                   </scg:List>
                 </ui:MultipleAssign.AssignOperations>
               </ui:MultipleAssign>
+              <ui:InvokeCode ContinueOnError="{x:Null}" DisplayName="Medir capacidad mensual real de plantilla" Language="CSharp" sap2010:WorkflowViewState.IdRef="InvokeCode_E04_001">
+                <ui:InvokeCode.Code><![CDATA[
+int MeasureMonths(System.Data.DataTable table, int oneBasedRow, int oneBasedStartColumn)
+{
+    if (table == null || table.Rows.Count < oneBasedRow || table.Columns.Count < oneBasedStartColumn)
+    {
+        return 0;
+    }
+
+    int lastNonEmptyColumn = oneBasedStartColumn - 1;
+    System.Data.DataRow row = table.Rows[oneBasedRow - 1];
+    for (int columnIndex = oneBasedStartColumn - 1; columnIndex < table.Columns.Count; columnIndex++)
+    {
+        object value = row[columnIndex];
+        string text = value == null || value == System.DBNull.Value ? string.Empty : System.Convert.ToString(value).Trim();
+        if (!string.IsNullOrWhiteSpace(text))
+        {
+            lastNonEmptyColumn = columnIndex + 1;
+        }
+    }
+
+    return System.Math.Max(0, lastNonEmptyColumn - oneBasedStartColumn + 1);
+}
+
+bool isAT = System.String.Equals(arg_TipoProyectoNormalizado, "AT", System.StringComparison.OrdinalIgnoreCase);
+arg_CapacidadMesesResources = MeasureMonths(arg_dtPlantillaResourcesRaw, 6, isAT ? 7 : 6);
+arg_CapacidadMesesCostPlanning = MeasureMonths(arg_dtPlantillaCostPlanningRaw, 8, isAT ? 8 : 7);
+arg_CapacidadMesesMonthlyView = MeasureMonths(arg_dtPlantillaMonthlyViewRaw, 5, 5);
+arg_CapacidadMesesPlantilla = System.Math.Min(arg_CapacidadMesesResources, System.Math.Min(arg_CapacidadMesesCostPlanning, arg_CapacidadMesesMonthlyView));
+                ]]></ui:InvokeCode.Code>
+                <ui:InvokeCode.Arguments>
+                  <scg:Dictionary x:TypeArguments="x:String, Argument">
+                    <InArgument x:TypeArguments="x:String" x:Key="arg_TipoProyectoNormalizado">[TipoProyectoNormalizado]</InArgument>
+                    <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtPlantillaResourcesRaw">[dtPlantillaResourcesRaw]</InArgument>
+                    <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtPlantillaCostPlanningRaw">[dtPlantillaCostPlanningRaw]</InArgument>
+                    <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtPlantillaMonthlyViewRaw">[dtPlantillaMonthlyViewRaw]</InArgument>
+                    <OutArgument x:TypeArguments="x:Int32" x:Key="arg_CapacidadMesesResources">[capacidadMesesResources]</OutArgument>
+                    <OutArgument x:TypeArguments="x:Int32" x:Key="arg_CapacidadMesesCostPlanning">[capacidadMesesCostPlanning]</OutArgument>
+                    <OutArgument x:TypeArguments="x:Int32" x:Key="arg_CapacidadMesesMonthlyView">[capacidadMesesMonthlyView]</OutArgument>
+                    <OutArgument x:TypeArguments="x:Int32" x:Key="arg_CapacidadMesesPlantilla">[capacidadMesesPlantilla]</OutArgument>
+                  </scg:Dictionary>
+                </ui:InvokeCode.Arguments>
+              </ui:InvokeCode>
               <If Condition="[esProyectoAT]" DisplayName="Calcular capacidad AT o PC" sap:VirtualizedContainerService.HintSize="688,4032" sap2010:WorkflowViewState.IdRef="If_42">
                 <If.Then>
                   <Sequence sap2010:Annotation.AnnotationText="Objetivo: definir reglas AT y resolverlas con un unico recorrido dinamico de reglas." DisplayName="Medir capacidad plantilla AT" sap:VirtualizedContainerService.HintSize="654,2199.3333333333335" sap2010:WorkflowViewState.IdRef="Sequence_84">
@@ -1489,7 +1577,11 @@ arg_dtSintesis = sintesis;
     New Object() {"Resources perfiles", capacidadResourcesPerfiles},
     New Object() {"Cost Planning perfiles", capacidadCostPlanningPerfiles},
     New Object() {"Cost Planning gastos", capacidadCostPlanningGastos},
-    New Object() {"Cost Planning compras", capacidadCostPlanningCompras}
+    New Object() {"Cost Planning compras", capacidadCostPlanningCompras},
+    New Object() {"Meses Resources", capacidadMesesResources},
+    New Object() {"Meses Cost Planning", capacidadMesesCostPlanning},
+    New Object() {"Meses Monthly View", capacidadMesesMonthlyView},
+    New Object() {"Meses plantilla", capacidadMesesPlantilla}
 }]</InArgument>
                   </Assign.Value>
                 </Assign>
@@ -1517,8 +1609,16 @@ arg_dtSintesis = sintesis;
                   </ui:ForEach.Body>
                 </ui:ForEach>
               </Sequence>
+              <If Condition="[dtMesesPPO IsNot Nothing AndAlso dtMesesPPO.Rows.Count &gt; capacidadMesesPlantilla]" DisplayName="Validar duracion contra capacidad mensual real" sap:VirtualizedContainerService.HintSize="688,276" sap2010:WorkflowViewState.IdRef="If_E04_02">
+                <If.Then>
+                  <Throw DisplayName="Error duracion supera capacidad de plantilla" Exception="[New Exception(&quot;La duracion detectada en PPO (&quot; + dtMesesPPO.Rows.Count.ToString() + &quot; meses) supera la capacidad mensual real de la plantilla CORE &quot; + TipoProyectoNormalizado + &quot; (&quot; + capacidadMesesPlantilla.ToString() + &quot; meses). Resources=&quot; + capacidadMesesResources.ToString() + &quot;, Cost Planning=&quot; + capacidadMesesCostPlanning.ToString() + &quot;, Monthly View=&quot; + capacidadMesesMonthlyView.ToString() + &quot;.&quot;)]" sap:VirtualizedContainerService.HintSize="334,92" sap2010:WorkflowViewState.IdRef="Throw_E04_02" />
+                </If.Then>
+                <If.Else>
+                  <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_E04_02" />
+                </If.Else>
+              </If>
             </Sequence>
-            <ui:LogMessage DisplayName="Registrar capacidad de plantilla detectada" sap:VirtualizedContainerService.HintSize="750,144.66666666666666" sap2010:WorkflowViewState.IdRef="LogMessage_7" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;S08 capacidad plantilla | Tipo=&quot; + TipoProyectoNormalizado + &quot; | ResourcesFilas=&quot; + capacidadResourcesFilas.ToString() + &quot; | ResourcesPerfiles=&quot; + capacidadResourcesPerfiles.ToString() + &quot; | CPPerfiles=&quot; + capacidadCostPlanningPerfiles.ToString() + &quot; | Gastos=&quot; + capacidadCostPlanningGastos.ToString() + &quot; | Compras=&quot; + capacidadCostPlanningCompras.ToString()]" />
+            <ui:LogMessage DisplayName="Registrar capacidad de plantilla detectada" sap:VirtualizedContainerService.HintSize="750,144.66666666666666" sap2010:WorkflowViewState.IdRef="LogMessage_7" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;S08 capacidad plantilla | Tipo=&quot; + TipoProyectoNormalizado + &quot; | Meses=&quot; + capacidadMesesPlantilla.ToString() + &quot; (Resources=&quot; + capacidadMesesResources.ToString() + &quot;, CP=&quot; + capacidadMesesCostPlanning.ToString() + &quot;, Monthly=&quot; + capacidadMesesMonthlyView.ToString() + &quot;) | ResourcesFilas=&quot; + capacidadResourcesFilas.ToString() + &quot; | ResourcesPerfiles=&quot; + capacidadResourcesPerfiles.ToString() + &quot; | CPPerfiles=&quot; + capacidadCostPlanningPerfiles.ToString() + &quot; | Gastos=&quot; + capacidadCostPlanningGastos.ToString() + &quot; | Compras=&quot; + capacidadCostPlanningCompras.ToString()]" />
           </Sequence>
           <Assign DisplayName="Medir inicio escritura CORE" sap:VirtualizedContainerService.HintSize="932.6666666666666,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_E05_02">
             <Assign.To>
@@ -2209,6 +2309,9 @@ arg_dtSintesis = sintesis;
                     <InArgument x:TypeArguments="x:Int32" x:Key="capacidadCostPlanningPerfiles">[capacidadCostPlanningPerfiles]</InArgument>
                     <InArgument x:TypeArguments="x:Int32" x:Key="capacidadCostPlanningGastos">[capacidadCostPlanningGastos]</InArgument>
                     <InArgument x:TypeArguments="x:Int32" x:Key="capacidadCostPlanningCompras">[capacidadCostPlanningCompras]</InArgument>
+                    <InArgument x:TypeArguments="x:Int32" x:Key="capacidadMesesResources">[capacidadMesesResources]</InArgument>
+                    <InArgument x:TypeArguments="x:Int32" x:Key="capacidadMesesCostPlanning">[capacidadMesesCostPlanning]</InArgument>
+                    <InArgument x:TypeArguments="x:Int32" x:Key="capacidadMesesMonthlyView">[capacidadMesesMonthlyView]</InArgument>
                   </ui:InvokeWorkflowFile.Arguments>
                 </ui:InvokeWorkflowFile>
               </If.Then>
@@ -2239,6 +2342,9 @@ arg_dtSintesis = sintesis;
                     <InArgument x:TypeArguments="x:Int32" x:Key="capacidadCostPlanningPerfiles">[capacidadCostPlanningPerfiles]</InArgument>
                     <InArgument x:TypeArguments="x:Int32" x:Key="capacidadCostPlanningGastos">[capacidadCostPlanningGastos]</InArgument>
                     <InArgument x:TypeArguments="x:Int32" x:Key="capacidadCostPlanningCompras">[capacidadCostPlanningCompras]</InArgument>
+                    <InArgument x:TypeArguments="x:Int32" x:Key="capacidadMesesResources">[capacidadMesesResources]</InArgument>
+                    <InArgument x:TypeArguments="x:Int32" x:Key="capacidadMesesCostPlanning">[capacidadMesesCostPlanning]</InArgument>
+                    <InArgument x:TypeArguments="x:Int32" x:Key="capacidadMesesMonthlyView">[capacidadMesesMonthlyView]</InArgument>
                   </ui:InvokeWorkflowFile.Arguments>
                 </ui:InvokeWorkflowFile>
               </If.Else>
@@ -2335,8 +2441,8 @@ arg_dtSintesis = sintesis;
                             <Assign.Value>
                               <InArgument x:TypeArguments="scg:List(s:Object[])" xml:space="preserve">[New System.Collections.Generic.List(Of Object()) From {
     New Object() {"Project Infor", "A1:J80", 1, 1},
-    New Object() {"Resources", "A1:BZ120", 1, 1},
-    New Object() {"Cost Planning", "A1:BZ140", 1, 1}
+    New Object() {"Resources", "A1:CA120", 1, 1},
+    New Object() {"Cost Planning", "A1:CB140", 1, 1}
 }]</InArgument>
                             </Assign.Value>
                           </Assign>

@@ -24,6 +24,9 @@
     <x:Property Name="capacidadCostPlanningPerfiles" Type="InArgument(x:Int32)" />
     <x:Property Name="capacidadCostPlanningGastos" Type="InArgument(x:Int32)" />
     <x:Property Name="capacidadCostPlanningCompras" Type="InArgument(x:Int32)" />
+    <x:Property Name="capacidadMesesResources" Type="InArgument(x:Int32)" />
+    <x:Property Name="capacidadMesesCostPlanning" Type="InArgument(x:Int32)" />
+    <x:Property Name="capacidadMesesMonthlyView" Type="InArgument(x:Int32)" />
   </x:Members>
   <VisualBasic.Settings>
     <x:Null />
@@ -157,6 +160,7 @@
           <InArgument x:TypeArguments="x:String" x:Key="in_CodigoPEP_WBS">[codigoPEPTrabajo]</InArgument>
           <InArgument x:TypeArguments="x:Int32" x:Key="in_CapacidadResourcesFilas">[capacidadResourcesFilas]</InArgument>
           <InArgument x:TypeArguments="x:Int32" x:Key="in_CapacidadResourcesPerfiles">[capacidadResourcesPerfiles]</InArgument>
+          <InArgument x:TypeArguments="x:Int32" x:Key="in_CapacidadMesesResources">[capacidadMesesResources]</InArgument>
           <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_ResourcesPCFijos">[dt_ResourcesPCFijos]</OutArgument>
           <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_ResourcesPCMeses">[dt_ResourcesPCMeses]</OutArgument>
           <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_ResourcesATFijos">[dt_ResourcesATFijos]</OutArgument>
@@ -178,6 +182,7 @@
                 <InArgument x:TypeArguments="x:Int32" x:Key="in_CapacidadCostPlanningPerfiles">[capacidadCostPlanningPerfiles]</InArgument>
                 <InArgument x:TypeArguments="x:Int32" x:Key="in_CapacidadCostPlanningGastos">[capacidadCostPlanningGastos]</InArgument>
                 <InArgument x:TypeArguments="x:Int32" x:Key="in_CapacidadCostPlanningCompras">[capacidadCostPlanningCompras]</InArgument>
+                <InArgument x:TypeArguments="x:Int32" x:Key="in_CapacidadMesesCostPlanning">[capacidadMesesCostPlanning]</InArgument>
                 <InArgument x:TypeArguments="x:Object" x:Key="in_Riesgos">[ppoRiesgosValor]</InArgument>
                 <InArgument x:TypeArguments="x:Object" x:Key="in_Garantia">[ppoGarantiaValor]</InArgument>
                 <InArgument x:TypeArguments="x:String" x:Key="in_ProveedorCompraSAP">[proveedorCompraSAPTrabajo]</InArgument>
@@ -203,7 +208,7 @@
               </ui:InvokeWorkflowFile.Arguments>
             </ui:InvokeWorkflowFile>
       <ui:LogMessage DisplayName="Registrar tablas de Cost Planning preparadas" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Cost Planning preparado | Tipo=&quot; + TipoProyectoNormalizado + &quot; | Perfiles=&quot; + costPlanningCantidadPerfiles.ToString() + &quot; | CapacidadPerfiles=&quot; + capacidadCostPlanningPerfiles.ToString() + &quot; | Meses=&quot; + costPlanningDuracionMeses.ToString() + &quot; | Gastos=&quot; + costPlanningCantidadGastos.ToString() + &quot;/&quot; + capacidadCostPlanningGastos.ToString() + &quot; | Compras=&quot; + costPlanningCantidadCompras.ToString() + &quot;/&quot; + capacidadCostPlanningCompras.ToString()]" />
-      <ui:InvokeCode ContinueOnError="{x:Null}" DisplayName="Preparar cabecera mensual CORE PC" Language="CSharp" Code="var tabla = new System.Data.DataTable();&#xD;&#xA;if (arg_MesesPPO != null)&#xD;&#xA;{&#xD;&#xA;    int indiceColumna = 1;&#xD;&#xA;    foreach (System.Data.DataRow mes in arg_MesesPPO.Rows)&#xD;&#xA;    {&#xD;&#xA;        tabla.Columns.Add(&quot;M&quot; + indiceColumna.ToString(), typeof(object));&#xD;&#xA;        indiceColumna++;&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    if (tabla.Columns.Count &gt; 0)&#xD;&#xA;    {&#xD;&#xA;        var fila = tabla.NewRow();&#xD;&#xA;        int indiceMes = 0;&#xD;&#xA;        foreach (System.Data.DataRow mes in arg_MesesPPO.Rows)&#xD;&#xA;        {&#xD;&#xA;            string textoFecha = System.Convert.ToString(mes[&quot;Fecha&quot;]).Trim();&#xD;&#xA;            System.DateTime fecha;&#xD;&#xA;            if (System.DateTime.TryParse(textoFecha, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out fecha))&#xD;&#xA;            {&#xD;&#xA;                fila[indiceMes] = fecha;&#xD;&#xA;            }&#xD;&#xA;            else&#xD;&#xA;            {&#xD;&#xA;                fila[indiceMes] = textoFecha;&#xD;&#xA;            }&#xD;&#xA;            indiceMes++;&#xD;&#xA;        }&#xD;&#xA;        tabla.Rows.Add(fila);&#xD;&#xA;    }&#xD;&#xA;}&#xD;&#xA;arg_CabeceraMeses = tabla;">
+      <ui:InvokeCode ContinueOnError="{x:Null}" DisplayName="Preparar cabecera mensual CORE PC" Language="CSharp" Code="var tabla = new System.Data.DataTable();&#xD;&#xA;if (arg_MesesPPO != null)&#xD;&#xA;{&#xD;&#xA;    int indiceColumna = 1;&#xD;&#xA;    foreach (System.Data.DataRow mes in arg_MesesPPO.Rows)&#xD;&#xA;    {&#xD;&#xA;        tabla.Columns.Add(&quot;M&quot; + indiceColumna.ToString(), typeof(object));&#xD;&#xA;        indiceColumna++;&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    if (tabla.Columns.Count &gt; 0)&#xD;&#xA;    {&#xD;&#xA;        var fila = tabla.NewRow();&#xD;&#xA;        int indiceMes = 0;&#xD;&#xA;        foreach (System.Data.DataRow mes in arg_MesesPPO.Rows)&#xD;&#xA;        {&#xD;&#xA;            string textoFecha = System.Convert.ToString(mes[&quot;Fecha&quot;]).Trim();&#xD;&#xA;            System.DateTime fecha;&#xD;&#xA;            if (System.DateTime.TryParse(textoFecha, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out fecha))&#xD;&#xA;            {&#xD;&#xA;                fila[indiceMes] = fecha.ToOADate();&#xD;&#xA;            }&#xD;&#xA;            else&#xD;&#xA;            {&#xD;&#xA;                fila[indiceMes] = textoFecha;&#xD;&#xA;            }&#xD;&#xA;            indiceMes++;&#xD;&#xA;        }&#xD;&#xA;        tabla.Rows.Add(fila);&#xD;&#xA;    }&#xD;&#xA;}&#xD;&#xA;arg_CabeceraMeses = tabla;">
         <ui:InvokeCode.Arguments>
           <scg:Dictionary x:TypeArguments="x:String, Argument">
             <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_MesesPPO">[dtMesesPPO]</InArgument>
@@ -212,6 +217,37 @@
         </ui:InvokeCode.Arguments>
       </ui:InvokeCode>
     </Sequence>
+    <ui:InvokeCode ContinueOnError="{x:Null}" DisplayName="Validar capacidad mensual antes de escribir PC" Language="CSharp" sap2010:WorkflowViewState.IdRef="InvokeCode_E04_PC_01">
+      <ui:InvokeCode.Code><![CDATA[
+if (arg_CapacidadMesesResources <= 0 || arg_CapacidadMesesCostPlanning <= 0 || arg_CapacidadMesesMonthlyView <= 0)
+{
+    throw new System.Exception("No se ha detectado capacidad mensual valida en la plantilla CORE PC. Resources=" + arg_CapacidadMesesResources.ToString() + ", Cost Planning=" + arg_CapacidadMesesCostPlanning.ToString() + ", Monthly View=" + arg_CapacidadMesesMonthlyView.ToString() + ".");
+}
+if (arg_ResourcesDuracionMeses > arg_CapacidadMesesResources)
+{
+    throw new System.Exception("La duracion Resources del PPO (" + arg_ResourcesDuracionMeses.ToString() + " meses) supera la capacidad real de la plantilla CORE PC (" + arg_CapacidadMesesResources.ToString() + " meses).");
+}
+if (arg_CostPlanningDuracionMeses > arg_CapacidadMesesCostPlanning)
+{
+    throw new System.Exception("La duracion Cost Planning del PPO (" + arg_CostPlanningDuracionMeses.ToString() + " meses) supera la capacidad real de la plantilla CORE PC (" + arg_CapacidadMesesCostPlanning.ToString() + " meses).");
+}
+int headerMonths = arg_CabeceraMesesPPO == null ? 0 : arg_CabeceraMesesPPO.Columns.Count;
+if (headerMonths > arg_CapacidadMesesMonthlyView)
+{
+    throw new System.Exception("La cabecera mensual del PPO (" + headerMonths.ToString() + " meses) supera la capacidad real de Monthly View en la plantilla CORE PC (" + arg_CapacidadMesesMonthlyView.ToString() + " meses).");
+}
+      ]]></ui:InvokeCode.Code>
+      <ui:InvokeCode.Arguments>
+        <scg:Dictionary x:TypeArguments="x:String, Argument">
+          <InArgument x:TypeArguments="x:Int32" x:Key="arg_ResourcesDuracionMeses">[resourcesDuracionMeses]</InArgument>
+          <InArgument x:TypeArguments="x:Int32" x:Key="arg_CostPlanningDuracionMeses">[costPlanningDuracionMeses]</InArgument>
+          <InArgument x:TypeArguments="x:Int32" x:Key="arg_CapacidadMesesResources">[capacidadMesesResources]</InArgument>
+          <InArgument x:TypeArguments="x:Int32" x:Key="arg_CapacidadMesesCostPlanning">[capacidadMesesCostPlanning]</InArgument>
+          <InArgument x:TypeArguments="x:Int32" x:Key="arg_CapacidadMesesMonthlyView">[capacidadMesesMonthlyView]</InArgument>
+          <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_CabeceraMesesPPO">[dt_CabeceraMesesPPO]</InArgument>
+        </scg:Dictionary>
+      </ui:InvokeCode.Arguments>
+    </ui:InvokeCode>
     <Sequence sap2010:Annotation.AnnotationText="Objetivo: limpiar y escribir Resources y Cost Planning PC abriendo el CORE una sola vez.&#xA;Entradas: tablas rectangulares ya preparadas.&#xA;Salida: rangos PC escritos y libro guardado para el recálculo final de la fachada." DisplayName="07 Escribir Resources y Cost Planning PC" sap2010:WorkflowViewState.IdRef="Sequence_E05_PC_02">
       <ui:MultipleAssign DisplayName="Resolver columnas mensuales PC" sap2010:WorkflowViewState.IdRef="MultipleAssign_E05_PC_01">
         <ui:MultipleAssign.AssignOperations>
@@ -277,4 +313,3 @@
     </Sequence>
   </Sequence>
 </Activity>
-

@@ -10,6 +10,7 @@
     <x:Property Name="in_CapacidadCostPlanningPerfiles" Type="InArgument(x:Int32)" />
     <x:Property Name="in_CapacidadCostPlanningGastos" Type="InArgument(x:Int32)" />
     <x:Property Name="in_CapacidadCostPlanningCompras" Type="InArgument(x:Int32)" />
+    <x:Property Name="in_CapacidadMesesCostPlanning" Type="InArgument(x:Int32)" />
     <x:Property Name="in_Riesgos" Type="InArgument(x:Object)" />
     <x:Property Name="in_Garantia" Type="InArgument(x:Object)" />
     <x:Property Name="in_ProveedorCompraSAP" Type="InArgument(x:String)" />
@@ -109,6 +110,7 @@
       <Variable x:TypeArguments="x:Int32" Name="capacidadFilasCostPlanningRecursos" />
       <Variable x:TypeArguments="x:Int32" Name="capacidadGastosCostPlanning" />
       <Variable x:TypeArguments="x:Int32" Name="capacidadComprasCostPlanning" />
+      <Variable x:TypeArguments="x:Int32" Name="capacidadMesesCostPlanning" />
       <Variable x:TypeArguments="x:Int32" Name="anioMesCostPlanning" />
       <Variable x:TypeArguments="x:Int32" Name="anioValorCostPlanning" />
       <Variable x:TypeArguments="x:Int32" Name="filaATCostPlanning" />
@@ -152,7 +154,7 @@
       </sap:WorkflowViewStateService.ViewState>
       <ui:MultipleAssign DisplayName="Inicializar capacidad Cost Planning" sap:VirtualizedContainerService.HintSize="478.6666666666667,240" sap2010:WorkflowViewState.IdRef="MultipleAssign_CP_001">
         <ui:MultipleAssign.AssignOperations>
-          <scg:List x:TypeArguments="ui:AssignOperation" Capacity="5">
+          <scg:List x:TypeArguments="ui:AssignOperation" Capacity="6">
             <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_001">
               <ui:AssignOperation.To>
                 <OutArgument x:TypeArguments="x:Int32">[duracionCostPlanning]</OutArgument>
@@ -193,6 +195,14 @@
                 <InArgument x:TypeArguments="x:Int32">[If(esProyectoATCostPlanning, capacidadPerfilesCostPlanning * 2, capacidadPerfilesCostPlanning)]</InArgument>
               </ui:AssignOperation.Value>
             </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_CP_E04_001">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:Int32">[capacidadMesesCostPlanning]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:Int32">[If(in_CapacidadMesesCostPlanning &gt; 0, in_CapacidadMesesCostPlanning, 0)]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
           </scg:List>
         </ui:MultipleAssign.AssignOperations>
       </ui:MultipleAssign>
@@ -204,9 +214,9 @@
           <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_2" />
         </If.Else>
       </If>
-      <If Condition="[duracionCostPlanning &gt; 60]" DisplayName="Validar limite de meses Cost Planning" sap:VirtualizedContainerService.HintSize="478.6666666666667,276" sap2010:WorkflowViewState.IdRef="If_CP_002">
+      <If Condition="[duracionCostPlanning &gt; capacidadMesesCostPlanning]" DisplayName="Validar limite de meses Cost Planning" sap:VirtualizedContainerService.HintSize="478.6666666666667,276" sap2010:WorkflowViewState.IdRef="If_CP_002">
         <If.Then>
-          <Throw DisplayName="Error limite meses Cost Planning" Exception="[New Exception(&quot;La plantilla CORE incluida soporta hasta 60 meses. Duracion detectada en PPO: &quot; + duracionCostPlanning.ToString())]" sap:VirtualizedContainerService.HintSize="334,92" sap2010:WorkflowViewState.IdRef="Throw_CP_002" />
+          <Throw DisplayName="Error limite meses Cost Planning" Exception="[New Exception(&quot;La plantilla CORE &quot; + If(esProyectoATCostPlanning, &quot;AT&quot;, &quot;PC&quot;) + &quot; recibida soporta &quot; + capacidadMesesCostPlanning.ToString() + &quot; meses utiles en Cost Planning. Duracion detectada en PPO: &quot; + duracionCostPlanning.ToString())]" sap:VirtualizedContainerService.HintSize="334,92" sap2010:WorkflowViewState.IdRef="Throw_CP_002" />
         </If.Then>
         <If.Else>
           <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_3" />
@@ -1318,6 +1328,14 @@
           <InArgument x:TypeArguments="x:Int32">[duracionCostPlanning - 1]</InArgument>
         </Assign.Value>
       </Assign>
+      <If Condition="[indiceUltimoMesCostPlanning &lt; 0 OrElse out_dt_CostPlanningPCRiesgosGarantia Is Nothing OrElse out_dt_CostPlanningATRiesgosGarantia Is Nothing OrElse out_dt_CostPlanningPCRiesgosGarantia.Columns.Count &lt;= indiceUltimoMesCostPlanning OrElse out_dt_CostPlanningATRiesgosGarantia.Columns.Count &lt;= indiceUltimoMesCostPlanning]" DisplayName="Validar ultimo mes riesgos garantia" sap2010:WorkflowViewState.IdRef="If_CP_E04_001">
+        <If.Then>
+          <Throw DisplayName="Error indice ultimo mes riesgos garantia" Exception="[New Exception(&quot;No existe la columna del ultimo mes para imputar riesgos/garantia. Duracion detectada=&quot; + duracionCostPlanning.ToString() + &quot;, indice=&quot; + indiceUltimoMesCostPlanning.ToString() + &quot;, columnas PC=&quot; + If(out_dt_CostPlanningPCRiesgosGarantia Is Nothing, &quot;0&quot;, out_dt_CostPlanningPCRiesgosGarantia.Columns.Count.ToString()) + &quot;, columnas AT=&quot; + If(out_dt_CostPlanningATRiesgosGarantia Is Nothing, &quot;0&quot;, out_dt_CostPlanningATRiesgosGarantia.Columns.Count.ToString()) + &quot;.&quot;)]" sap2010:WorkflowViewState.IdRef="Throw_CP_E04_001" />
+        </If.Then>
+        <If.Else>
+          <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_CP_E04_001" />
+        </If.Else>
+      </If>
       <Assign DisplayName="Leer riesgos PPO" sap2010:WorkflowViewState.IdRef="Assign_CP_045">
         <Assign.To>
           <OutArgument x:TypeArguments="x:Object">[valorNumeroCostPlanning]</OutArgument>
@@ -1799,6 +1817,6 @@
         </scg:List>
       </ui:MultipleAssign.AssignOperations>
     </ui:MultipleAssign>
-    <ui:LogMessage DisplayName="Registrar Cost Planning preparado" sap2010:WorkflowViewState.IdRef="LogMessage_CP_001" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;S07 Cost Planning preparado | Tipo=&quot; + in_TipoProyectoNormalizado + &quot; | Perfiles=&quot; + perfilesDetectadosCostPlanning.ToString() + &quot; | Meses=&quot; + duracionCostPlanning.ToString() + &quot; | Gastos=&quot; + ordenGastosCostPlanning.Count.ToString() + &quot; | Compras=&quot; + ordenComprasCostPlanning.Count.ToString()]" />
+    <ui:LogMessage DisplayName="Registrar Cost Planning preparado" sap2010:WorkflowViewState.IdRef="LogMessage_CP_001" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;S07 Cost Planning preparado | Tipo=&quot; + in_TipoProyectoNormalizado + &quot; | Perfiles=&quot; + perfilesDetectadosCostPlanning.ToString() + &quot; | Meses=&quot; + duracionCostPlanning.ToString() + &quot;/&quot; + capacidadMesesCostPlanning.ToString() + &quot; | Gastos=&quot; + ordenGastosCostPlanning.Count.ToString() + &quot; | Compras=&quot; + ordenComprasCostPlanning.Count.ToString()]" />
   </Sequence>
 </Activity>

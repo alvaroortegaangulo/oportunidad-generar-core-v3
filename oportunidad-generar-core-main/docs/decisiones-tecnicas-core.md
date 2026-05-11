@@ -26,6 +26,7 @@ Este registro captura las decisiones que debe respetar el proceso padre o cualqu
 | D16 | Aceptar excepciones focalizadas de Workflow Analyzer. | Cerrada | Algunas reglas penalizan claridad del contrato o anidacion de actividades modernas. | `test/validar_calidad_e06.ps1` acepta solo `ST-ANA-009`, `ST-DBP-002`, `ST-MRD-009`, `ST-NMG-002`, `ST-NMG-009`, `ST-NMG-011`, `ST-NMG-016` y `ST-USG-020`. |
 | D17 | Mantener validacion runtime manual desde Studio para XAML sueltos. | Cerrada | `UiRobot` local no ejecuta XAML crudos de este proyecto; Studio 23.10.4 es el camino fiable de prueba. | Wrappers en `test/` generan Excel reales y PowerShell valida integridad despues. |
 | D18 | No crear auditoria externa ni Markdown desde los modulos. | Cerrada | La evidencia principal debe quedar en el Excel generado y en logs breves. | Los validadores comprueban ausencia de hojas externas como `Trazabilidad_RPA`. |
+| D19 | Medir capacidad mensual desde la plantilla CORE antes de escribir. | Cerrada | El PPO AT dura 48 meses y no se debe depender de un limite fijo ni limpiar zonas fuera de capacidad. | `oportunidad-generar-core.xaml` mide `Resources`, `Cost Planning` y `Monthly View`; PC/AT y comunes reciben esa capacidad y fallan con duracion detectada y capacidad real. |
 
 ## Reglas para mantenimiento
 

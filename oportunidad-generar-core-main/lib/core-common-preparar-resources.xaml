@@ -12,6 +12,7 @@
     <x:Property Name="in_CodigoPEP_WBS" Type="InArgument(x:String)" />
     <x:Property Name="in_CapacidadResourcesFilas" Type="InArgument(x:Int32)" />
     <x:Property Name="in_CapacidadResourcesPerfiles" Type="InArgument(x:Int32)" />
+    <x:Property Name="in_CapacidadMesesResources" Type="InArgument(x:Int32)" />
     <x:Property Name="out_dt_ResourcesPCFijos" Type="OutArgument(sd:DataTable)" />
     <x:Property Name="out_dt_ResourcesPCMeses" Type="OutArgument(sd:DataTable)" />
     <x:Property Name="out_dt_ResourcesATFijos" Type="OutArgument(sd:DataTable)" />
@@ -84,6 +85,7 @@
       <Variable x:TypeArguments="x:Int32" Name="perfilesDetectadosResources" />
       <Variable x:TypeArguments="x:Int32" Name="capacidadFilasResources" />
       <Variable x:TypeArguments="x:Int32" Name="capacidadPerfilesResources" />
+      <Variable x:TypeArguments="x:Int32" Name="capacidadMesesResources" />
       <Variable x:TypeArguments="x:Int32" Name="anioInicioResources" />
       <Variable x:TypeArguments="x:Int32" Name="anioCosteResources" />
       <Variable x:TypeArguments="x:Int32" Name="primerAnioCosteResources" />
@@ -128,7 +130,7 @@
       </sap:WorkflowViewStateService.ViewState>
       <ui:MultipleAssign DisplayName="Inicializar capacidad Resources" sap:VirtualizedContainerService.HintSize="478.6666666666667,240" sap2010:WorkflowViewState.IdRef="MultipleAssign_RES_001">
         <ui:MultipleAssign.AssignOperations>
-          <scg:List x:TypeArguments="ui:AssignOperation" Capacity="5">
+          <scg:List x:TypeArguments="ui:AssignOperation" Capacity="6">
             <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_001">
               <ui:AssignOperation.To>
                 <OutArgument x:TypeArguments="x:Int32">[duracionResources]</OutArgument>
@@ -169,6 +171,14 @@
                 <InArgument x:TypeArguments="x:Int32">[If(in_CapacidadResourcesPerfiles &gt; 0, in_CapacidadResourcesPerfiles, If(esProyectoATResources, 15, 30))]</InArgument>
               </ui:AssignOperation.Value>
             </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_RES_E04_001">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:Int32">[capacidadMesesResources]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:Int32">[If(in_CapacidadMesesResources &gt; 0, in_CapacidadMesesResources, 0)]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
           </scg:List>
         </ui:MultipleAssign.AssignOperations>
       </ui:MultipleAssign>
@@ -180,9 +190,9 @@
           <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_2" />
         </If.Else>
       </If>
-      <If Condition="[duracionResources &gt; 60]" DisplayName="Validar limite de meses Resources" sap:VirtualizedContainerService.HintSize="478.6666666666667,276" sap2010:WorkflowViewState.IdRef="If_RES_002">
+      <If Condition="[duracionResources &gt; capacidadMesesResources]" DisplayName="Validar limite de meses Resources" sap:VirtualizedContainerService.HintSize="478.6666666666667,276" sap2010:WorkflowViewState.IdRef="If_RES_002">
         <If.Then>
-          <Throw DisplayName="Error limite meses Resources" Exception="[New Exception(&quot;La plantilla CORE incluida soporta hasta 60 meses. Duración detectada en PPO: &quot; + duracionResources.ToString())]" sap:VirtualizedContainerService.HintSize="334,92" sap2010:WorkflowViewState.IdRef="Throw_RES_002" />
+          <Throw DisplayName="Error limite meses Resources" Exception="[New Exception(&quot;La plantilla CORE &quot; + If(esProyectoATResources, &quot;AT&quot;, &quot;PC&quot;) + &quot; recibida soporta &quot; + capacidadMesesResources.ToString() + &quot; meses utiles en Resources. Duracion detectada en PPO: &quot; + duracionResources.ToString())]" sap:VirtualizedContainerService.HintSize="334,92" sap2010:WorkflowViewState.IdRef="Throw_RES_002" />
         </If.Then>
         <If.Else>
           <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_3" />
@@ -1138,6 +1148,6 @@
         </scg:List>
       </ui:MultipleAssign.AssignOperations>
     </ui:MultipleAssign>
-    <ui:LogMessage DisplayName="Registrar Resources preparado" sap:VirtualizedContainerService.HintSize="540.6666666666666,144.66666666666666" sap2010:WorkflowViewState.IdRef="LogMessage_RES_001" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;S06 Resources preparado | Tipo=&quot; + in_TipoProyectoNormalizado + &quot; | Perfiles=&quot; + perfilesDetectadosResources.ToString() + &quot; | Meses=&quot; + duracionResources.ToString() + &quot; | Filas=&quot; + capacidadFilasResources.ToString()]" />
+    <ui:LogMessage DisplayName="Registrar Resources preparado" sap:VirtualizedContainerService.HintSize="540.6666666666666,144.66666666666666" sap2010:WorkflowViewState.IdRef="LogMessage_RES_001" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;S06 Resources preparado | Tipo=&quot; + in_TipoProyectoNormalizado + &quot; | Perfiles=&quot; + perfilesDetectadosResources.ToString() + &quot; | Meses=&quot; + duracionResources.ToString() + &quot;/&quot; + capacidadMesesResources.ToString() + &quot; | Filas=&quot; + capacidadFilasResources.ToString()]" />
   </Sequence>
 </Activity>

@@ -78,11 +78,11 @@ También normaliza el importe de pedido: si `Presupuesto!X8` y `Sintesis Precio!
 
 ### `lib\core-common-preparar-resources.xaml`
 
-Prepara las tablas rectangulares de `Resources` a partir de perfiles, meses y costes/tarifas. Está preparado para duraciones de hasta 60 meses.
+Prepara las tablas rectangulares de `Resources` a partir de perfiles, meses y costes/tarifas. Recibe la capacidad mensual real medida desde la plantilla antes de escribir.
 
 ### `lib\core-common-preparar-cost-planning.xaml`
 
-Prepara las tablas rectangulares de `Cost Planning`: horas, gastos, compras, riesgos y garantía. Riesgos y garantía se imputan al último mes del proyecto según la regla funcional documentada.
+Prepara las tablas rectangulares de `Cost Planning`: horas, gastos, compras, riesgos y garantía. Riesgos y garantía se imputan al último mes real del proyecto y se valida que esa columna exista en la capacidad mensual detectada.
 
 ### `lib\oportunidad-generar-core-pc.xaml` y `lib\oportunidad-generar-core-at.xaml`
 
@@ -111,6 +111,16 @@ Al ejecutar desde UiPath Studio, abre el proyecto usando esta carpeta como raíz
 
 No se incluyen metadatos generados por UiPath Studio, caches de compilacion ni outputs previos. UiPath Studio debe recompilar desde los XAML incluidos.
 
+## Plantillas CORE de 60 meses
+
+Las plantillas `CORE_PC_template.xlsx` y `CORE_AT_template.xlsx` son las variantes extendidas incluidas en la referencia de trabajo y adoptadas tras validacion local. La fachada `lib\oportunidad-generar-core.xaml` mide la capacidad mensual real en `Resources`, `Cost Planning` y `Monthly View`; si un PPO supera esa capacidad, el robot falla antes de escribir con la duracion detectada y la capacidad de cada hoja.
+
+Validacion estatica disponible:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\test\validar_plantillas_core_60_meses.ps1
+```
+
 ## Cómo ejecutar
 
 1. Descomprime el ZIP.
@@ -123,7 +133,7 @@ Antes de reejecutar, borra los `.xlsx` anteriores de `data\output` si quieres va
 
 ## Tests
 
-La carpeta `test` contiene únicamente tests XAML. Están pensados como ejemplos de invocación y validación desde Studio, usando recursos locales de `data`. Los scripts PowerShell del repositorio original no se copian para mantener la entrega limpia.
+La carpeta `test` contiene wrappers XAML de invocacion y validadores PowerShell. `validar_plantillas_core_60_meses.ps1` inspecciona las plantillas como OpenXML y comprueba hojas obligatorias, formulas, validaciones, ausencia de `#REF!` y capacidad mensual de 60 meses en `Resources`, `Cost Planning` y `Monthly View`. `validar_salida_core_at_48_meses_e04.ps1` valida outputs generados PC/AT comprobando cabeceras mensuales reales y ausencia de `#REF!`.
 
 ## Criterios funcionales aplicados
 
