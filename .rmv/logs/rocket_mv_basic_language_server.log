@@ -427,3 +427,126 @@ Account{name=..., path=..., type=PREDICT}
 2026-05-12 00:29:48.280 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.account.AccountManager - [client:40010101]load account manager start
 2026-05-12 00:29:48.296 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.account.handler.CacheAccountHandler - [client:40010102]load cache account: 
 2026-05-12 00:29:48.296 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.account.handler.ExternalAccountHandler - [client:40010103]load external account: 
+2026-05-12 00:29:48.434 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in oportunidad-generar-core-v3 account
+2026-05-12 00:29:48.434 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.434 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.450 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for oportunidad-generar-core-v3, its period 5s 
+2026-05-12 00:29:48.450 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in .git account
+2026-05-12 00:29:48.450 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.450 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.450 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for .git, its period 5s 
+2026-05-12 00:29:48.450 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in logs account
+2026-05-12 00:29:48.450 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.450 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for logs, its period 5s 
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in refs account
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for refs, its period 5s 
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in remotes account
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for remotes, its period 5s 
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in objects account
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for objects, its period 5s 
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in refs account
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for refs, its period 5s 
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in remotes account
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for remotes, its period 5s 
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in .local account
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for .local, its period 5s 
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in .codedworkflows account
+2026-05-12 00:29:48.456 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.466 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.466 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for .codedworkflows, its period 5s 
+2026-05-12 00:29:48.466 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in .globalvariables account
+2026-05-12 00:29:48.467 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.467 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.467 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for .globalvariables, its period 5s 
+2026-05-12 00:29:48.467 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in runs account
+2026-05-12 00:29:48.467 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.467 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.467 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for runs, its period 5s 
+2026-05-12 00:29:48.467 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in .settings account
+2026-05-12 00:29:48.467 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.467 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.467 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for .settings, its period 5s 
+2026-05-12 00:29:48.467 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in oportunidad-generar-core-main account
+2026-05-12 00:29:48.467 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.471 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.471 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for oportunidad-generar-core-main, its period 5s 
+2026-05-12 00:29:48.472 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in .local account
+2026-05-12 00:29:48.472 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.472 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.472 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for .local, its period 5s 
+2026-05-12 00:29:48.473 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in .globalvariables account
+2026-05-12 00:29:48.473 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.473 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.473 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for .globalvariables, its period 5s 
+2026-05-12 00:29:48.474 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in .settings account
+2026-05-12 00:29:48.474 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.474 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.475 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for .settings, its period 5s 
+2026-05-12 00:29:48.475 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in data account
+2026-05-12 00:29:48.475 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.475 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.476 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for data, its period 5s 
+2026-05-12 00:29:48.476 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in referencia-resultado-gpt-pro account
+2026-05-12 00:29:48.476 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.476 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.477 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for referencia-resultado-gpt-pro, its period 5s 
+2026-05-12 00:29:48.477 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in oportunidad-generar-core-main account
+2026-05-12 00:29:48.477 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.477 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.478 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for oportunidad-generar-core-main, its period 5s 
+2026-05-12 00:29:48.478 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in data account
+2026-05-12 00:29:48.478 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.479 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.479 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for data, its period 5s 
+2026-05-12 00:29:48.480 [pool-3-thread-1] INFO  com.rs.mv.mvvs.rmv.documentation.BasicDocumentation - [framework:30020101]documentation load start
+2026-05-12 00:29:48.480 [pool-3-thread-1] INFO  com.rs.mv.mvvs.rmv.documentation.reader.SystemDocReader - [framework:30020102]system documentation path: /documentation/UNIVERSE/
+2026-05-12 00:29:48.480 [pool-3-thread-1] INFO  com.rs.mv.mvvs.rmv.documentation.reader.ProjectDocReader - [framework:30020103]project documentation brief file: custom.json
+2026-05-12 00:29:48.480 [pool-3-thread-1] INFO  com.rs.mv.mvvs.rmv.documentation.reader.UserDocReader - [framework:30020104]user documentation brief file: C:\Users\aortega\documentation\UNIVERSE\custom.json
+2026-05-12 00:29:48.501 [pool-3-thread-1] INFO  com.rs.mv.mvvs.rmv.documentation.BasicDocumentation - [framework:30020105]documentation load end
+2026-05-12 00:29:48.504 [pool-3-thread-1] INFO  com.rs.mv.mvvs.common.convertor.ConvertorManager - [framework:30030101]convertors for folder(*) load start
+2026-05-12 00:29:48.506 [pool-3-thread-1] INFO  com.rs.mv.mvvs.common.convertor.ConvertorManager - [framework:30030102]comment convertor load finish
+2026-05-12 00:29:48.509 [pool-3-thread-1] INFO  com.rs.mv.mvvs.common.convertor.ConvertorManager - [framework:30030103]keyword convertor load finish
+2026-05-12 00:29:48.511 [pool-3-thread-1] INFO  com.rs.mv.mvvs.common.convertor.ConvertorManager - [framework:30030104]operator convertor load finish
+2026-05-12 00:29:48.511 [pool-3-thread-1] INFO  com.rs.mv.mvvs.common.convertor.ConvertorManager - [framework:30030105]function name convertor load finish
+2026-05-12 00:29:48.512 [pool-3-thread-1] INFO  com.rs.mv.mvvs.common.convertor.ConvertorManager - [framework:30030106]atVariable convertor load finish
+2026-05-12 00:29:48.512 [pool-3-thread-1] INFO  com.rs.mv.mvvs.common.convertor.ConvertorManager - [framework:30030107]convertors for folder(*) load end
+2026-05-12 00:29:48.512 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400203]cache file auto update thread launch in ... account
+2026-05-12 00:29:48.513 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.DirsConfigReader - [client:400206]parse dir config information
+2026-05-12 00:29:48.513 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.config.MappingConfigReader - [client:400207]parse mapping config information
+2026-05-12 00:29:48.514 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.manager.U2CatalogManager - [client:400202]start a schedule task to get global/local catalog for ..., its period 5s 
+2026-05-12 00:29:48.524 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.account.handler.ServerAccountHandler - [client:40010104]load server account: Account{name=.git, path=C:/Users/aortega/Documents/UiPath/oportunidad-generar-core-v3/.git, type=PREDICT}
+Account{name=runs, path=C:/Users/aortega/Documents/UiPath/oportunidad-generar-core-v3/.local/runs, type=PREDICT}
+Account{name=refs, path=C:/Users/aortega/Documents/UiPath/oportunidad-generar-core-v3/.git/logs/refs, type=PREDICT}
+Account{name=.globalvariables, path=C:/Users/aortega/Documents/UiPath/oportunidad-generar-core-v3/oportunidad-generar-core-main/.local/.globalvariables, type=PREDICT}
+Account{name=.local, path=C:/Users/aortega/Documents/UiPath/oportunidad-generar-core-v3/oportunidad-generar-core-main/.local, type=PREDICT}
+Account{name=data, path=C:/Users/aortega/Documents/UiPath/oportunidad-generar-core-v3/oportunidad-generar-core-main/data, type=PREDICT}
+Account{name=oportunidad-generar-core-v3, path=C:/Users/aortega/Documents/UiPath/oportunidad-generar-core-v3, type=PREDICT}
+Account{name=objects, path=C:/Users/aortega/Documents/UiPath/oportunidad-generar-core-v3/.git/objects, type=PREDICT}
+Account{name=oportunidad-generar-core-main, path=C:/Users/aortega/Documents/UiPath/oportunidad-generar-core-v3/oportunidad-generar-core-main, type=PREDICT}
+Account{name=refs, path=C:/Users/aortega/Documents/UiPath/oportunidad-generar-core-v3/.git/refs, type=PREDICT}
+Account{name=.local, path=C:/Users/aortega/Documents/UiPath/oportunidad-generar-core-v3/.local, type=PREDICT}
+Account{name=.settings, path=C:/Users/aortega/Documents/UiPath/oportunidad-generar-core-v3/oportunidad-generar-core-main/.settings, type=PREDICT}
+Account{name=.settings, path=C:/Users/aortega/Documents/UiPath/oportunidad-generar-core-v3/.settings, type=PREDICT}
+Account{name=referencia-resultado-gpt-pro, path=C:/Users/aortega/Documents/UiPath/oportunidad-generar-core-v3/referencia-resultado-gpt-pro, type=PREDICT}
+Account{name=remotes, path=C:/Users/aortega/Documents/UiPath/oportunidad-generar-core-v3/.git/refs/remotes, type=PREDICT}
+Account{name=oportunidad-generar-core-main, path=C:/Users/aortega/Documents/UiPath/oportunidad-generar-core-v3/referencia-resultado-gpt-pro/oportunidad-generar-core-main, type=PREDICT}
+Account{name=.globalvariables, path=C:/Users/aortega/Documents/UiPath/oportunidad-generar-core-v3/.local/.globalvariables, type=PREDICT}
+Account{name=data, path=C:/Users/aortega/Documents/UiPath/oportunidad-generar-core-v3/referencia-resultado-gpt-pro/oportunidad-generar-core-main/data, type=PREDICT}
+Account{name=logs, path=C:/Users/aortega/Documents/UiPath/oportunidad-generar-core-v3/.git/logs, type=PREDICT}
+Account{name=remotes, path=C:/Users/aortega/Documents/UiPath/oportunidad-generar-core-v3/.git/logs/refs/remotes, type=PREDICT}
+Account{name=..., path=..., type=PREDICT}
+2026-05-12 00:29:48.525 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.account.AccountManager - [client:40010105]load account manager finish
+2026-05-12 00:29:48.526 [pool-3-thread-1] INFO  com.rs.mv.mvvs.instance.userspace.UserspaceManager - [framework:30010402]config file(C:\Users\aortega/.rmv/config) watcher launch successful
