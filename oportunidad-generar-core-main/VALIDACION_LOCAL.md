@@ -6,12 +6,12 @@ Validación realizada en el entorno de generación del ZIP. No sustituye la ejec
 
 - XAML parseados como XML: 14.
 - Todas las referencias `WorkflowFileName="lib\..."` apuntan a ficheros existentes.
-- No se incluyen directorios `.local`, `.objects`, `.project`, `.settings` ni `.tmh`.
+- No se incluyen directorios generados por UiPath Studio ni caches locales de compilacion.
 - Referencias obsoletas detectadas en XAML/MD/JSON: 0.
 
 ## Lectura semántica comprobada en PPO
 
-### `data/input/20250256445_PPO_NuevaTerminalPVR_v2.xlsm`
+### `data/input/20250256445  PPO_NuevaTerminalPVR v2 1.xlsm`
 
 - Tipo detectado: `PC`
 - Opportunity: `20250256445`
@@ -23,7 +23,7 @@ Validación realizada en el entorno de generación del ZIP. No sustituye la ejec
 - Sintesis Precio!D12: `583896.55`
 - Importe elegido por la regla de mayor importe numérico: `583896.55`
 
-### `data/input/20251160543_PPO_CEducacion_AMS_SI_Lote_2_v01.xlsm`
+### `data/input/20251160543_PPO_CEducación_AMS_SI_Lote 2_v01.xlsm`
 
 - Tipo detectado: `AT`
 - Opportunity: `20251160543`

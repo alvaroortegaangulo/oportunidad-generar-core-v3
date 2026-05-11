@@ -6,8 +6,8 @@ Proyecto UiPath limpio para validar y reutilizar los workflows de generación de
 
 El `Main.xaml` ejecuta dos invocaciones reales a `lib\oportunidad-generar-core.xaml`:
 
-1. **CORE PC** desde `data\input\20250256445_PPO_NuevaTerminalPVR_v2.xlsm`.
-2. **CORE AT** desde `data\input\20251160543_PPO_CEducacion_AMS_SI_Lote_2_v01.xlsm`.
+1. **CORE PC** desde `data\input\20250256445  PPO_NuevaTerminalPVR v2 1.xlsm`.
+2. **CORE AT** desde `data\input\20251160543_PPO_CEducación_AMS_SI_Lote 2_v01.xlsm`.
 
 Los resultados se escriben en:
 
@@ -34,8 +34,8 @@ oportunidad-generar-core-main\
     core-recalcular-final.txt
   data\
     input\
-      20250256445_PPO_NuevaTerminalPVR_v2.xlsm
-      20251160543_PPO_CEducacion_AMS_SI_Lote_2_v01.xlsm
+      20250256445  PPO_NuevaTerminalPVR v2 1.xlsm
+      20251160543_PPO_CEducación_AMS_SI_Lote 2_v01.xlsm
     templates\
       CORE_PC_template.xlsx
       CORE_AT_template.xlsx
@@ -109,7 +109,7 @@ Al ejecutar desde UiPath Studio, abre el proyecto usando esta carpeta como raíz
 - Microsoft Excel instalado. La lectura y escritura se hace con actividades modernas de Excel (`ExcelProcessScopeX`, `ExcelApplicationCard`, `ReadRangeX`, `WriteRangeX`, `WriteCellX`).
 - Los PPO de entrada son `.xlsm`; las salidas CORE son `.xlsx`.
 
-No se incluye `.local`, `.objects`, `.project`, `.settings`, cachés de compilación ni outputs previos. UiPath Studio debe recompilar desde los XAML incluidos.
+No se incluyen metadatos generados por UiPath Studio, caches de compilacion ni outputs previos. UiPath Studio debe recompilar desde los XAML incluidos.
 
 ## Cómo ejecutar
 

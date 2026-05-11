@@ -41,7 +41,7 @@ El workflow `test/ejemplo_invocacion_proceso_padre.xaml` simula una fila de opor
 3. Invoca `oportunidad-generar-core.xaml` con `Invoke Workflow File`.
 4. Recoge `out_NumeroSFLeido` y registra el fin OK.
 
-Para probarlo, abrir el proyecto con UiPath Studio 23.10.4 y ejecutar `test/ejemplo_invocacion_proceso_padre.xaml`. La salida de ejemplo se escribe en `.local\handover-output`.
+Para probarlo, abrir el proyecto con UiPath Studio 23.10.4 y ejecutar `test/ejemplo_invocacion_proceso_padre.xaml`. La salida de ejemplo se escribe en `data\output`.
 
 ## Contrato de argumentos
 
@@ -175,10 +175,10 @@ Logs del submodulo:
 
 ## Validacion recomendada
 
-1. Ejecutar `test/test_generar_core_pc.xaml` desde Studio para generar `.local\test-output\CORE_PC_20250256445_test.xlsx`.
+1. Ejecutar `test/test_generar_core_pc.xaml` desde Studio para generar `data\output\test\CORE_PC_20250256445_test.xlsx`.
 2. Ejecutar `powershell -ExecutionPolicy Bypass -File .\test\validar_integridad_core_pc.ps1`.
 3. Ejecutar `powershell -ExecutionPolicy Bypass -File .\test\validar_negativos_core.ps1`.
-4. Ejecutar `test/test_generar_core_datos_incompletos.xaml` desde Studio y validar el resultado con `powershell -ExecutionPolicy Bypass -File .\test\validar_integridad_core_pc.ps1 -CorePath .\.local\test-output\CORE_PC_20250256445_datos_incompletos.xlsx -Scenario DatosIncompletos -SkipBaseline`.
+4. Ejecutar `test/test_generar_core_datos_incompletos.xaml` desde Studio y validar el resultado con `powershell -ExecutionPolicy Bypass -File .\test\validar_integridad_core_pc.ps1 -CorePath .\data\output\test\CORE_PC_20250256445_datos_incompletos.xlsx -Scenario DatosIncompletos -SkipBaseline`.
 5. Ejecutar `powershell -ExecutionPolicy Bypass -File .\test\validar_calidad_e06.ps1` para cerrar XML, contratos negativos y Workflow Analyzer focalizado.
 6. Abrir visualmente `oportunidad-generar-core.xaml` en Studio antes de integrarlo en el proyecto padre.
 

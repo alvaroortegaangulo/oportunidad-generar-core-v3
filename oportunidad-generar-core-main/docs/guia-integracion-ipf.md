@@ -8,10 +8,10 @@ El modulo IPF no usa assets, colas, Salesforce ni SAP. El proceso padre localiza
 
 Ficheros revisados:
 
-- `ficheros-auxiliares\Plantilla IPF.xlsx`.
-- `ficheros-auxiliares\IPF - ICT - GAP - ZEV-PCE0012 - Despliegue Smart Airport nueva terminal-  FEB26 v1.xlsx`.
-- `ficheros-auxiliares\documento_funcional_core_ipf_uipath.pdf`.
-- `ficheros-auxiliares\Reunion-explicacion-proceso.md`.
+- `data\templates\IPF_template.xlsx`.
+- Documento de referencia IPF original revisado durante el analisis funcional.
+- `docs\documento_funcional_core_ipf_uipath.pdf`.
+- `docs\Reunion-explicacion-proceso.md`.
 
 El ejemplo GAP y la plantilla tienen hashes distintos, pero no presentan diferencias de celdas, formulas ni validaciones en los rangos usados. Por tanto, el ejemplo sirve como referencia de cumplimentacion de campos, no como libro con estructura distinta.
 
@@ -101,9 +101,9 @@ Abrir el proyecto en UiPath Studio 23.10.4 y ejecutar `test/test_generar_ipf.xam
 
 El wrapper:
 
-1. Crea `.local\test-output`.
+1. Crea `data\output\test`.
 2. Invoca `oportunidad-generar-ipf.xaml`.
-3. Genera `.local\test-output\IPF_20250256445_test.xlsx` con cabecera, PO, narrativa/importe si se aportan y comentarios de prueba.
+3. Genera `data\output\test\IPF_20250256445_test.xlsx` con cabecera, PO, narrativa/importe si se aportan y comentarios de prueba.
 4. Recoge `out_NumeroSFLeido`.
 
 Desde S13 hay dos pruebas IPF:
@@ -118,7 +118,7 @@ Validaciones PowerShell:
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\test\validar_integridad_ipf.ps1 -SkipGenerated
 powershell -ExecutionPolicy Bypass -File .\test\validar_integridad_ipf.ps1
-powershell -ExecutionPolicy Bypass -File .\test\validar_integridad_ipf.ps1 -IpfPath .\.local\test-output\IPF_20250256445_datos_incompletos.xlsx -Scenario DatosIncompletos
+powershell -ExecutionPolicy Bypass -File .\test\validar_integridad_ipf.ps1 -IpfPath .\data\output\test\IPF_20250256445_datos_incompletos.xlsx -Scenario DatosIncompletos
 powershell -ExecutionPolicy Bypass -File .\test\validar_negativos_ipf.ps1
 ```
 

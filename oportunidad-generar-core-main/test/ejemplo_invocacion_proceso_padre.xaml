@@ -86,7 +86,7 @@
               <OutArgument x:TypeArguments="x:String">[RutaPPO]</OutArgument>
             </ui:AssignOperation.To>
             <ui:AssignOperation.Value>
-              <InArgument x:TypeArguments="x:String">[Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "data", "input", "20250256445_PPO_NuevaTerminalPVR_v2.xlsm"))]</InArgument>
+              <InArgument x:TypeArguments="x:String">[Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "data", "input", "20250256445  PPO_NuevaTerminalPVR v2 1.xlsm"))]</InArgument>
             </ui:AssignOperation.Value>
           </ui:AssignOperation>
           <ui:AssignOperation>
