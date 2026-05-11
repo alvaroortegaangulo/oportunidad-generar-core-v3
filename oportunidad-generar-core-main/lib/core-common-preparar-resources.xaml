@@ -1193,6 +1193,198 @@
         </scg:List>
       </ui:MultipleAssign.AssignOperations>
     </ui:MultipleAssign>
-    <ui:LogMessage DisplayName="Registrar Resources preparado" sap:VirtualizedContainerService.HintSize="540.6666666666666,144.66666666666666" sap2010:WorkflowViewState.IdRef="LogMessage_RES_001" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;S06 Resources preparado | Tipo=&quot; + in_TipoProyectoNormalizado + &quot; | Perfiles=&quot; + perfilesDetectadosResources.ToString() + &quot; | Meses=&quot; + duracionResources.ToString() + &quot;/&quot; + capacidadMesesResources.ToString() + &quot; | Filas=&quot; + capacidadFilasResources.ToString()]" />
+    <ui:InvokeCode ContinueOnError="{x:Null}" DisplayName="Postprocesar costes y tarifas Resources desde PPO" Language="CSharp">
+      <ui:InvokeCode.Code><![CDATA[
+string Texto(object valor)
+{
+    if (valor == null || valor == System.DBNull.Value) return string.Empty;
+    return System.Convert.ToString(valor).Trim();
+}
+
+bool HasCol(System.Data.DataRow fila, string columna)
+{
+    return fila != null && fila.Table != null && fila.Table.Columns.Contains(columna);
+}
+
+string Norm(string texto)
+{
+    string origen = (texto ?? string.Empty).Normalize(System.Text.NormalizationForm.FormD);
+    var sb = new System.Text.StringBuilder();
+    foreach (char c in origen)
+    {
+        if (System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c) == System.Globalization.UnicodeCategory.NonSpacingMark) continue;
+        if (char.IsLetterOrDigit(c)) sb.Append(char.ToUpperInvariant(c));
+    }
+    return sb.ToString();
+}
+
+bool TryNumero(object valor, out double numero)
+{
+    numero = 0D;
+    if (valor == null || valor == System.DBNull.Value) return false;
+    if (valor is double || valor is float || valor is int || valor is long || valor is decimal || valor is short)
+    {
+        numero = System.Convert.ToDouble(valor, System.Globalization.CultureInfo.InvariantCulture);
+        return true;
+    }
+
+    string texto = Texto(valor);
+    if (string.IsNullOrWhiteSpace(texto)) return false;
+    texto = texto.Replace("EUR", string.Empty).Replace("eur", string.Empty).Replace("\u20AC", string.Empty).Replace("%", string.Empty).Trim();
+    if (double.TryParse(texto, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, out numero)) return true;
+    if (double.TryParse(texto, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), out numero)) return true;
+    if (double.TryParse(texto, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out numero)) return true;
+    string normalizado = texto.Replace(" ", string.Empty);
+    if (normalizado.Contains(",") && normalizado.Contains("."))
+    {
+        normalizado = normalizado.Replace(".", string.Empty).Replace(",", ".");
+        if (double.TryParse(normalizado, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out numero)) return true;
+    }
+    return false;
+}
+
+bool TryAnio(object valor, out int anio)
+{
+    anio = 0;
+    double numero;
+    if (TryNumero(valor, out numero))
+    {
+        int candidato = (int)System.Math.Round(numero, 0);
+        if (candidato >= 2000 && candidato <= 2100)
+        {
+            anio = candidato;
+            return true;
+        }
+    }
+
+    var match = System.Text.RegularExpressions.Regex.Match(Texto(valor), @"20\d{2}");
+    if (match.Success)
+    {
+        anio = int.Parse(match.Value, System.Globalization.CultureInfo.InvariantCulture);
+        return true;
+    }
+    return false;
+}
+
+string KeyPerfil(System.Data.DataRow fila)
+{
+    if (HasCol(fila, "ResourceKey") && !string.IsNullOrWhiteSpace(Texto(fila["ResourceKey"]))) return Norm(Texto(fila["ResourceKey"]));
+    return Norm(Texto(fila["Sigla"]) + "|" + Texto(fila["Perfil"]) + "|" + Texto(fila["Entidad"]));
+}
+
+void AddCost(System.Collections.Generic.Dictionary<string, System.Collections.Generic.SortedDictionary<int, double>> destino, string clave, int anio, double valor)
+{
+    if (string.IsNullOrWhiteSpace(clave) || anio <= 0 || System.Math.Abs(valor) <= 0.0000001D) return;
+    System.Collections.Generic.SortedDictionary<int, double> porAnio;
+    if (!destino.TryGetValue(clave, out porAnio))
+    {
+        porAnio = new System.Collections.Generic.SortedDictionary<int, double>();
+        destino[clave] = porAnio;
+    }
+    if (!porAnio.ContainsKey(anio)) porAnio[anio] = valor;
+}
+
+bool PickCost(System.Collections.Generic.Dictionary<string, System.Collections.Generic.SortedDictionary<int, double>> origen, string clave, int anioInicio, out double valor)
+{
+    valor = 0D;
+    System.Collections.Generic.SortedDictionary<int, double> porAnio;
+    if (string.IsNullOrWhiteSpace(clave) || !origen.TryGetValue(clave, out porAnio) || porAnio.Count == 0) return false;
+    if (porAnio.TryGetValue(anioInicio, out valor) && System.Math.Abs(valor) > 0.0000001D) return true;
+    foreach (var item in porAnio)
+    {
+        if (System.Math.Abs(item.Value) > 0.0000001D)
+        {
+            valor = item.Value;
+            return true;
+        }
+    }
+    return false;
+}
+
+int anioInicio = 0;
+if (arg_Meses != null && arg_Meses.Rows.Count > 0 && arg_Meses.Columns.Contains("Anio")) TryAnio(arg_Meses.Rows[0]["Anio"], out anioInicio);
+if (anioInicio <= 0) anioInicio = System.DateTime.Now.Year;
+
+var costesPorKey = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.SortedDictionary<int, double>>(System.StringComparer.OrdinalIgnoreCase);
+var costesPorSigla = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.SortedDictionary<int, double>>(System.StringComparer.OrdinalIgnoreCase);
+if (arg_Costes != null)
+{
+    foreach (System.Data.DataRow filaCoste in arg_Costes.Rows)
+    {
+        int anio;
+        double coste;
+        if (!HasCol(filaCoste, "Anio") || !HasCol(filaCoste, "CosteHora") || !TryAnio(filaCoste["Anio"], out anio) || !TryNumero(filaCoste["CosteHora"], out coste) || System.Math.Abs(coste) <= 0.0000001D) continue;
+        string sigla = HasCol(filaCoste, "Sigla") ? Texto(filaCoste["Sigla"]) : string.Empty;
+        string key = HasCol(filaCoste, "ResourceKey") ? Norm(Texto(filaCoste["ResourceKey"])) : string.Empty;
+        AddCost(costesPorKey, key, anio, coste);
+        AddCost(costesPorSigla, Norm(sigla), anio, coste);
+    }
+}
+
+var tarifasPorKey = new System.Collections.Generic.Dictionary<string, double>(System.StringComparer.OrdinalIgnoreCase);
+var tarifasPorSigla = new System.Collections.Generic.Dictionary<string, double>(System.StringComparer.OrdinalIgnoreCase);
+var tarifasPorSiglaCuenta = new System.Collections.Generic.Dictionary<string, int>(System.StringComparer.OrdinalIgnoreCase);
+if (arg_Tarifas != null)
+{
+    foreach (System.Data.DataRow filaTarifa in arg_Tarifas.Rows)
+    {
+        double tarifa;
+        if (!HasCol(filaTarifa, "TarifaAT") || !TryNumero(filaTarifa["TarifaAT"], out tarifa) || System.Math.Abs(tarifa) <= 0.0000001D) continue;
+        string siglaNorm = HasCol(filaTarifa, "Sigla") ? Norm(Texto(filaTarifa["Sigla"])) : string.Empty;
+        string key = HasCol(filaTarifa, "ResourceKey") ? Norm(Texto(filaTarifa["ResourceKey"])) : string.Empty;
+        if (!string.IsNullOrWhiteSpace(key)) tarifasPorKey[key] = tarifa;
+        if (!string.IsNullOrWhiteSpace(siglaNorm))
+        {
+            tarifasPorSigla[siglaNorm] = tarifa;
+            tarifasPorSiglaCuenta[siglaNorm] = tarifasPorSiglaCuenta.ContainsKey(siglaNorm) ? tarifasPorSiglaCuenta[siglaNorm] + 1 : 1;
+        }
+    }
+}
+
+int perfiles = arg_Perfiles == null ? 0 : arg_Perfiles.Rows.Count;
+int meses = arg_Meses == null ? 0 : arg_Meses.Rows.Count;
+for (int i = 0; i < perfiles; i++)
+{
+    System.Data.DataRow filaPerfil = arg_Perfiles.Rows[i];
+    string sigla = Texto(filaPerfil["Sigla"]);
+    string siglaNorm = Norm(sigla);
+    string key = KeyPerfil(filaPerfil);
+
+    double coste;
+    bool tieneCoste = PickCost(costesPorKey, key, anioInicio, out coste) || PickCost(costesPorSigla, siglaNorm, anioInicio, out coste);
+
+    double tarifa = 0D;
+    bool tieneTarifa = HasCol(filaPerfil, "TarifaAT") && TryNumero(filaPerfil["TarifaAT"], out tarifa) && System.Math.Abs(tarifa) > 0.0000001D;
+    if (!tieneTarifa && tarifasPorKey.TryGetValue(key, out tarifa) && System.Math.Abs(tarifa) > 0.0000001D) tieneTarifa = true;
+    if (!tieneTarifa && tarifasPorSiglaCuenta.ContainsKey(siglaNorm) && tarifasPorSiglaCuenta[siglaNorm] == 1 && tarifasPorSigla.TryGetValue(siglaNorm, out tarifa) && System.Math.Abs(tarifa) > 0.0000001D) tieneTarifa = true;
+
+    for (int m = 0; m < meses; m++)
+    {
+        if (arg_ResourcesPCMeses != null && i < arg_ResourcesPCMeses.Rows.Count && m < arg_ResourcesPCMeses.Columns.Count)
+        {
+            arg_ResourcesPCMeses.Rows[i][m] = tieneCoste ? (object)coste : (object)"Coste no disponible";
+        }
+
+        int filaAT = i * 2;
+        if (arg_ResourcesATMeses != null && filaAT + 1 < arg_ResourcesATMeses.Rows.Count && m < arg_ResourcesATMeses.Columns.Count)
+        {
+            arg_ResourcesATMeses.Rows[filaAT][m] = tieneCoste ? (object)coste : (object)"Coste no disponible";
+            arg_ResourcesATMeses.Rows[filaAT + 1][m] = tieneTarifa ? (object)tarifa : (object)"Tarifa AT no disponible";
+        }
+    }
+}
+      ]]></ui:InvokeCode.Code>
+      <ui:InvokeCode.Arguments>
+        <scg:Dictionary x:TypeArguments="x:String, Argument">
+          <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_Perfiles">[in_dt_PerfilesPPO]</InArgument>
+          <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_Costes">[in_dt_CostesPorAnio]</InArgument>
+          <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_Tarifas">[in_dt_TarifasAT]</InArgument>
+          <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_Meses">[in_dt_MesesPPO]</InArgument>
+          <InOutArgument x:TypeArguments="sd:DataTable" x:Key="arg_ResourcesPCMeses">[out_dt_ResourcesPCMeses]</InOutArgument>
+          <InOutArgument x:TypeArguments="sd:DataTable" x:Key="arg_ResourcesATMeses">[out_dt_ResourcesATMeses]</InOutArgument>
+        </scg:Dictionary>
+      </ui:InvokeCode.Arguments>
+    </ui:InvokeCode>
+    <ui:LogMessage DisplayName="Registrar Resources preparado" sap:VirtualizedContainerService.HintSize="540.6666666666666,144.66666666666666" sap2010:WorkflowViewState.IdRef="LogMessage_RES_001" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;S06 Resources preparado | Tipo=&quot; + in_TipoProyectoNormalizado + &quot; | Perfiles=&quot; + perfilesDetectadosResources.ToString() + &quot; | Costes=&quot; + If(in_dt_CostesPorAnio Is Nothing, &quot;0&quot;, in_dt_CostesPorAnio.Rows.Count.ToString()) + &quot; | TarifasAT=&quot; + If(in_dt_TarifasAT Is Nothing, &quot;0&quot;, in_dt_TarifasAT.Rows.Count.ToString()) + &quot; | Meses=&quot; + duracionResources.ToString() + &quot;/&quot; + capacidadMesesResources.ToString() + &quot; | Filas=&quot; + capacidadFilasResources.ToString()]" />
   </Sequence>
 </Activity>

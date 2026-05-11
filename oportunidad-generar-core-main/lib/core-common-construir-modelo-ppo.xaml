@@ -2236,6 +2236,11 @@ void AddOrSum(System.Data.DataTable tabla, string keyColumn, string key, string 
             && anioActual == anio)
         {
             TryNumero(fila[valueColumn], out actual);
+            if (string.Equals(valueColumn, "CosteHora", System.StringComparison.OrdinalIgnoreCase))
+            {
+                if (System.Math.Abs(actual) <= 0.0000001D) fila[valueColumn] = valor;
+                return;
+            }
             fila[valueColumn] = actual + valor;
             return;
         }
@@ -2602,6 +2607,62 @@ if (arg_Presupuesto != null && filaRecursos >= 0)
             if (TryNumero(Celda(arg_Presupuesto, r, par.Value), out horas))
             {
                 AddOrSum(dtHorasPorAnio, "ResourceKey", key, "Anio", par.Key, "Horas", horas, sigla, par.Key, horas, key);
+                double costeTotalAnual;
+                int colCosteAnual = par.Value + 11;
+                if (System.Math.Abs(horas) > 0.0000001D
+                    && colCosteAnual >= 0
+                    && colCosteAnual < arg_Presupuesto.Columns.Count
+                    && TryNumero(Celda(arg_Presupuesto, r, colCosteAnual), out costeTotalAnual)
+                    && System.Math.Abs(costeTotalAnual) > 0.0000001D)
+                {
+                    AddOrSum(dtCostesPorAnio, "ResourceKey", key, "Anio", par.Key, "CosteHora", costeTotalAnual / horas, sigla, par.Key, costeTotalAnual / horas, key);
+                }
+            }
+        }
+        if (string.Equals(tipoDetectado, "AT", System.StringComparison.OrdinalIgnoreCase))
+        {
+            double horasPerfilAT = 0D;
+            double tarifaATPresupuesto = 0D;
+            string origenTarifaATPresupuesto = string.Empty;
+            int colHorasFacturablesAT = 24;
+            int colTarifaAT = 25;
+            int colVentaAT = 26;
+            if (TryNumero(Celda(arg_Presupuesto, r, totalCol), out horasPerfilAT) && System.Math.Abs(horasPerfilAT) > 0.0000001D && colTarifaAT < arg_Presupuesto.Columns.Count)
+            {
+                foreach (int filaTarifaAT in new int[] { r + 1, r })
+                {
+                    double tarifaCandidataAT = 0D;
+                    double horasFacturablesAT = 0D;
+                    double ventaAT = 0D;
+                    bool tarifaValidaAT = filaTarifaAT >= 0
+                        && filaTarifaAT < arg_Presupuesto.Rows.Count
+                        && TryNumero(Celda(arg_Presupuesto, filaTarifaAT, colTarifaAT), out tarifaCandidataAT)
+                        && System.Math.Abs(tarifaCandidataAT) > 0.0000001D;
+                    bool horasFacturablesValidasAT = tarifaValidaAT
+                        && colHorasFacturablesAT < arg_Presupuesto.Columns.Count
+                        && TryNumero(Celda(arg_Presupuesto, filaTarifaAT, colHorasFacturablesAT), out horasFacturablesAT);
+                    bool ventaValidaAT = tarifaValidaAT
+                        && colVentaAT < arg_Presupuesto.Columns.Count
+                        && TryNumero(Celda(arg_Presupuesto, filaTarifaAT, colVentaAT), out ventaAT)
+                        && System.Math.Abs(ventaAT) > 0.0000001D;
+                    bool horasCoherentesAT = !horasFacturablesValidasAT
+                        || System.Math.Abs(horasFacturablesAT - horasPerfilAT) <= System.Math.Max(1D, System.Math.Abs(horasPerfilAT) * 0.02D);
+                    bool ventaCoherenteAT = !ventaValidaAT
+                        || !horasFacturablesValidasAT
+                        || System.Math.Abs(horasFacturablesAT) <= 0.0000001D
+                        || System.Math.Abs((ventaAT / horasFacturablesAT) - tarifaCandidataAT) <= System.Math.Max(0.05D, System.Math.Abs(tarifaCandidataAT) * 0.01D);
+                    if (tarifaValidaAT && horasCoherentesAT && ventaCoherenteAT)
+                    {
+                        tarifaATPresupuesto = tarifaCandidataAT;
+                        origenTarifaATPresupuesto = "Presupuesto!" + CeldaExcel(3, 2, filaTarifaAT, colTarifaAT) + " tarifa AT";
+                        break;
+                    }
+                }
+            }
+            if (System.Math.Abs(tarifaATPresupuesto) > 0.0000001D)
+            {
+                filaPerfil["TarifaAT"] = tarifaATPresupuesto;
+                Add(dtTarifasAT, sigla, tarifaATPresupuesto, key, origenTarifaATPresupuesto);
             }
         }
     }

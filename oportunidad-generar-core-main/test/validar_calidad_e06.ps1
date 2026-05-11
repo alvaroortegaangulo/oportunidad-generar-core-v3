@@ -282,6 +282,21 @@ function Assert-CellText {
     }
 }
 
+function Assert-CellContains {
+    param(
+        [xml]$Sheet,
+        $SharedStrings,
+        [string]$Address,
+        [string]$ExpectedPart,
+        [string]$Case
+    )
+
+    $actual = Get-CellValue -Cell (Get-Cell -WorksheetXml $Sheet -Address $Address) -SharedStrings $SharedStrings
+    if ($null -eq $actual -or -not $actual.ToString().Contains($ExpectedPart)) {
+        Add-Failure "$Case $Address debe contener '$ExpectedPart'. Actual='$actual'"
+    }
+}
+
 function Assert-CellNear {
     param(
         [xml]$Sheet,
@@ -294,6 +309,22 @@ function Assert-CellNear {
 
     $actual = Get-CellValue -Cell (Get-Cell -WorksheetXml $Sheet -Address $Address) -SharedStrings $SharedStrings
     Assert-NearNumber -Actual $actual -Expected $Expected -Tolerance $Tolerance -Case "$Case $Address"
+}
+
+function Assert-CellGreater {
+    param(
+        [xml]$Sheet,
+        $SharedStrings,
+        [string]$Address,
+        [double]$Minimum,
+        [string]$Case
+    )
+
+    $actual = Get-CellValue -Cell (Get-Cell -WorksheetXml $Sheet -Address $Address) -SharedStrings $SharedStrings
+    $number = Get-CellNumber -Value $actual
+    if ([double]::IsNaN($number) -or $number -le $Minimum) {
+        Add-Failure "$Case $Address debe ser mayor que $Minimum. Actual='$actual'"
+    }
 }
 
 function Assert-RangeBlankOrZero {
@@ -377,7 +408,7 @@ function Test-StaticContract {
 
     Assert-TextContains -Text $pc -Pattern 'columnaFinCostPlanningMeses' -Case 'PC escribe Cost Planning hasta columna calculada'
     Assert-TextContains -Text $at -Pattern 'columnaFinCostPlanningMeses' -Case 'AT escribe Cost Planning hasta columna calculada'
-    Assert-TextContains -Text $at -Pattern 'Range("H68:" + columnaFinCostPlanningMeses' -Case 'AT limpia meses compras solo hasta duracion'
+    Assert-TextContains -Text $at -Pattern 'Range("H67:" + columnaFinCostPlanningMeses' -Case 'AT limpia meses compras solo hasta duracion'
     Assert-TextContains -Text $pc -Pattern 'Range("G64:" + columnaFinCostPlanningMeses' -Case 'PC limpia meses compras solo hasta duracion'
 }
 
@@ -396,7 +427,9 @@ function Test-CorePcWorkbook {
 
         $sharedStrings = Get-SharedStrings -Zip $zip
         $projectInfor = Read-ZipXml -Zip $zip -EntryName $sheetMap['Project Infor']
+        $resources = Read-ZipXml -Zip $zip -EntryName $sheetMap['Resources']
         $costPlanning = Read-ZipXml -Zip $zip -EntryName $sheetMap['Cost Planning']
+        $costSummary = Read-ZipXml -Zip $zip -EntryName $sheetMap['Cost Summary']
 
         Assert-MonthHeaders -WorksheetXml $costPlanning -SharedStrings $sharedStrings -SheetName 'Cost Planning PC' -HeaderRow 8 -StartColumn 'G' -ExpectedStart ([datetime]'2025-11-01') -Months 12
         Assert-CellNear -Sheet $projectInfor -SharedStrings $sharedStrings -Address 'C28' -Expected 583896.55 -Tolerance 0.01 -Case 'PC importe pedido'
@@ -406,6 +439,16 @@ function Test-CorePcWorkbook {
         Assert-CellNear -Sheet $projectInfor -SharedStrings $sharedStrings -Address 'C32' -Expected 0 -Tolerance 0.01 -Case 'PC garantia'
         Assert-CellNear -Sheet $projectInfor -SharedStrings $sharedStrings -Address 'C33' -Expected 7400 -Tolerance 0.01 -Case 'PC gastos'
         Assert-CellNear -Sheet $projectInfor -SharedStrings $sharedStrings -Address 'C34' -Expected 40000 -Tolerance 0.01 -Case 'PC compras'
+
+        Assert-CellNear -Sheet $resources -SharedStrings $sharedStrings -Address 'F7' -Expected 40 -Tolerance 0.01 -Case 'PC coste hora JP'
+        Assert-CellNear -Sheet $resources -SharedStrings $sharedStrings -Address 'F8' -Expected 26 -Tolerance 0.01 -Case 'PC coste hora CSS'
+        Assert-CellNear -Sheet $resources -SharedStrings $sharedStrings -Address 'F9' -Expected 16 -Tolerance 0.01 -Case 'PC coste hora CJSS'
+        Assert-CellNear -Sheet $resources -SharedStrings $sharedStrings -Address 'F10' -Expected 38.75 -Tolerance 0.01 -Case 'PC coste hora A'
+        Assert-CellNear -Sheet $resources -SharedStrings $sharedStrings -Address 'F11' -Expected 27 -Tolerance 0.01 -Case 'PC coste hora II'
+        Assert-CellNear -Sheet $resources -SharedStrings $sharedStrings -Address 'F12' -Expected 20 -Tolerance 0.01 -Case 'PC coste hora P'
+        Assert-CellNear -Sheet $resources -SharedStrings $sharedStrings -Address 'F13' -Expected 25 -Tolerance 0.01 -Case 'PC coste hora DG'
+        Assert-CellGreater -Sheet $costSummary -SharedStrings $sharedStrings -Address 'E8' -Minimum 300000 -Case 'PC proyeccion coste recursos'
+        Assert-CellContains -Sheet $costSummary -SharedStrings $sharedStrings -Address 'B18' -ExpectedPart 'ADVERTENCIA: PPO contiene anualidades de horas fuera del periodo CORE planificado.' -Case 'PC trazabilidad anualidades fuera de periodo'
 
         Assert-CellText -Sheet $costPlanning -SharedStrings $sharedStrings -Address 'B64' -Expected 'Proveedor Test' -Case 'PC compra proveedor'
         Assert-CellText -Sheet $costPlanning -SharedStrings $sharedStrings -Address 'C64' -Expected 'Trabajos on site' -Case 'PC compra descripcion'
@@ -434,6 +477,7 @@ function Test-CoreAtWorkbook {
         $resources = Read-ZipXml -Zip $zip -EntryName $sheetMap['Resources']
         $costPlanning = Read-ZipXml -Zip $zip -EntryName $sheetMap['Cost Planning']
         $monthlyView = Read-ZipXml -Zip $zip -EntryName $sheetMap['Monthly View']
+        $costSummary = Read-ZipXml -Zip $zip -EntryName $sheetMap['Cost Summary']
 
         Assert-MonthHeaders -WorksheetXml $resources -SharedStrings $sharedStrings -SheetName 'Resources AT' -HeaderRow 6 -StartColumn 'G' -ExpectedStart ([datetime]'2026-01-01') -Months 48
         Assert-MonthHeaders -WorksheetXml $costPlanning -SharedStrings $sharedStrings -SheetName 'Cost Planning AT' -HeaderRow 8 -StartColumn 'H' -ExpectedStart ([datetime]'2026-01-01') -Months 48
@@ -442,6 +486,17 @@ function Test-CoreAtWorkbook {
         Assert-CellNear -Sheet $projectInfor -SharedStrings $sharedStrings -Address 'C28' -Expected 465000 -Tolerance 0.01 -Case 'AT importe pedido semantico'
         Assert-CellNear -Sheet $projectInfor -SharedStrings $sharedStrings -Address 'C33' -Expected 0 -Tolerance 0.01 -Case 'AT gastos sin datos reales'
         Assert-CellNear -Sheet $projectInfor -SharedStrings $sharedStrings -Address 'C34' -Expected 0 -Tolerance 0.01 -Case 'AT compras sin datos reales'
+
+        Assert-CellNear -Sheet $resources -SharedStrings $sharedStrings -Address 'G7' -Expected 32.84 -Tolerance 0.01 -Case 'AT coste hora Susana'
+        Assert-CellNear -Sheet $resources -SharedStrings $sharedStrings -Address 'G9' -Expected 15.17 -Tolerance 0.01 -Case 'AT coste hora Jorge'
+        Assert-CellNear -Sheet $resources -SharedStrings $sharedStrings -Address 'G11' -Expected 20 -Tolerance 0.01 -Case 'AT coste hora soporte'
+        Assert-CellNear -Sheet $resources -SharedStrings $sharedStrings -Address 'G8' -Expected 44.35 -Tolerance 0.02 -Case 'AT tarifa venta Susana'
+        Assert-CellNear -Sheet $resources -SharedStrings $sharedStrings -Address 'G10' -Expected 20.49 -Tolerance 0.02 -Case 'AT tarifa venta Jorge'
+        Assert-CellNear -Sheet $resources -SharedStrings $sharedStrings -Address 'G12' -Expected 27.01 -Tolerance 0.02 -Case 'AT tarifa venta soporte'
+        Assert-CellGreater -Sheet $costSummary -SharedStrings $sharedStrings -Address 'E8' -Minimum 300000 -Case 'AT proyeccion coste recursos'
+        Assert-CellNear -Sheet $costSummary -SharedStrings $sharedStrings -Address 'J8' -Expected 0 -Tolerance 0.01 -Case 'AT proyeccion compras sin compras PPO'
+        Assert-CellText -Sheet $costSummary -SharedStrings $sharedStrings -Address 'B14' -Expected '' -Case 'AT warning venta no contradictorio'
+        Assert-CellContains -Sheet $costSummary -SharedStrings $sharedStrings -Address 'B18' -ExpectedPart 'Generado por RPA:' -Case 'AT trazabilidad visible'
 
         $expectedRows = @(
             @{ Row = 10; Sigla = 'AP'; Perfil = 'Susana Matarranz'; Tipo = 'Horas Reales' },
@@ -474,8 +529,8 @@ function Test-CoreAtWorkbook {
         Assert-CellNear -Sheet $costPlanning -SharedStrings $sharedStrings -Address 'BC47' -Expected 3565.85 -Tolerance 0.02 -Case 'AT riesgos ultimo mes'
         Assert-CellNear -Sheet $costPlanning -SharedStrings $sharedStrings -Address 'BC48' -Expected 0 -Tolerance 0.01 -Case 'AT garantia ultimo mes'
 
-        Assert-RangeBlankOrZero -Sheet $costPlanning -SharedStrings $sharedStrings -FromColumn 'B' -ToColumn 'G' -FromRow 68 -ToRow 76 -Case 'AT bloque fijo compras sin compras PPO'
-        Assert-RangeBlankOrZero -Sheet $costPlanning -SharedStrings $sharedStrings -FromColumn 'H' -ToColumn 'BC' -FromRow 68 -ToRow 76 -Case 'AT meses compras sin compras PPO'
+        Assert-RangeBlankOrZero -Sheet $costPlanning -SharedStrings $sharedStrings -FromColumn 'B' -ToColumn 'G' -FromRow 67 -ToRow 76 -Case 'AT bloque fijo compras sin compras PPO'
+        Assert-RangeBlankOrZero -Sheet $costPlanning -SharedStrings $sharedStrings -FromColumn 'H' -ToColumn 'BC' -FromRow 67 -ToRow 76 -Case 'AT meses compras sin compras PPO'
     }
     finally {
         $zip.Dispose()

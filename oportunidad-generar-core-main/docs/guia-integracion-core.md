@@ -11,7 +11,7 @@ La fachada estable sigue siendo `oportunidad-generar-core.xaml`. El proceso padr
 | XAML | Responsabilidad | Consume | Produce / valida |
 | --- | --- | --- | --- |
 | `oportunidad-generar-core.xaml` | Orquestacion CORE: valida entradas tecnicas, copia plantilla, lee PPO por rangos, prepara Project Infor, delega PC/AT, pinta errores dinamicos y recalcula. | Argumentos `in_`, PPO, plantillas PC/AT y ruta final `in_RutaCORE`. | CORE generado, `out_NumeroSFLeido`, logs de inicio/rendimiento/fin/error y excepciones tecnicas relanzadas. |
-| `lib/core-common-construir-modelo-ppo.xaml` | Interpretacion comun del PPO leido por rangos estables. | `Hoja de datos!A8:D35 (etiqueta, valor y comentarios; interpretado por etiquetas)`, `Parametros!B18:J58`, `Presupuesto!B3:X53`, `Facturacion y SAP!A1:E10`, `Sintesis Precio!D12:P80`. | `dtMapaLecturaPPO`, `dtCabeceraPPO`, perfiles, costes, horas, gastos, compras, tarifas AT, meses, JSON trazable y tipo detectado. |
+| `lib/core-common-construir-modelo-ppo.xaml` | Interpretacion comun del PPO leido por rangos estables. | `Hoja de datos!A8:D35 (etiqueta, valor y comentarios; interpretado por etiquetas)`, `Parametros!B18:J58`, `Presupuesto!B3:AB53`, `Facturacion y SAP!A1:E10`, `Sintesis Precio!D12:P80`. | `dtMapaLecturaPPO`, `dtCabeceraPPO`, perfiles, costes, horas, gastos, compras, tarifas AT, meses, JSON trazable y tipo detectado. |
 | `lib/core-common-preparar-resources.xaml` | Preparacion comun de `Resources` PC/AT. | Modelo PPO, matriz intercompany, WBS, fecha SAP, codigos de empleado y capacidad real de plantilla. | Tablas rectangulares PC/AT para `Write Range`, con errores funcionales preparados como texto corto. |
 | `lib/core-common-preparar-cost-planning.xaml` | Preparacion comun de `Cost Planning` PC/AT. | Perfiles, horas, gastos, compras, meses, riesgos, garantia, datos SAP de compra y tabla AT de Resources. | Tablas PC/AT de horas, riesgos/garantia, gastos y compras. Valida capacidades de perfiles, gastos y compras. |
 | `lib/oportunidad-generar-core-pc.xaml` | Escritura especifica del layout CORE PC. | Tablas comunes y ruta CORE copiada. | Limpieza/escritura consolidada de `Resources` y `Cost Planning` PC con una unica apertura Excel. |
@@ -135,8 +135,8 @@ La lectura del PPO se concentra en `03 Leer PPO por rangos estables` y la interp
 | `expenses` / `purchases` | `Presupuesto!K28/K34` | `Project Infor C33:C34`, JSON financiero | Texto rojo especifico de gastos/compras. |
 | `risks` / `warranty` | `Presupuesto!K49/K53` | `Project Infor C31:C32`, Cost Planning ultimo mes | Texto rojo especifico de riesgos/garantia. |
 | Perfiles/costes | `Parametros!B18:J58` | `dtPerfilesPPO`, `dtCostesPorAnio` | Coste no disponible se escribe en rojo en `Resources`. |
-| Horas por anio | `Presupuesto!B3:X53` | `dtHorasPorAnio` | No se crea linea de horas si no hay importe. |
-| Gastos/compras detalle | `Presupuesto!B3:X53` | `dtGastos`, `dtCompras` | Se omiten lineas sin descripcion o importe. |
+| Horas por anio | `Presupuesto!B3:AB53` | `dtHorasPorAnio` | No se crea linea de horas si no hay importe. |
+| Gastos/compras detalle | `Presupuesto!B3:AB53` | `dtGastos`, `dtCompras` | Se omiten lineas sin descripcion o importe. |
 | Tarifas AT | `Sintesis Precio!D12:P80` | `dtTarifasAT`, `Resources` AT | Texto rojo `Tarifa AT no disponible`. |
 
 ## Mapa Project Infor
