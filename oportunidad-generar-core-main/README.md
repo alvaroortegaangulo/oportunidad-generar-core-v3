@@ -133,7 +133,13 @@ Antes de reejecutar, borra los `.xlsx` anteriores de `data\output` si quieres va
 
 ## Tests
 
-La carpeta `test` contiene wrappers XAML de invocacion y validadores PowerShell. `validar_plantillas_core_60_meses.ps1` inspecciona las plantillas como OpenXML y comprueba hojas obligatorias, formulas, validaciones, ausencia de `#REF!` y capacidad mensual de 60 meses en `Resources`, `Cost Planning` y `Monthly View`. `validar_salida_core_at_48_meses_e04.ps1` valida outputs generados PC/AT comprobando cabeceras mensuales reales y ausencia de `#REF!`.
+La carpeta `test` contiene wrappers XAML de invocacion y validadores PowerShell. `validar_plantillas_core_60_meses.ps1` inspecciona las plantillas como OpenXML y comprueba hojas obligatorias, formulas, validaciones, ausencia de `#REF!` y capacidad mensual de 60 meses en `Resources`, `Cost Planning` y `Monthly View`. `validar_salida_core_at_48_meses_e04.ps1` valida outputs generados PC/AT comprobando cabeceras mensuales reales y ausencia de `#REF!`. `validar_calidad_e06.ps1` cierra la robustez de `Cost Planning`: identidad `ResourceKey`, prorrateo por anualidad, AT real/facturable, riesgos en ultimo mes, 48 meses y ausencia de compras falsas.
+
+Validacion E06:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\test\validar_calidad_e06.ps1
+```
 
 ## Criterios funcionales aplicados
 

@@ -158,6 +158,10 @@ La preparacion comun de `Resources` vive en `lib/core-common-preparar-resources.
 
 La preparacion comun de `Cost Planning` vive en `lib/core-common-preparar-cost-planning.xaml`. Calcula prorrateos mensuales, riesgos, garantia, gastos, compras y textos funcionales de compras una sola vez. Para evitar duplicar reglas de intercompany, consume la tabla fija AT generada por Resources (`dt_ResourcesATFijos`) cuando necesita reproducir codigo, sigla, intercompany y perfil en Cost Planning AT.
 
+Desde E06, las horas de `Cost Planning` se agrupan por `ResourceKey` cuando el modelo PPO lo aporta, y solo caen a `Sigla` como compatibilidad. Cada anualidad se distribuye exclusivamente entre los meses reales de ese ano dentro del proyecto, de modo que las horas de 2026 no se reparten sobre noviembre/diciembre de 2025 ni sobre anos posteriores. En AT se rellenan por pares las filas de horas reales y facturables; mientras no exista una regla contractual distinta para facturable, se replica la base inicial para revision del jefe de proyecto.
+
+Las compras solo nacen de `dtCompras`, construido desde el bloque semantico de compras del PPO. Las filas de riesgos y garantia se leen como bloques separados y se imputan al ultimo mes real del proyecto. Si el PPO AT no trae compras reales, el bloque de compras de `Cost Planning` queda vacio y no se escriben textos SAP de compra.
+
 Los subworkflows `oportunidad-generar-core-pc.xaml` y `oportunidad-generar-core-at.xaml` ya no contienen `Invoke Code`: invocan los common workflows y conservan solo la limpieza/escritura de rangos especificos de cada layout. Desde E05, cada subworkflow prepara primero `Resources` y `Cost Planning` y abre el CORE una sola vez para escribir ambos bloques por `Write Range`.
 
 ## Errores y logs
@@ -179,7 +183,7 @@ Logs del submodulo:
 2. Ejecutar `powershell -ExecutionPolicy Bypass -File .\test\validar_integridad_core_pc.ps1`.
 3. Ejecutar `powershell -ExecutionPolicy Bypass -File .\test\validar_negativos_core.ps1`.
 4. Ejecutar `test/test_generar_core_datos_incompletos.xaml` desde Studio y validar el resultado con `powershell -ExecutionPolicy Bypass -File .\test\validar_integridad_core_pc.ps1 -CorePath .\data\output\test\CORE_PC_20250256445_datos_incompletos.xlsx -Scenario DatosIncompletos -SkipBaseline`.
-5. Ejecutar `powershell -ExecutionPolicy Bypass -File .\test\validar_calidad_e06.ps1` para cerrar XML, contratos negativos y Workflow Analyzer focalizado.
+5. Ejecutar `powershell -ExecutionPolicy Bypass -File .\test\validar_calidad_e06.ps1` para cerrar el contrato E06: XML, referencias de workflows, `ResourceKey`, prorrateo anual, AT real/facturable, riesgos en ultimo mes, 48 meses y ausencia de compras falsas.
 6. Abrir visualmente `oportunidad-generar-core.xaml` en Studio antes de integrarlo en el proyecto padre.
 
 ## Paquete de handover

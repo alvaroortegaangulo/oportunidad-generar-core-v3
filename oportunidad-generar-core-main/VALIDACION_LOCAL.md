@@ -75,6 +75,22 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\test\validar_plantillas_co
 
 Resultado: OK para CORE PC/AT con 60 meses utiles y sin `#REF!`.
 
+## Validacion especifica E06
+
+- Se incorpora `test/validar_calidad_e06.ps1` para proteger `Cost Planning` sin depender de COM ni de Excel abierto.
+- El contrato estatico valida que `dtHorasPorAnio` conserva `ResourceKey`, que `Cost Planning` agrupa horas por clave robusta y que riesgos/garantia usan `duracionCostPlanning`, no 25 columnas fijas.
+- El output PC conserva los importes funcionales de referencia: pedido `583896.55`, horas `13570`, coste recursos `367515.14`, riesgos `18375.76`, gastos `7400` y compras `40000`.
+- El output AT conserva pedido `465000`, duracion `48` meses, tres recursos de negocio y dos filas por recurso (`Horas Reales` y `Horas/Jornadas Facturables`) con base inicial replicada para revision.
+- El bloque de compras AT queda vacio cuando el PPO no trae compras reales; no se crean compras falsas desde riesgos/garantia.
+
+Comando ejecutado:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\test\validar_calidad_e06.ps1
+```
+
+Resultado: OK para `ResourceKey`, prorrateo anual, AT real/facturable, riesgos en ultimo mes, cabeceras AT hasta diciembre 2029 y ausencia de compras falsas.
+
 ## Ejecucion runtime UiRobot E04
 
 Paquete ejecutado: `oportunidad-generar-core-main.1.0.26-e04.nupkg`.
@@ -99,3 +115,30 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\test\validar_salida_core_a
 ```
 
 Resultado: OK en ambos outputs, cabeceras mensuales correctas y `#REF! = 0`.
+
+## Ejecucion runtime UiRobot E06
+
+Paquete ejecutado: `oportunidad-generar-core-main.1.0.29-e06.nupkg`.
+
+Comandos ejecutados:
+
+```powershell
+& 'C:\Program Files\UiPath\Studio\UiRobot.exe' pack 'C:\Users\aortega\Documents\UiPath\oportunidad-generar-core-v3\oportunidad-generar-core-main\project.json' --output 'C:\Users\aortega\Documents\UiPath\oportunidad-generar-core-v3\.local\packages' -v 1.0.29-e06
+& 'C:\Program Files\UiPath\Studio\UiRobot.exe' execute --file 'C:\Users\aortega\Documents\UiPath\oportunidad-generar-core-v3\.local\packages\oportunidad-generar-core-main.1.0.29-e06.nupkg' --entry 'test\test_generar_core_at.xaml'
+& 'C:\Program Files\UiPath\Studio\UiRobot.exe' execute --file 'C:\Users\aortega\Documents\UiPath\oportunidad-generar-core-v3\.local\packages\oportunidad-generar-core-main.1.0.29-e06.nupkg' --entry 'test\test_generar_core_pc.xaml'
+```
+
+Resultados:
+
+- AT `20251160543`: ejecucion `00:04:28`; output generado en cache NuGet y copiado a `data/output/CORE_AT_20251160543_test.xlsx`.
+- PC `20250256445`: ejecucion `00:03:47`; output generado en cache NuGet y copiado a `data/output/CORE_PC_20250256445_test.xlsx`.
+
+Validaciones tras copiar outputs:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\test\validar_calidad_e06.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\test\validar_salida_core_at_48_meses_e04.ps1 -WorkbookPath .\data\output\CORE_AT_20251160543_test.xlsx -Kind AT -ExpectedStart '2026-01-01' -Months 48
+powershell -NoProfile -ExecutionPolicy Bypass -File .\test\validar_salida_core_at_48_meses_e04.ps1 -WorkbookPath .\data\output\CORE_PC_20250256445_test.xlsx -Kind PC -ExpectedStart '2025-11-01' -Months 12
+```
+
+Resultado: OK. E06 validado con `ResourceKey`, prorrateo anual, AT real/facturable, riesgos en ultimo mes, 48 meses y ausencia de compras falsas.
