@@ -397,3 +397,4 @@ Account{name=remotes, path=C:/Users/aortega/Documents/UiPath/oportunidad-generar
 Account{name=..., path=..., type=PREDICT}
 2026-05-11 08:17:05.292 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.account.AccountManager - [client:40010105]load account manager finish
 2026-05-11 08:17:05.294 [pool-3-thread-1] INFO  com.rs.mv.mvvs.instance.userspace.UserspaceManager - [framework:30010402]config file(C:\Users\aortega/.rmv/config) watcher launch successful
+2026-05-11 09:25:49.447 [pool-3-thread-1] INFO  com.rs.mv.mvvs.client.catalog.from.scan.CurrentPathScanner - [client:400205]scan file in current open file directory(C:/Users/aortega/Documents/UiPath/oportunidad-generar-core-v3/oportunidad-generar-core-main)

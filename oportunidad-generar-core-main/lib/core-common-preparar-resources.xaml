@@ -1350,8 +1350,8 @@ for (int i = 0; i < perfiles; i++)
     string siglaNorm = Norm(sigla);
     string key = KeyPerfil(filaPerfil);
 
-    double coste;
-    bool tieneCoste = PickCost(costesPorKey, key, anioInicio, out coste) || PickCost(costesPorSigla, siglaNorm, anioInicio, out coste);
+    double costeInicio;
+    bool tieneCosteInicio = PickCost(costesPorKey, key, anioInicio, out costeInicio) || PickCost(costesPorSigla, siglaNorm, anioInicio, out costeInicio);
 
     double tarifa = 0D;
     bool tieneTarifa = HasCol(filaPerfil, "TarifaAT") && TryNumero(filaPerfil["TarifaAT"], out tarifa) && System.Math.Abs(tarifa) > 0.0000001D;
@@ -1360,15 +1360,30 @@ for (int i = 0; i < perfiles; i++)
 
     for (int m = 0; m < meses; m++)
     {
+        int anioMes = anioInicio;
+        if (arg_Meses != null && m < arg_Meses.Rows.Count && arg_Meses.Columns.Contains("Anio"))
+        {
+            int anioDetectado;
+            if (TryAnio(arg_Meses.Rows[m]["Anio"], out anioDetectado)) anioMes = anioDetectado;
+        }
+
+        double costeMes;
+        bool tieneCosteMes = PickCost(costesPorKey, key, anioMes, out costeMes) || PickCost(costesPorSigla, siglaNorm, anioMes, out costeMes);
+        if (!tieneCosteMes && tieneCosteInicio)
+        {
+            costeMes = costeInicio;
+            tieneCosteMes = true;
+        }
+
         if (arg_ResourcesPCMeses != null && i < arg_ResourcesPCMeses.Rows.Count && m < arg_ResourcesPCMeses.Columns.Count)
         {
-            arg_ResourcesPCMeses.Rows[i][m] = tieneCoste ? (object)coste : (object)"Coste no disponible";
+            arg_ResourcesPCMeses.Rows[i][m] = tieneCosteMes ? (object)costeMes : (object)"Coste no disponible";
         }
 
         int filaAT = i * 2;
         if (arg_ResourcesATMeses != null && filaAT + 1 < arg_ResourcesATMeses.Rows.Count && m < arg_ResourcesATMeses.Columns.Count)
         {
-            arg_ResourcesATMeses.Rows[filaAT][m] = tieneCoste ? (object)coste : (object)"Coste no disponible";
+            arg_ResourcesATMeses.Rows[filaAT][m] = tieneCosteMes ? (object)costeMes : (object)"Coste no disponible";
             arg_ResourcesATMeses.Rows[filaAT + 1][m] = tieneTarifa ? (object)tarifa : (object)"Tarifa AT no disponible";
         }
     }

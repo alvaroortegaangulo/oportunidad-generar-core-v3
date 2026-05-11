@@ -2238,7 +2238,7 @@ void AddOrSum(System.Data.DataTable tabla, string keyColumn, string key, string 
             TryNumero(fila[valueColumn], out actual);
             if (string.Equals(valueColumn, "CosteHora", System.StringComparison.OrdinalIgnoreCase))
             {
-                if (System.Math.Abs(actual) <= 0.0000001D) fila[valueColumn] = valor;
+                fila[valueColumn] = valor;
                 return;
             }
             fila[valueColumn] = actual + valor;
@@ -2754,6 +2754,72 @@ if (arg_Sintesis != null)
                 filaPerfil["TarifaAT"] = tarifa;
                 Add(dtTarifasAT, sigla, tarifa, key, origenTarifa);
             }
+        }
+    }
+}
+
+if (string.Equals(tipoDetectado, "AT", System.StringComparison.OrdinalIgnoreCase))
+{
+    double pedidoAT;
+    if (TryNumero(orderAmount, out pedidoAT) && System.Math.Abs(pedidoAT) > 0.0000001D)
+    {
+        var horasPorKeyAT = new System.Collections.Generic.Dictionary<string, double>(System.StringComparer.OrdinalIgnoreCase);
+        foreach (System.Data.DataRow filaHoraAT in dtHorasPorAnio.Rows)
+        {
+            string keyHoraAT = Texto(filaHoraAT["ResourceKey"]);
+            double horasAT;
+            if (string.IsNullOrWhiteSpace(keyHoraAT) || !TryNumero(filaHoraAT["Horas"], out horasAT)) continue;
+            if (!horasPorKeyAT.ContainsKey(keyHoraAT)) horasPorKeyAT[keyHoraAT] = 0D;
+            horasPorKeyAT[keyHoraAT] += horasAT;
+        }
+
+        double ventaPlanificadaAT = 0D;
+        foreach (string keyPerfilAT in ordenPerfiles)
+        {
+            System.Data.DataRow filaPerfilAT = perfiles[keyPerfilAT];
+            double tarifaAT;
+            double horasAT;
+            if (TryNumero(filaPerfilAT["TarifaAT"], out tarifaAT) && horasPorKeyAT.TryGetValue(keyPerfilAT, out horasAT))
+            {
+                ventaPlanificadaAT += tarifaAT * horasAT;
+            }
+        }
+
+        double toleranciaPedidoAT = System.Math.Max(1D, System.Math.Abs(pedidoAT) * 0.001D);
+        if (System.Math.Abs(ventaPlanificadaAT) > 0.0000001D && System.Math.Abs(pedidoAT - ventaPlanificadaAT) > toleranciaPedidoAT)
+        {
+            double factorTarifaAT = pedidoAT / ventaPlanificadaAT;
+            foreach (string keyPerfilAT in ordenPerfiles)
+            {
+                System.Data.DataRow filaPerfilAT = perfiles[keyPerfilAT];
+                double tarifaAT;
+                if (TryNumero(filaPerfilAT["TarifaAT"], out tarifaAT))
+                {
+                    filaPerfilAT["TarifaAT"] = tarifaAT * factorTarifaAT;
+                }
+            }
+
+            foreach (System.Data.DataRow filaTarifaAT in dtTarifasAT.Rows)
+            {
+                double tarifaAT;
+                if (TryNumero(filaTarifaAT["TarifaAT"], out tarifaAT))
+                {
+                    filaTarifaAT["TarifaAT"] = tarifaAT * factorTarifaAT;
+                    filaTarifaAT["Origen"] = Texto(filaTarifaAT["Origen"])
+                        + " | Ajuste proporcional para cuadrar venta facturable planificada con pedido PPO "
+                        + pedidoAT.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+                }
+            }
+
+            AddMapa(
+                "atTariffReconciliation",
+                "PPO",
+                "Tarifas AT",
+                "Regla",
+                false,
+                "Tarifas AT reescaladas proporcionalmente para que la venta facturable planificada cuadre con el pedido PPO. Delta previo="
+                    + (pedidoAT - ventaPlanificadaAT).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)
+            );
         }
     }
 }

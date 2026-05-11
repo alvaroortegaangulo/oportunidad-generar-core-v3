@@ -2126,6 +2126,8 @@ arg_CapacidadMesesPlantilla = System.Math.Min(arg_CapacidadMesesResources, Syste
                   <Assign.Value>
                     <InArgument x:TypeArguments="scg:List(s:Object[])" xml:space="preserve">[New System.Collections.Generic.List(Of Object()) From {
     New Object() {"05A Fechas e identificadores", "Fecha de generación", "C5", CObj(System.DateTime.Today), False, String.Empty, "Módulo"},
+    New Object() {"05A Fechas e identificadores", "Fecha reporting prerrelleno", "C6", If(String.IsNullOrWhiteSpace(piFechaInicioTexto), CObj(String.Empty), CObj(System.DateTime.ParseExact(piFechaInicioTexto, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture).AddDays(-1))), False, String.Empty, "Módulo"},
+    New Object() {"05A Fechas e identificadores", "Fecha reporting técnica", "D6", If(String.IsNullOrWhiteSpace(piFechaInicioTexto), CObj(String.Empty), CObj(System.DateTime.ParseExact(piFechaInicioTexto, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture).AddDays(-1))), False, String.Empty, "Módulo"},
     New Object() {"05A Fechas e identificadores", "Fecha inicio", "C8", If(piFechaInicioTexto Is Nothing, CObj(String.Empty), CObj(piFechaInicioTexto)), False, String.Empty, "SAP/PPO"},
     New Object() {"05A Fechas e identificadores", "Fecha fin", "C9", If(piFechaFinTexto Is Nothing, CObj(String.Empty), CObj(piFechaFinTexto)), False, String.Empty, "SAP/PPO"},
     New Object() {"05A Fechas e identificadores", "WBS", "C10", If(piWBSValor Is Nothing, CObj(String.Empty), CObj(piWBSValor)), piErrorWBS, If(piErrorWBS, If(piWBSValor Is Nothing, String.Empty, piWBSValor.ToString()), String.Empty), "SAP"},
@@ -2604,6 +2606,149 @@ arg_CapacidadMesesPlantilla = System.Math.Min(arg_CapacidadMesesResources, Syste
               <ui:InvokeCode.Arguments>
                 <scg:Dictionary x:TypeArguments="x:String, Argument">
                   <InArgument x:TypeArguments="x:String" x:Key="arg_RutaCORE">[rutaCORETrabajo]</InArgument>
+                </scg:Dictionary>
+              </ui:InvokeCode.Arguments>
+            </ui:InvokeCode>
+            <ui:InvokeCode ContinueOnError="{x:Null}" DisplayName="Normalizar resumen y auditoria CORE" Language="CSharp">
+              <ui:InvokeCode.Code><![CDATA[
+object excel = null;
+object workbooks = null;
+object workbook = null;
+object worksheets = null;
+System.Type excelType = System.Type.GetTypeFromProgID("Excel.Application");
+if (excelType == null)
+{
+    throw new System.InvalidOperationException("Microsoft Excel no esta disponible para normalizar el resumen CORE.");
+}
+
+object missing = System.Type.Missing;
+System.Reflection.BindingFlags getProperty = System.Reflection.BindingFlags.GetProperty;
+System.Reflection.BindingFlags setProperty = System.Reflection.BindingFlags.SetProperty;
+System.Reflection.BindingFlags invokeMethod = System.Reflection.BindingFlags.InvokeMethod;
+
+object GetWorksheet(object sheets, string name)
+{
+    System.Type sheetsType = sheets.GetType();
+    int count = System.Convert.ToInt32(sheetsType.InvokeMember("Count", getProperty, null, sheets, null));
+    for (int i = 1; i <= count; i++)
+    {
+        object sheet = null;
+        try
+        {
+            sheet = sheetsType.InvokeMember("Item", getProperty, null, sheets, new object[] { i });
+            string sheetName = System.Convert.ToString(sheet.GetType().InvokeMember("Name", getProperty, null, sheet, null));
+            if (string.Equals(sheetName, name, System.StringComparison.OrdinalIgnoreCase))
+            {
+                return sheet;
+            }
+        }
+        catch
+        {
+            if (sheet != null) System.Runtime.InteropServices.Marshal.FinalReleaseComObject(sheet);
+        }
+    }
+    return null;
+}
+
+object Range(object sheet, string address)
+{
+    return sheet.GetType().InvokeMember("Range", getProperty, null, sheet, new object[] { address });
+}
+
+void SetValue(object sheet, string address, object value)
+{
+    object range = null;
+    try
+    {
+        range = Range(sheet, address);
+        range.GetType().InvokeMember("Value2", setProperty, null, range, new object[] { value ?? string.Empty });
+    }
+    finally
+    {
+        if (range != null) System.Runtime.InteropServices.Marshal.FinalReleaseComObject(range);
+    }
+}
+
+void SetFormula(object sheet, string address, string formula)
+{
+    object range = null;
+    try
+    {
+        range = Range(sheet, address);
+        range.GetType().InvokeMember("Formula", setProperty, null, range, new object[] { formula });
+    }
+    finally
+    {
+        if (range != null) System.Runtime.InteropServices.Marshal.FinalReleaseComObject(range);
+    }
+}
+
+try
+{
+    excel = System.Activator.CreateInstance(excelType);
+    excelType.InvokeMember("DisplayAlerts", setProperty, null, excel, new object[] { false });
+    excelType.InvokeMember("Visible", setProperty, null, excel, new object[] { false });
+    excelType.InvokeMember("EnableEvents", setProperty, null, excel, new object[] { false });
+
+    workbooks = excelType.InvokeMember("Workbooks", getProperty, null, excel, null);
+    System.Type workbooksType = workbooks.GetType();
+    workbook = workbooksType.InvokeMember("Open", invokeMethod, null, workbooks, new object[] { arg_RutaCORE, 0, false, missing, missing, missing, true, missing, missing, missing, missing, missing, false, true, missing });
+    System.Type workbookType = workbook.GetType();
+    worksheets = workbookType.InvokeMember("Worksheets", getProperty, null, workbook, null);
+
+    object summary = GetWorksheet(worksheets, "Cost Summary");
+    if (summary != null)
+    {
+        try
+        {
+            SetFormula(summary, "D12", "=IF(D8=0,0,D11/D8)");
+            SetFormula(summary, "E12", "=IF(E8=0,0,E11/E8)");
+            SetFormula(summary, "F12", "=IF(F8=0,0,F11/F8)");
+            string resumen = "Generado por RPA: " + System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)
+                + " | PPO=" + System.IO.Path.GetFileName(arg_RutaPPO)
+                + " | NumeroSF=" + (arg_NumeroSF ?? string.Empty)
+                + " | Tipo=" + (arg_TipoProyecto ?? string.Empty)
+                + " | Trazabilidad: PPO=baseline; SAP/SF=datos de prueba hardcodeados en Main.xaml; reglas=recursos/gastos/compras prorrateados por anualidad, riesgos/garantia al ultimo mes, facturacion y realizado vacios; pendiente JP=revisar intercompany, externos y planificacion mensual."
+                + (arg_HorasFueraPeriodo ? " | ADVERTENCIA: PPO contiene anualidades de horas fuera del periodo CORE planificado." : string.Empty);
+            SetValue(summary, "B18", resumen);
+        }
+        finally
+        {
+            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(summary);
+        }
+    }
+
+    try { excelType.InvokeMember("CalculateFullRebuild", invokeMethod, null, excel, null); }
+    catch { excelType.InvokeMember("Calculate", invokeMethod, null, excel, null); }
+    workbookType.InvokeMember("Save", invokeMethod, null, workbook, null);
+}
+finally
+{
+    if (workbook != null)
+    {
+        try { workbook.GetType().InvokeMember("Close", invokeMethod, null, workbook, new object[] { false }); } catch { }
+    }
+    if (excel != null)
+    {
+        try { excelType.InvokeMember("Quit", invokeMethod, null, excel, null); } catch { }
+    }
+
+    if (worksheets != null) System.Runtime.InteropServices.Marshal.FinalReleaseComObject(worksheets);
+    if (workbook != null) System.Runtime.InteropServices.Marshal.FinalReleaseComObject(workbook);
+    if (workbooks != null) System.Runtime.InteropServices.Marshal.FinalReleaseComObject(workbooks);
+    if (excel != null) System.Runtime.InteropServices.Marshal.FinalReleaseComObject(excel);
+    System.GC.Collect();
+    System.GC.WaitForPendingFinalizers();
+}
+              ]]></ui:InvokeCode.Code>
+              <ui:InvokeCode.Arguments>
+                <scg:Dictionary x:TypeArguments="x:String, Argument">
+                  <InArgument x:TypeArguments="x:String" x:Key="arg_RutaCORE">[rutaCORETrabajo]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="arg_RutaPPO">[rutaPPOTrabajo]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="arg_TipoProyecto">[TipoProyectoNormalizado]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="arg_NumeroSF">[NumeroSFExtraido]</InArgument>
+                  <InArgument x:TypeArguments="x:Boolean" x:Key="arg_HorasFueraPeriodo">[dtHorasPorAnio IsNot Nothing AndAlso dtMesesPPO IsNot Nothing AndAlso dtHorasPorAnio.Rows.Cast(Of System.Data.DataRow)().Any(Function(filaHora) Not dtMesesPPO.Rows.Cast(Of System.Data.DataRow)().Select(Function(filaMes) CInt(filaMes(&quot;Anio&quot;))).Contains(CInt(filaHora(&quot;Anio&quot;))))]</InArgument>
+                  <InArgument x:TypeArguments="x:Int32" x:Key="arg_CamposPPO">[If(dtMapaLecturaPPO Is Nothing, 0, dtMapaLecturaPPO.Rows.Count)]</InArgument>
                 </scg:Dictionary>
               </ui:InvokeCode.Arguments>
             </ui:InvokeCode>

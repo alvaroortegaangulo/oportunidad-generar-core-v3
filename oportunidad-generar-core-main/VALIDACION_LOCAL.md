@@ -142,3 +142,32 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\test\validar_salida_core_a
 ```
 
 Resultado: OK. E06 validado con `ResourceKey`, prorrateo anual, AT real/facturable, riesgos en ultimo mes, 48 meses y ausencia de compras falsas.
+
+## Correccion posterior a revision funcional GPT
+
+Fecha de validacion: 2026-05-11.
+
+Cambios verificados:
+
+- El CORE se genera como prerrelleno: `Cost Planning` y `Monthly View` arrancan en estado `Prev`, y `Cost Summary` deja `REALIZADO` y `% Avance` a cero si no hay reales SAP.
+- No se crean hojas nuevas ni se modifica el formato corporativo de salida; la trazabilidad se mantiene en el comentario existente de `Cost Summary`.
+- AT reconcilia las tarifas de venta proporcionalmente para que la venta facturable planificada cuadre con el pedido PPO: `465000`.
+- AT aplica costes hora por anualidad usando los importes anuales del PPO cuando existen, no el coste hora redondeado de `Parametros`; la proyeccion de coste recursos queda alineada con baseline (`356584.84`, diferencia solo de precision decimal de Excel).
+- PC conserva la duracion PPO de 12 meses y mantiene advertencia por las anualidades de horas 2027/2028 fuera del periodo CORE; no se redistribuyen silenciosamente horas fuera de calendario.
+
+Comandos ejecutados:
+
+```powershell
+& 'C:\Program Files\UiPath\Studio\UiRobot.exe' pack 'C:\Users\aortega\Documents\UiPath\oportunidad-generar-core-v3\oportunidad-generar-core-main\project.json' --output 'C:\Users\aortega\Documents\UiPath\oportunidad-generar-core-v3\.local\packages' -v 1.0.36-e08
+& 'C:\Program Files\UiPath\Studio\UiRobot.exe' execute --file 'C:\Users\aortega\Documents\UiPath\oportunidad-generar-core-v3\.local\packages\oportunidad-generar-core-main.1.0.36-e08.nupkg' --entry 'Main.xaml'
+powershell -NoProfile -ExecutionPolicy Bypass -File .\test\validar_calidad_e06.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\test\validar_salida_core_at_48_meses_e04.ps1 -WorkbookPath .\data\output\CORE_AT_20251160543.xlsx -Kind AT -ExpectedStart '2026-01-01' -Months 48
+powershell -NoProfile -ExecutionPolicy Bypass -File .\test\validar_salida_core_at_48_meses_e04.ps1 -WorkbookPath .\data\output\CORE_PC_20250256445.xlsx -Kind PC -ExpectedStart '2025-11-01' -Months 12
+```
+
+Resultado:
+
+- `Main.xaml`: OK; outputs finales copiados desde la cache NuGet del paquete a `data/output`.
+- `validar_calidad_e06.ps1`: OK.
+- AT 48 meses: OK, sin `#REF!`, cabeceras hasta 2029-12.
+- PC 12 meses: OK, sin `#REF!`, cabeceras hasta 2026-10.
