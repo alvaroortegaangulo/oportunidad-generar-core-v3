@@ -2406,6 +2406,7 @@ arg_CapacidadMesesPlantilla = System.Math.Min(arg_CapacidadMesesResources, Syste
                               <InArgument x:TypeArguments="scg:HashSet(x:String)" xml:space="preserve">[New System.Collections.Generic.HashSet(Of String)(System.StringComparer.OrdinalIgnoreCase) From {
     "Intercompany no determinable",
     "Entidad recurso no disponible",
+    "Codigo empleado no disponible",
     "Código empleado no disponible",
     "Coste no disponible",
     "Tarifa AT no disponible",

@@ -99,7 +99,7 @@
               <OutArgument x:TypeArguments="x:String">[CodigosEmpleadoRecursosJson]</OutArgument>
             </ui:AssignOperation.To>
             <ui:AssignOperation.Value>
-              <InArgument x:TypeArguments="x:String">{"AP":"E92010","PR":"E92011"}</InArgument>
+              <InArgument x:TypeArguments="x:String">{"AP":"E92010","AP|Susana Matarranz":"E92012","AP|Sopore especializado":"E92013","PR":"E92011"}</InArgument>
             </ui:AssignOperation.Value>
           </ui:AssignOperation>
         </scg:List>
