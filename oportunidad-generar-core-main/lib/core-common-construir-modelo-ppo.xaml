@@ -1153,7 +1153,7 @@ arg_Duracion = duracion;
           </ActivityAction>
         </ui:ForEach.Body>
       </ui:ForEach>
-      <ui:InvokeCode ContinueOnError="{x:Null}" DisplayName="Normalizar importe pedido PPO desde Presupuesto y Sintesis" Language="CSharp" Code="// Normaliza el importe de pedido que se usara en Project Infor.&#xD;&#xA;// En PPO de AT puede existir un total operativo en Presupuesto!X8 menor que el precio total de Sintesis Precio!D12.&#xD;&#xA;// Se escoge un valor no vacio y, si ambos son numericos, el mayor de los dos.&#xD;&#xA;string Texto(object valor)&#xD;&#xA;{&#xD;&#xA;    if (valor == null) return string.Empty;&#xD;&#xA;    if (valor == System.DBNull.Value) return string.Empty;&#xD;&#xA;    return System.Convert.ToString(valor).Trim();&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;bool TryNumero(object valor, out double numero)&#xD;&#xA;{&#xD;&#xA;    numero = 0D;&#xD;&#xA;    string texto = Texto(valor);&#xD;&#xA;    if (string.IsNullOrWhiteSpace(texto)) return false;&#xD;&#xA;    texto = texto.Replace(&quot;€&quot;, string.Empty).Replace(&quot; &quot;, string.Empty);&#xD;&#xA;    if (double.TryParse(texto, System.Globalization.NumberStyles.Any, new System.Globalization.CultureInfo(&quot;es-ES&quot;), out numero)) return true;&#xD;&#xA;    if (double.TryParse(texto, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out numero)) return true;&#xD;&#xA;    string normalizado = texto;&#xD;&#xA;    if (normalizado.Contains(&quot;,&quot;) &amp;&amp; normalizado.Contains(&quot;.&quot;))&#xD;&#xA;    {&#xD;&#xA;        normalizado = normalizado.Replace(&quot;.&quot;, string.Empty).Replace(&quot;,&quot;, &quot;.&quot;);&#xD;&#xA;        if (double.TryParse(normalizado, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out numero)) return true;&#xD;&#xA;    }&#xD;&#xA;    return false;&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;System.Data.DataRow BuscarFila(string campo)&#xD;&#xA;{&#xD;&#xA;    if (arg_dtCabeceraPPO == null) return null;&#xD;&#xA;    if (!arg_dtCabeceraPPO.Columns.Contains(&quot;Campo&quot;)) return null;&#xD;&#xA;    foreach (System.Data.DataRow fila in arg_dtCabeceraPPO.Rows)&#xD;&#xA;    {&#xD;&#xA;        if (string.Equals(Texto(fila[&quot;Campo&quot;]), campo, System.StringComparison.OrdinalIgnoreCase)) return fila;&#xD;&#xA;    }&#xD;&#xA;    return null;&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;var filaPresupuesto = BuscarFila(&quot;orderAmount&quot;);&#xD;&#xA;var filaSintesis = BuscarFila(&quot;orderAmountFallback&quot;);&#xD;&#xA;if (filaPresupuesto != null)&#xD;&#xA;{&#xD;&#xA;    object valorPresupuesto = filaPresupuesto.Table.Columns.Contains(&quot;Valor&quot;) ? filaPresupuesto[&quot;Valor&quot;] : null;&#xD;&#xA;    object valorSintesis = (filaSintesis != null &amp;&amp; filaSintesis.Table.Columns.Contains(&quot;Valor&quot;)) ? filaSintesis[&quot;Valor&quot;] : null;&#xD;&#xA;    double numeroPresupuesto;&#xD;&#xA;    double numeroSintesis;&#xD;&#xA;    bool hayPresupuesto = TryNumero(valorPresupuesto, out numeroPresupuesto);&#xD;&#xA;    bool haySintesis = TryNumero(valorSintesis, out numeroSintesis);&#xD;&#xA;    object valorElegido = valorPresupuesto;&#xD;&#xA;    string origenElegido = &quot;Presupuesto!X8&quot;;&#xD;&#xA;&#xD;&#xA;    if (string.IsNullOrWhiteSpace(Texto(valorPresupuesto)) &amp;&amp; !string.IsNullOrWhiteSpace(Texto(valorSintesis)))&#xD;&#xA;    {&#xD;&#xA;        valorElegido = valorSintesis;&#xD;&#xA;        origenElegido = &quot;Sintesis Precio!D12&quot;;&#xD;&#xA;    }&#xD;&#xA;    else if (hayPresupuesto &amp;&amp; haySintesis &amp;&amp; numeroSintesis &gt; numeroPresupuesto)&#xD;&#xA;    {&#xD;&#xA;        valorElegido = valorSintesis;&#xD;&#xA;        origenElegido = &quot;Sintesis Precio!D12 (mayor que Presupuesto!X8)&quot;;&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    if (filaPresupuesto.Table.Columns.Contains(&quot;Valor&quot;)) filaPresupuesto[&quot;Valor&quot;] = valorElegido ?? System.DBNull.Value;&#xD;&#xA;    if (filaPresupuesto.Table.Columns.Contains(&quot;Origen&quot;)) filaPresupuesto[&quot;Origen&quot;] = origenElegido;&#xD;&#xA;}">
+      <ui:InvokeCode ContinueOnError="{x:Null}" DisplayName="Normalizar importe total de venta PPO desde Presupuesto y Sintesis" Language="CSharp" Code="// Normaliza el importe total de venta que se usara en Project Infor.&#xD;&#xA;// En PPO de AT puede existir un total operativo en Presupuesto!X8 menor que el precio total de Sintesis Precio!D12.&#xD;&#xA;// Se escoge un valor no vacio y, si ambos son numericos, el mayor de los dos.&#xD;&#xA;string Texto(object valor)&#xD;&#xA;{&#xD;&#xA;    if (valor == null) return string.Empty;&#xD;&#xA;    if (valor == System.DBNull.Value) return string.Empty;&#xD;&#xA;    return System.Convert.ToString(valor).Trim();&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;bool TryNumero(object valor, out double numero)&#xD;&#xA;{&#xD;&#xA;    numero = 0D;&#xD;&#xA;    string texto = Texto(valor);&#xD;&#xA;    if (string.IsNullOrWhiteSpace(texto)) return false;&#xD;&#xA;    texto = texto.Replace(&quot;€&quot;, string.Empty).Replace(&quot; &quot;, string.Empty);&#xD;&#xA;    if (double.TryParse(texto, System.Globalization.NumberStyles.Any, new System.Globalization.CultureInfo(&quot;es-ES&quot;), out numero)) return true;&#xD;&#xA;    if (double.TryParse(texto, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out numero)) return true;&#xD;&#xA;    string normalizado = texto;&#xD;&#xA;    if (normalizado.Contains(&quot;,&quot;) &amp;&amp; normalizado.Contains(&quot;.&quot;))&#xD;&#xA;    {&#xD;&#xA;        normalizado = normalizado.Replace(&quot;.&quot;, string.Empty).Replace(&quot;,&quot;, &quot;.&quot;);&#xD;&#xA;        if (double.TryParse(normalizado, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out numero)) return true;&#xD;&#xA;    }&#xD;&#xA;    return false;&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;System.Data.DataRow BuscarFila(string campo)&#xD;&#xA;{&#xD;&#xA;    if (arg_dtCabeceraPPO == null) return null;&#xD;&#xA;    if (!arg_dtCabeceraPPO.Columns.Contains(&quot;Campo&quot;)) return null;&#xD;&#xA;    foreach (System.Data.DataRow fila in arg_dtCabeceraPPO.Rows)&#xD;&#xA;    {&#xD;&#xA;        if (string.Equals(Texto(fila[&quot;Campo&quot;]), campo, System.StringComparison.OrdinalIgnoreCase)) return fila;&#xD;&#xA;    }&#xD;&#xA;    return null;&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;var filaPresupuesto = BuscarFila(&quot;orderAmount&quot;);&#xD;&#xA;var filaSintesis = BuscarFila(&quot;orderAmountFallback&quot;);&#xD;&#xA;if (filaPresupuesto != null)&#xD;&#xA;{&#xD;&#xA;    object valorPresupuesto = filaPresupuesto.Table.Columns.Contains(&quot;Valor&quot;) ? filaPresupuesto[&quot;Valor&quot;] : null;&#xD;&#xA;    object valorSintesis = (filaSintesis != null &amp;&amp; filaSintesis.Table.Columns.Contains(&quot;Valor&quot;)) ? filaSintesis[&quot;Valor&quot;] : null;&#xD;&#xA;    double numeroPresupuesto;&#xD;&#xA;    double numeroSintesis;&#xD;&#xA;    bool hayPresupuesto = TryNumero(valorPresupuesto, out numeroPresupuesto);&#xD;&#xA;    bool haySintesis = TryNumero(valorSintesis, out numeroSintesis);&#xD;&#xA;    object valorElegido = valorPresupuesto;&#xD;&#xA;    string origenElegido = &quot;Presupuesto!X8&quot;;&#xD;&#xA;&#xD;&#xA;    if (string.IsNullOrWhiteSpace(Texto(valorPresupuesto)) &amp;&amp; !string.IsNullOrWhiteSpace(Texto(valorSintesis)))&#xD;&#xA;    {&#xD;&#xA;        valorElegido = valorSintesis;&#xD;&#xA;        origenElegido = &quot;Sintesis Precio!D12&quot;;&#xD;&#xA;    }&#xD;&#xA;    else if (hayPresupuesto &amp;&amp; haySintesis &amp;&amp; numeroSintesis &gt; numeroPresupuesto)&#xD;&#xA;    {&#xD;&#xA;        valorElegido = valorSintesis;&#xD;&#xA;        origenElegido = &quot;Sintesis Precio!D12 (mayor que Presupuesto!X8)&quot;;&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    if (filaPresupuesto.Table.Columns.Contains(&quot;Valor&quot;)) filaPresupuesto[&quot;Valor&quot;] = valorElegido ?? System.DBNull.Value;&#xD;&#xA;    if (filaPresupuesto.Table.Columns.Contains(&quot;Origen&quot;)) filaPresupuesto[&quot;Origen&quot;] = origenElegido;&#xD;&#xA;}">
         <ui:InvokeCode.Arguments>
           <scg:Dictionary x:TypeArguments="x:String, Argument">
             <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtCabeceraPPO">[out_dt_CabeceraPPO]</InArgument>
@@ -2785,29 +2785,66 @@ if (string.Equals(tipoDetectado, "AT", System.StringComparison.OrdinalIgnoreCase
             }
         }
 
-        double toleranciaPedidoAT = System.Math.Max(1D, System.Math.Abs(pedidoAT) * 0.001D);
+        double toleranciaPedidoAT = 0.01D;
         if (System.Math.Abs(ventaPlanificadaAT) > 0.0000001D && System.Math.Abs(pedidoAT - ventaPlanificadaAT) > toleranciaPedidoAT)
         {
             double factorTarifaAT = pedidoAT / ventaPlanificadaAT;
+            string keyMayorVentaAT = string.Empty;
+            double horasMayorVentaAT = 0D;
+            double importeMayorVentaAT = -1D;
             foreach (string keyPerfilAT in ordenPerfiles)
             {
                 System.Data.DataRow filaPerfilAT = perfiles[keyPerfilAT];
                 double tarifaAT;
-                if (TryNumero(filaPerfilAT["TarifaAT"], out tarifaAT))
+                double horasAT;
+                if (TryNumero(filaPerfilAT["TarifaAT"], out tarifaAT) && horasPorKeyAT.TryGetValue(keyPerfilAT, out horasAT))
                 {
-                    filaPerfilAT["TarifaAT"] = tarifaAT * factorTarifaAT;
+                    double tarifaAjustadaAT = System.Math.Round(tarifaAT * factorTarifaAT, 6, System.MidpointRounding.AwayFromZero);
+                    filaPerfilAT["TarifaAT"] = tarifaAjustadaAT;
+                    double importeLineaAT = System.Math.Abs(tarifaAjustadaAT * horasAT);
+                    if (importeLineaAT > importeMayorVentaAT)
+                    {
+                        importeMayorVentaAT = importeLineaAT;
+                        keyMayorVentaAT = keyPerfilAT;
+                        horasMayorVentaAT = horasAT;
+                    }
+                }
+            }
+
+            double ventaReescaladaAT = 0D;
+            foreach (string keyPerfilAT in ordenPerfiles)
+            {
+                System.Data.DataRow filaPerfilAT = perfiles[keyPerfilAT];
+                double tarifaAT;
+                double horasAT;
+                if (TryNumero(filaPerfilAT["TarifaAT"], out tarifaAT) && horasPorKeyAT.TryGetValue(keyPerfilAT, out horasAT))
+                {
+                    ventaReescaladaAT += tarifaAT * horasAT;
+                }
+            }
+
+            double residuoRedondeoAT = pedidoAT - ventaReescaladaAT;
+            if (System.Math.Abs(residuoRedondeoAT) > 0.0000001D && !string.IsNullOrWhiteSpace(keyMayorVentaAT) && System.Math.Abs(horasMayorVentaAT) > 0.0000001D)
+            {
+                System.Data.DataRow filaMayorAT = perfiles[keyMayorVentaAT];
+                double tarifaMayorAT;
+                if (TryNumero(filaMayorAT["TarifaAT"], out tarifaMayorAT))
+                {
+                    filaMayorAT["TarifaAT"] = System.Math.Round(tarifaMayorAT + (residuoRedondeoAT / horasMayorVentaAT), 6, System.MidpointRounding.AwayFromZero);
                 }
             }
 
             foreach (System.Data.DataRow filaTarifaAT in dtTarifasAT.Rows)
             {
-                double tarifaAT;
-                if (TryNumero(filaTarifaAT["TarifaAT"], out tarifaAT))
+                string keyTarifaAT = Texto(filaTarifaAT["ResourceKey"]);
+                System.Data.DataRow filaPerfilAT;
+                if (!string.IsNullOrWhiteSpace(keyTarifaAT) && perfiles.TryGetValue(keyTarifaAT, out filaPerfilAT))
                 {
-                    filaTarifaAT["TarifaAT"] = tarifaAT * factorTarifaAT;
+                    filaTarifaAT["TarifaAT"] = filaPerfilAT["TarifaAT"];
                     filaTarifaAT["Origen"] = Texto(filaTarifaAT["Origen"])
-                        + " | Ajuste proporcional para cuadrar venta facturable planificada con pedido PPO "
-                        + pedidoAT.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+                        + " | Ajuste proporcional para cuadrar venta facturable planificada con importe total de venta del proyecto "
+                        + pedidoAT.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)
+                        + " | tolerancia=0.01 | redondeo tarifas=6 decimales";
                 }
             }
 
@@ -2817,8 +2854,9 @@ if (string.Equals(tipoDetectado, "AT", System.StringComparison.OrdinalIgnoreCase
                 "Tarifas AT",
                 "Regla",
                 false,
-                "Tarifas AT reescaladas proporcionalmente para que la venta facturable planificada cuadre con el pedido PPO. Delta previo="
+                "Tarifas AT reescaladas proporcionalmente para que la venta facturable planificada cuadre con el importe total de venta del proyecto. Delta previo="
                     + (pedidoAT - ventaPlanificadaAT).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)
+                    + "; tolerancia=0.01; redondeo=6 decimales"
             );
         }
     }

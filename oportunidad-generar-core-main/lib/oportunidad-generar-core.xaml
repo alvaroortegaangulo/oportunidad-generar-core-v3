@@ -2606,7 +2606,7 @@ If(dtCabeceraPPO.Select("Campo = 'subpracticeOrigin'").Length > 0 AndAlso Not St
                               </ActivityAction>
                             </ui:ForEach.Body>
                           </ui:ForEach>
-                          <ueab:WriteCellX Cell="[ExcelCoreCierreFinal.Sheet(&quot;Cost Summary&quot;).Cell(&quot;B14&quot;)]" DisplayName="Actualizar warning venta AT" sap2010:WorkflowViewState.IdRef="WriteCellX_TRACE_000" Value="[If(String.Equals(TipoProyectoNormalizado, &quot;AT&quot;, System.StringComparison.OrdinalIgnoreCase) AndAlso (dtTarifasAT Is Nothing OrElse dtTarifasAT.Rows.Count = 0), &quot;(!) Tarifa de venta AT no informada; venta facturable planificada = 0; pedido pendiente de distribuir.&quot;, String.Empty)]" />
+                          <ueab:WriteCellX Cell="[ExcelCoreCierreFinal.Sheet(&quot;Cost Summary&quot;).Cell(&quot;B14&quot;)]" DisplayName="Actualizar warning venta AT" sap2010:WorkflowViewState.IdRef="WriteCellX_TRACE_000" Value="[If(String.Equals(TipoProyectoNormalizado, &quot;AT&quot;, System.StringComparison.OrdinalIgnoreCase) AndAlso (dtTarifasAT Is Nothing OrElse dtTarifasAT.Rows.Count = 0), &quot;(!) Tarifa de venta AT no informada; venta facturable planificada = 0; importe total de venta pendiente de distribuir.&quot;, String.Empty)]" />
                           <ueab:WriteCellX Cell="[ExcelCoreCierreFinal.Sheet(&quot;Cost Summary&quot;).Cell(&quot;F14&quot;)]" DisplayName="Limpiar delta warning venta AT" sap2010:WorkflowViewState.IdRef="WriteCellX_TRACE_000B" Value="[String.Empty]" />
                           <ueab:WriteCellX Cell="[ExcelCoreCierreFinal.Sheet(&quot;Cost Summary&quot;).Cell(&quot;B18&quot;)]" DisplayName="Escribir trazabilidad visible Cost Summary" sap2010:WorkflowViewState.IdRef="WriteCellX_TRACE_001" Value="[&quot;Generado por RPA: &quot; + System.DateTime.Now.ToString(&quot;yyyy-MM-dd HH:mm:ss&quot;) + &quot; | PPO=&quot; + System.IO.Path.GetFileName(rutaPPOTrabajo) + &quot; | NumeroSF=&quot; + NumeroSFExtraido + &quot; | Tipo=&quot; + TipoProyectoNormalizado + &quot; | Campos PPO=&quot; + If(dtMapaLecturaPPO Is Nothing, &quot;0&quot;, dtMapaLecturaPPO.Rows.Count.ToString()) + &quot; | Datos SAP/SF del ejemplo: valores de prueba hardcodeados para validacion. | Revisar: campos externos, intercompany y planificacion.&quot; + If(dtHorasPorAnio IsNot Nothing AndAlso dtMesesPPO IsNot Nothing AndAlso dtHorasPorAnio.Rows.Cast(Of System.Data.DataRow)().Any(Function(filaHora) Not dtMesesPPO.Rows.Cast(Of System.Data.DataRow)().Select(Function(filaMes) CInt(filaMes(&quot;Anio&quot;))).Contains(CInt(filaHora(&quot;Anio&quot;)))), &quot; | ADVERTENCIA: PPO contiene anualidades de horas fuera del periodo CORE planificado.&quot;, &quot;&quot;) + If(String.Equals(TipoProyectoNormalizado, &quot;AT&quot;, System.StringComparison.OrdinalIgnoreCase) AndAlso (dtTarifasAT Is Nothing OrElse dtTarifasAT.Rows.Count = 0), &quot; | ADVERTENCIA: tarifa de venta AT no informada.&quot;, &quot;&quot;)]" />
                           <ueab:SaveExcelFileX DisplayName="Guardar CORE tras formato final" sap:VirtualizedContainerService.HintSize="740.6666666666666,86.66666666666667" sap2010:WorkflowViewState.IdRef="SaveExcelFileX_2" Workbook="[ExcelCoreCierreFinal]" />
@@ -2698,6 +2698,84 @@ void SetFormula(object sheet, string address, string formula)
     }
 }
 
+object GetValue(object sheet, string address)
+{
+    object range = null;
+    try
+    {
+        range = Range(sheet, address);
+        return range.GetType().InvokeMember("Value2", getProperty, null, range, null);
+    }
+    finally
+    {
+        if (range != null) System.Runtime.InteropServices.Marshal.FinalReleaseComObject(range);
+    }
+}
+
+double GetDouble(object sheet, string address)
+{
+    object valor = GetValue(sheet, address);
+    if (valor == null) return 0D;
+    if (valor is double) return (double)valor;
+    if (valor is float || valor is int || valor is long || valor is decimal) return System.Convert.ToDouble(valor, System.Globalization.CultureInfo.InvariantCulture);
+    double numero;
+    string texto = System.Convert.ToString(valor).Trim();
+    if (double.TryParse(texto, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out numero)) return numero;
+    if (double.TryParse(texto, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), out numero)) return numero;
+    return 0D;
+}
+
+string FormatoEs(double valor, string formato)
+{
+    return valor.ToString(formato, System.Globalization.CultureInfo.GetCultureInfo("es-ES"));
+}
+
+string Calendario(System.Data.DataTable meses)
+{
+    if (meses == null || meses.Rows.Count == 0 || !meses.Columns.Contains("Anio") || !meses.Columns.Contains("Mes")) return "no disponible";
+    int primerAnio = System.Convert.ToInt32(meses.Rows[0]["Anio"]);
+    int primerMes = System.Convert.ToInt32(meses.Rows[0]["Mes"]);
+    int ultimoAnio = System.Convert.ToInt32(meses.Rows[meses.Rows.Count - 1]["Anio"]);
+    int ultimoMes = System.Convert.ToInt32(meses.Rows[meses.Rows.Count - 1]["Mes"]);
+    return new System.DateTime(primerAnio, primerMes, 1).ToString("yyyy-MM", System.Globalization.CultureInfo.InvariantCulture)
+        + " a "
+        + new System.DateTime(ultimoAnio, ultimoMes, 1).ToString("yyyy-MM", System.Globalization.CultureInfo.InvariantCulture);
+}
+
+string AfectadosFueraCalendario(System.Data.DataTable horas, System.Data.DataTable meses)
+{
+    var aniosCore = new System.Collections.Generic.HashSet<int>();
+    if (meses != null && meses.Columns.Contains("Anio"))
+    {
+        foreach (System.Data.DataRow filaMes in meses.Rows)
+        {
+            aniosCore.Add(System.Convert.ToInt32(filaMes["Anio"]));
+        }
+    }
+
+    var afectados = new System.Collections.Generic.SortedSet<int>();
+    if (horas != null && horas.Columns.Contains("Anio") && horas.Columns.Contains("Horas"))
+    {
+        foreach (System.Data.DataRow filaHora in horas.Rows)
+        {
+            double horasAnio;
+            object valorHoras = filaHora["Horas"];
+            if (valorHoras == null || valorHoras == System.DBNull.Value) continue;
+            if (!double.TryParse(System.Convert.ToString(valorHoras), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out horasAnio)
+                && !double.TryParse(System.Convert.ToString(valorHoras), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), out horasAnio))
+            {
+                continue;
+            }
+
+            int anio = System.Convert.ToInt32(filaHora["Anio"]);
+            if (System.Math.Abs(horasAnio) > 0.0000001D && !aniosCore.Contains(anio)) afectados.Add(anio);
+        }
+    }
+
+    if (afectados.Count == 0) return "no disponible";
+    return string.Join(", ", afectados);
+}
+
 try
 {
     excel = System.Activator.CreateInstance(excelType);
@@ -2728,13 +2806,39 @@ try
             SetFormula(summary, "D12", "=IF(D8=0,0,D11/D8)");
             SetFormula(summary, "E12", "=IF(E8=0,0,E11/E8)");
             SetFormula(summary, "F12", "=IF(F8=0,0,F11/F8)");
-            string resumen = "Generado por RPA: " + System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)
+            string resumen = "RPA_VALIDACION: Generado por RPA: " + System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)
                 + " | PPO=" + System.IO.Path.GetFileName(arg_RutaPPO)
                 + " | NumeroSF=" + (arg_NumeroSF ?? string.Empty)
                 + " | Tipo=" + (arg_TipoProyecto ?? string.Empty)
                 + " | Campos PPO=" + arg_CamposPPO.ToString(System.Globalization.CultureInfo.InvariantCulture)
-                + " | Trazabilidad: PPO=baseline; SAP/SF=datos de prueba hardcodeados en Main.xaml; reglas=recursos/gastos/compras prorrateados por anualidad, riesgos/garantia al ultimo mes, facturacion y realizado vacios; pendiente JP=revisar intercompany, externos y planificacion mensual."
-                + (arg_HorasFueraPeriodo ? " | ADVERTENCIA: PPO contiene anualidades de horas fuera del periodo CORE planificado." : string.Empty);
+                + " | Trazabilidad: PPO=baseline; SAP/SF=datos de prueba hardcodeados en Main.xaml; reglas=recursos/gastos/compras prorrateados por anualidad, riesgos/garantia al ultimo mes, facturacion y realizado vacios; pendiente JP=revisar intercompany, externos y planificacion mensual.";
+
+            if (arg_HorasFueraPeriodo)
+            {
+                double baselineCoste = GetDouble(summary, "E6");
+                double planificadoCoste = GetDouble(summary, "E8");
+                double baselineHoras = GetDouble(summary, "F6");
+                double planificadoHoras = GetDouble(summary, "F8");
+                resumen += " | PC: detectadas anualidades fuera de calendario CORE. Calendario "
+                    + Calendario(arg_dtMesesPPO)
+                    + ". Baseline recursos PPO: " + FormatoEs(baselineCoste, "N2") + " EUR."
+                    + " Recursos planificados: " + FormatoEs(planificadoCoste, "N2") + " EUR."
+                    + " Pendiente fuera de calendario: " + FormatoEs(baselineHoras - planificadoHoras, "N0") + " h / " + FormatoEs(baselineCoste - planificadoCoste, "N2") + " EUR."
+                    + " Años afectados: " + AfectadosFueraCalendario(arg_dtHorasPorAnio, arg_dtMesesPPO) + "."
+                    + " Revisión requerida por JP.";
+            }
+            else if (string.Equals(arg_TipoProyecto, "AT", System.StringComparison.OrdinalIgnoreCase) && arg_TarifasATReescaladas)
+            {
+                double importeVenta = GetDouble(summary, "D6");
+                resumen += " | AT: tarifas de venta reescaladas proporcionalmente para cuadrar venta facturable con importe total de venta del proyecto: "
+                    + FormatoEs(importeVenta, "N2") + " EUR."
+                    + " Se conservan horas, costes y perfiles; solo se ajusta tarifa de venta."
+                    + " Revisión requerida si negocio exige tarifa literal por linea PPO.";
+            }
+            else if (string.Equals(arg_TipoProyecto, "AT", System.StringComparison.OrdinalIgnoreCase))
+            {
+                resumen += " | AT: no se ha aplicado reescalado de tarifa de venta; revisar si el importe total de venta no estaba disponible o no habia descuadre.";
+            }
             SetValue(summary, "B18", resumen);
         }
         finally
@@ -2804,6 +2908,9 @@ finally
                   <InArgument x:TypeArguments="x:String" x:Key="arg_NumeroSF">[NumeroSFExtraido]</InArgument>
                   <InArgument x:TypeArguments="x:Boolean" x:Key="arg_HorasFueraPeriodo">[dtHorasPorAnio IsNot Nothing AndAlso dtMesesPPO IsNot Nothing AndAlso dtHorasPorAnio.Rows.Cast(Of System.Data.DataRow)().Any(Function(filaHora) Not dtMesesPPO.Rows.Cast(Of System.Data.DataRow)().Select(Function(filaMes) CInt(filaMes(&quot;Anio&quot;))).Contains(CInt(filaHora(&quot;Anio&quot;))))]</InArgument>
                   <InArgument x:TypeArguments="x:Int32" x:Key="arg_CamposPPO">[If(dtMapaLecturaPPO Is Nothing, 0, dtMapaLecturaPPO.Rows.Count)]</InArgument>
+                  <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtHorasPorAnio">[dtHorasPorAnio]</InArgument>
+                  <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtMesesPPO">[dtMesesPPO]</InArgument>
+                  <InArgument x:TypeArguments="x:Boolean" x:Key="arg_TarifasATReescaladas">[dtMapaLecturaPPO IsNot Nothing AndAlso dtMapaLecturaPPO.Rows.Cast(Of System.Data.DataRow)().Any(Function(filaMapa) filaMapa.Table.Columns.Contains(&quot;Campo&quot;) AndAlso String.Equals(Convert.ToString(filaMapa(&quot;Campo&quot;)).Trim(), &quot;atTariffReconciliation&quot;, System.StringComparison.OrdinalIgnoreCase))]</InArgument>
                 </scg:Dictionary>
               </ui:InvokeCode.Arguments>
             </ui:InvokeCode>

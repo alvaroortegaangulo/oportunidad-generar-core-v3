@@ -74,7 +74,7 @@ Salida:
 
 Construye el modelo de negocio común desde los rangos del PPO. La cabecera ya no depende de posiciones fijas como `B8:B29`; interpreta `Hoja de datos` por etiquetas normalizadas. Esto permite absorber variaciones esperables de la plantilla, por ejemplo `Company` frente a `Entidad Presentadora`, `Opportunity Code` frente a `Código Oferta/Proyecto`, o `PEP Type` frente a `Tipo de Contratación`.
 
-También normaliza el importe de pedido: si `Presupuesto!X8` y `Sintesis Precio!D12` contienen importes numéricos distintos, se usa el mayor como importe del pedido del CORE. Esto cubre el PPO AT de 48 meses, donde el precio total fiable aparece en la síntesis.
+También normaliza el importe total de venta del proyecto: la fuente prioritaria es el total semántico de `Sintesis Precio` (`Total Oferta sin IVA` / `Precio Total`). Esto cubre el PPO AT de 48 meses, donde el precio total fiable aparece en la síntesis y no debe confundirse con el Sales Order o número de pedido.
 
 ### `lib\core-common-preparar-resources.xaml`
 
@@ -147,3 +147,5 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\test\validar_calidad_e06.p
 - La duración se deriva del PPO y se propaga a Resources y Cost Planning.
 - Se mantiene la estrategia de pre-relleno: cuando faltan datos reales de Salesforce/SAP, el `Main.xaml` usa valores de prueba explícitos; no se inventan valores desde el PPO.
 - Los campos incompletos que pertenecen a fuentes externas deben quedar trazables como datos de prueba en el ejemplo, no ocultos como si vinieran de producción.
+- En PC, la duración del PPO gobierna el calendario CORE; si el PPO contiene anualidades fuera de calendario, se conserva la baseline completa y se cuantifica el pendiente en `Cost Summary!B18`.
+- En AT, la venta facturable planificada se reconcilia contra el importe total de venta del proyecto; si se reescalan tarifas proporcionalmente, `Cost Summary!B18` lo deja auditado con prefijo `RPA_VALIDACION:`.

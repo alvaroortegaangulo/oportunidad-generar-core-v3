@@ -79,8 +79,8 @@ Resultado: OK para CORE PC/AT con 60 meses utiles y sin `#REF!`.
 
 - Se incorpora `test/validar_calidad_e06.ps1` para proteger `Cost Planning` sin depender de COM ni de Excel abierto.
 - El contrato estatico valida que `dtHorasPorAnio` conserva `ResourceKey`, que `Cost Planning` agrupa horas por clave robusta y que riesgos/garantia usan `duracionCostPlanning`, no 25 columnas fijas.
-- El output PC conserva los importes funcionales de referencia: pedido `583896.55`, horas `13570`, coste recursos `367515.14`, riesgos `18375.76`, gastos `7400` y compras `40000`.
-- El output AT conserva pedido `465000`, duracion `48` meses, tres recursos de negocio y dos filas por recurso (`Horas Reales` y `Horas/Jornadas Facturables`) con base inicial replicada para revision.
+- El output PC conserva los importes funcionales de referencia: importe total de venta `583896.55`, horas `13570`, coste recursos `367515.14`, riesgos `18375.76`, gastos `7400` y compras `40000`.
+- El output AT conserva importe total de venta `465000`, duracion `48` meses, tres recursos de negocio y dos filas por recurso (`Horas Reales` y `Horas/Jornadas Facturables`) con base inicial replicada para revision.
 - El bloque de compras AT queda vacio cuando el PPO no trae compras reales; no se crean compras falsas desde riesgos/garantia.
 
 Comando ejecutado:
@@ -151,7 +151,8 @@ Cambios verificados:
 
 - El CORE se genera como prerrelleno: `Cost Planning` y `Monthly View` arrancan en estado `Prev`, y `Cost Summary` deja `REALIZADO` y `% Avance` a cero si no hay reales SAP.
 - No se crean hojas nuevas ni se modifica el formato corporativo de salida; la trazabilidad se mantiene en el comentario existente de `Cost Summary`.
-- AT reconcilia las tarifas de venta proporcionalmente para que la venta facturable planificada cuadre con el pedido PPO: `465000`.
+- AT reconcilia las tarifas de venta proporcionalmente para que la venta facturable planificada cuadre con el importe total de venta del proyecto: `465000`.
+- `Cost Summary!B18` usa prefijo `RPA_VALIDACION:`; PC cuantifica anualidades 2027/2028 fuera de calendario y AT documenta el reescalado proporcional de tarifas cuando aplica.
 - AT aplica costes hora por anualidad usando los importes anuales del PPO cuando existen, no el coste hora redondeado de `Parametros`; la proyeccion de coste recursos queda alineada con baseline (`356584.84`, diferencia solo de precision decimal de Excel).
 - PC conserva la duracion PPO de 12 meses y mantiene advertencia por las anualidades de horas 2027/2028 fuera del periodo CORE; no se redistribuyen silenciosamente horas fuera de calendario.
 
@@ -171,3 +172,26 @@ Resultado:
 - `validar_calidad_e06.ps1`: OK.
 - AT 48 meses: OK, sin `#REF!`, cabeceras hasta 2029-12.
 - PC 12 meses: OK, sin `#REF!`, cabeceras hasta 2026-10.
+
+## Validacion plan refinado RPA_VALIDACION
+
+Fecha de validacion: 2026-05-12.
+
+Cambios verificados:
+
+- `Cost Summary!B18` empieza por `RPA_VALIDACION:` y no se crea hoja `Trazabilidad_RPA`.
+- PC mantiene duracion 12 meses y baseline completa; `B18` cuantifica anualidades 2027/2028 fuera de calendario, `1.720 h` y `43.420,09 EUR` pendientes de planificar.
+- AT documenta el reescalado proporcional de tarifas para cuadrar la venta facturable con el importe total de venta del proyecto `465000`.
+- El reescalado AT usa tolerancia monetaria `0,01` y tarifas redondeadas a 6 decimales, corrigiendo el residuo en la linea facturable de mayor importe.
+
+Comandos ejecutados:
+
+```powershell
+& 'C:\Program Files\UiPath\Studio\UiRobot.exe' pack 'C:\Users\aortega\Documents\UiPath\oportunidad-generar-core-v3\oportunidad-generar-core-main\project.json' --output 'C:\Users\aortega\Documents\UiPath\oportunidad-generar-core-v3\.local\packages' -v 1.0.37-rpa-validacion
+& 'C:\Program Files\UiPath\Studio\UiRobot.exe' execute --file 'C:\Users\aortega\Documents\UiPath\oportunidad-generar-core-v3\.local\packages\oportunidad-generar-core-main.1.0.37-rpa-validacion.nupkg' --entry 'Main.xaml'
+powershell -NoProfile -ExecutionPolicy Bypass -File .\test\validar_calidad_e06.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\test\validar_salida_core_at_48_meses_e04.ps1 -WorkbookPath .\data\output\CORE_AT_20251160543.xlsx -Kind AT -ExpectedStart '2026-01-01' -Months 48
+powershell -NoProfile -ExecutionPolicy Bypass -File .\test\validar_salida_core_at_48_meses_e04.ps1 -WorkbookPath .\data\output\CORE_PC_20250256445.xlsx -Kind PC -ExpectedStart '2025-11-01' -Months 12
+```
+
+Resultado: OK en los tres validadores; outputs finales actualizados en `data/output`.
