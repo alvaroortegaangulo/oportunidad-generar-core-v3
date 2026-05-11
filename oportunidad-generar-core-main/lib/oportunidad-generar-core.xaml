@@ -1640,6 +1640,7 @@ arg_CapacidadMesesPlantilla = System.Math.Min(arg_CapacidadMesesResources, Syste
               <Variable x:TypeArguments="x:String" Name="piWBSValor" />
               <Variable x:TypeArguments="x:String" Name="piDescripcionValor" />
               <Variable x:TypeArguments="x:String" Name="piPracticaValor" />
+              <Variable x:TypeArguments="x:String" Name="piPracticasRelacionadasValor" />
               <Variable x:TypeArguments="x:String" Name="piClienteSAPValor" />
               <Variable x:TypeArguments="x:String" Name="piCuentaValor" />
               <Variable x:TypeArguments="x:String" Name="piSalesOrderValor" />
@@ -1777,6 +1778,20 @@ arg_CapacidadMesesPlantilla = System.Math.Min(arg_CapacidadMesesResources, Syste
                   </scg:List>
                 </ui:MultipleAssign.AssignOperations>
               </ui:MultipleAssign>
+              <Assign DisplayName="Preparar otras practicas relacionadas PPO" sap:VirtualizedContainerService.HintSize="478.6666666666667,86" sap2010:WorkflowViewState.IdRef="Assign_E08_001">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:String">[piPracticasRelacionadasValor]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:String">[String.Join(" | ", New String() {
+If(dtCabeceraPPO.Select("Campo = 'company'").Length > 0 AndAlso Not String.IsNullOrWhiteSpace(dtCabeceraPPO.Select("Campo = 'company'")(0)("Valor").ToString()), "Compania: " + dtCabeceraPPO.Select("Campo = 'company'")(0)("Valor").ToString(), String.Empty),
+If(dtCabeceraPPO.Select("Campo = 'unit'").Length > 0 AndAlso Not String.IsNullOrWhiteSpace(dtCabeceraPPO.Select("Campo = 'unit'")(0)("Valor").ToString()), "Unidad: " + dtCabeceraPPO.Select("Campo = 'unit'")(0)("Valor").ToString(), String.Empty),
+If(dtCabeceraPPO.Select("Campo = 'portfolio'").Length > 0 AndAlso Not String.IsNullOrWhiteSpace(dtCabeceraPPO.Select("Campo = 'portfolio'")(0)("Valor").ToString()), "Portfolio: " + dtCabeceraPPO.Select("Campo = 'portfolio'")(0)("Valor").ToString(), String.Empty),
+If(dtCabeceraPPO.Select("Campo = 'subpractice'").Length > 0 AndAlso Not String.IsNullOrWhiteSpace(dtCabeceraPPO.Select("Campo = 'subpractice'")(0)("Valor").ToString()), "Subpractice: " + dtCabeceraPPO.Select("Campo = 'subpractice'")(0)("Valor").ToString(), String.Empty),
+If(dtCabeceraPPO.Select("Campo = 'subpracticeOrigin'").Length > 0 AndAlso Not String.IsNullOrWhiteSpace(dtCabeceraPPO.Select("Campo = 'subpracticeOrigin'")(0)("Valor").ToString()), "Origen: " + dtCabeceraPPO.Select("Campo = 'subpracticeOrigin'")(0)("Valor").ToString(), String.Empty)
+}.Where(Function(texto) Not String.IsNullOrWhiteSpace(texto)))]</InArgument>
+                </Assign.Value>
+              </Assign>
             </Sequence>
             <Sequence sap2010:Annotation.AnnotationText="Objetivo: resolver práctica, cliente SAP y cuenta usando Salesforce como apoyo y PPO como respaldo.&#xA;Entradas: datos Salesforce, SAP y cabecera PPO.&#xA;Salida: valores comerciales listos para el mapa Project Infor." DisplayName="05B Cliente y práctica" sap:VirtualizedContainerService.HintSize="679.3333333333334,442.6666666666667" sap2010:WorkflowViewState.IdRef="Sequence_37">
               <sap:WorkflowViewStateService.ViewState>
@@ -2133,7 +2148,7 @@ arg_CapacidadMesesPlantilla = System.Math.Min(arg_CapacidadMesesResources, Syste
     New Object() {"05A Fechas e identificadores", "WBS", "C10", If(piWBSValor Is Nothing, CObj(String.Empty), CObj(piWBSValor)), piErrorWBS, If(piErrorWBS, If(piWBSValor Is Nothing, String.Empty, piWBSValor.ToString()), String.Empty), "SAP"},
     New Object() {"05A Fechas e identificadores", "Descripcion", "C11", If(piDescripcionValor Is Nothing, CObj(String.Empty), CObj(piDescripcionValor)), piErrorDescripcion, If(piErrorDescripcion, If(piDescripcionValor Is Nothing, String.Empty, piDescripcionValor.ToString()), String.Empty), "PPO"},
     New Object() {"05B Cliente y práctica", "Practica", "C12", If(piPracticaValor Is Nothing, CObj(String.Empty), CObj(piPracticaValor)), piErrorPractica, If(piErrorPractica, If(piPracticaValor Is Nothing, String.Empty, piPracticaValor.ToString()), String.Empty), "Salesforce/PPO"},
-    New Object() {"05B Cliente y práctica", "C13 reservado", "C13", CObj(String.Empty), False, String.Empty, "Plantilla"},
+    New Object() {"05B Cliente y práctica", "Otras practicas relacionadas", "C13", If(piPracticasRelacionadasValor Is Nothing, CObj(String.Empty), CObj(piPracticasRelacionadasValor)), False, String.Empty, "PPO"},
     New Object() {"05B Cliente y práctica", "Cliente SAP", "C16", If(piClienteSAPValor Is Nothing, CObj(String.Empty), CObj(piClienteSAPValor)), piErrorClienteSAP, If(piErrorClienteSAP, If(piClienteSAPValor Is Nothing, String.Empty, piClienteSAPValor.ToString()), String.Empty), "SAP"},
     New Object() {"05B Cliente y práctica", "Cuenta cliente", "D16", If(piCuentaValor Is Nothing, CObj(String.Empty), CObj(piCuentaValor)), piErrorCuenta, If(piErrorCuenta, If(piCuentaValor Is Nothing, String.Empty, piCuentaValor.ToString()), String.Empty), "Salesforce/PPO"},
     New Object() {"05A Fechas e identificadores", "Opportunity SLFC", "C18", CObj(String.Concat("SLFC ", If(piNumeroSFTexto Is Nothing, String.Empty, piNumeroSFTexto))), False, String.Empty, "PPO"},
@@ -2701,6 +2716,15 @@ try
     {
         try
         {
+            string FormulaDelta(string column)
+            {
+                return "=IF(AND(" + column + "8=0," + column + "7=0),0,IF(" + column + "8=0,1,(" + column + "8-" + column + "7)/" + column + "8))";
+            }
+
+            for (char column = 'D'; column <= 'L'; column++)
+            {
+                SetFormula(summary, column.ToString() + "9", FormulaDelta(column.ToString()));
+            }
             SetFormula(summary, "D12", "=IF(D8=0,0,D11/D8)");
             SetFormula(summary, "E12", "=IF(E8=0,0,E11/E8)");
             SetFormula(summary, "F12", "=IF(F8=0,0,F11/F8)");
@@ -2708,6 +2732,7 @@ try
                 + " | PPO=" + System.IO.Path.GetFileName(arg_RutaPPO)
                 + " | NumeroSF=" + (arg_NumeroSF ?? string.Empty)
                 + " | Tipo=" + (arg_TipoProyecto ?? string.Empty)
+                + " | Campos PPO=" + arg_CamposPPO.ToString(System.Globalization.CultureInfo.InvariantCulture)
                 + " | Trazabilidad: PPO=baseline; SAP/SF=datos de prueba hardcodeados en Main.xaml; reglas=recursos/gastos/compras prorrateados por anualidad, riesgos/garantia al ultimo mes, facturacion y realizado vacios; pendiente JP=revisar intercompany, externos y planificacion mensual."
                 + (arg_HorasFueraPeriodo ? " | ADVERTENCIA: PPO contiene anualidades de horas fuera del periodo CORE planificado." : string.Empty);
             SetValue(summary, "B18", resumen);
@@ -2715,6 +2740,36 @@ try
         finally
         {
             System.Runtime.InteropServices.Marshal.FinalReleaseComObject(summary);
+        }
+    }
+
+    object costPlanning = GetWorksheet(worksheets, "Cost Planning");
+    if (costPlanning != null)
+    {
+        try
+        {
+            bool esAT = string.Equals(arg_TipoProyecto, "AT", System.StringComparison.OrdinalIgnoreCase);
+            if (esAT)
+            {
+                SetFormula(costPlanning, "J5", "=ROUND(F5-SUM(F40:BO41),2)");
+                SetFormula(costPlanning, "J50", "=ROUND(F50-SUM(F61:BO61),2)");
+                SetFormula(costPlanning, "J64", "=ROUND(F64-SUM(F77:BO77),2)");
+                SetFormula(costPlanning, "L50", "=IF(J50<-0.005,\"(!) El coste de GASTOS planificado es mayor que el de la BASELINE\",\"\")");
+                SetFormula(costPlanning, "L64", "=IF(J64<-0.005,\"(!) El coste de COMPRAS planificado es mayor que el de la BASELINE\",\"\")");
+            }
+            else
+            {
+                SetFormula(costPlanning, "I5", "=ROUND(F5-SUM(F40:BN41),2)");
+                SetFormula(costPlanning, "I50", "=ROUND(F50-SUM(F59:BN59),2)");
+                SetFormula(costPlanning, "I61", "=ROUND(F61-SUM(F74:BN74),2)");
+                SetFormula(costPlanning, "K5", "=IF(I5<-0.005,\"(!) El coste de RECURSOS planificado es mayor que el de la BASELINE\",\"\")");
+                SetFormula(costPlanning, "K50", "=IF(I50<-0.005,\"(!) El coste de GASTOS planificado es mayor que el de la BASELINE\",\"\")");
+                SetFormula(costPlanning, "K61", "=IF(I61<-0.005,\"(!) El coste de COMPRAS planificado es mayor que el de la BASELINE\",\"\")");
+            }
+        }
+        finally
+        {
+            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(costPlanning);
         }
     }
 

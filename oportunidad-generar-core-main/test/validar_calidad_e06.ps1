@@ -401,6 +401,10 @@ function Test-StaticContract {
     Assert-TextContains -Text $resources -Pattern 'PickCost(costesPorKey, key, anioMes, out costeMes)' -Case 'Resources aplica coste por anualidad del mes'
     Assert-TextContains -Text $core -Pattern 'Fecha reporting prerrelleno' -Case 'CORE no marca realizado sin SAP real'
     Assert-TextContains -Text $core -Pattern 'IF(D8=0,0,D11/D8)' -Case 'Cost Summary avance realizado cero'
+    Assert-TextContains -Text $core -Pattern 'FormulaDelta' -Case 'Cost Summary corrige diferencia porcentual 0/0'
+    Assert-TextContains -Text $core -Pattern 'piPracticasRelacionadasValor' -Case 'Project Infor C13 conserva contexto PPO'
+    Assert-TextContains -Text $core -Pattern 'SetFormula(costPlanning, "K5"' -Case 'Warnings PC de Cost Planning condicionales'
+    Assert-TextContains -Text $core -Pattern 'SetFormula(costPlanning, "L50"' -Case 'Warnings AT de Cost Planning condicionales'
 
     Assert-TextContains -Text $cp -Pattern 'ResourceKey' -Case 'Cost Planning consume ResourceKey'
     Assert-TextContains -Text $cp -Pattern 'horasPorClaveCostPlanning' -Case 'Horas agrupadas por clave robusta'
@@ -452,6 +456,8 @@ function Test-CorePcWorkbook {
         Assert-CellNear -Sheet $projectInfor -SharedStrings $sharedStrings -Address 'C32' -Expected 0 -Tolerance 0.01 -Case 'PC garantia'
         Assert-CellNear -Sheet $projectInfor -SharedStrings $sharedStrings -Address 'C33' -Expected 7400 -Tolerance 0.01 -Case 'PC gastos'
         Assert-CellNear -Sheet $projectInfor -SharedStrings $sharedStrings -Address 'C34' -Expected 40000 -Tolerance 0.01 -Case 'PC compras'
+        Assert-CellContains -Sheet $projectInfor -SharedStrings $sharedStrings -Address 'C13' -ExpectedPart 'Portfolio: Smart Spaces' -Case 'PC otras practicas portfolio PPO'
+        Assert-CellContains -Sheet $projectInfor -SharedStrings $sharedStrings -Address 'C13' -ExpectedPart 'Subpractice: Smart Spaces/EAI' -Case 'PC otras practicas subpractice PPO'
 
         Assert-CellNear -Sheet $resources -SharedStrings $sharedStrings -Address 'F7' -Expected 40 -Tolerance 0.01 -Case 'PC coste hora JP'
         Assert-CellNear -Sheet $resources -SharedStrings $sharedStrings -Address 'F8' -Expected 26 -Tolerance 0.01 -Case 'PC coste hora CSS'
@@ -467,9 +473,13 @@ function Test-CorePcWorkbook {
         Assert-CellNear -Sheet $costSummary -SharedStrings $sharedStrings -Address 'D12' -Expected 0 -Tolerance 0.0001 -Case 'PC avance venta sin realizado'
         Assert-CellNear -Sheet $costSummary -SharedStrings $sharedStrings -Address 'E12' -Expected 0 -Tolerance 0.0001 -Case 'PC avance coste sin realizado'
         Assert-CellNear -Sheet $costSummary -SharedStrings $sharedStrings -Address 'F12' -Expected 0 -Tolerance 0.0001 -Case 'PC avance horas sin realizado'
+        Assert-CellNear -Sheet $costSummary -SharedStrings $sharedStrings -Address 'H9' -Expected 0 -Tolerance 0.0001 -Case 'PC diferencia garantia 0/0'
         Assert-CellContains -Sheet $costSummary -SharedStrings $sharedStrings -Address 'B18' -ExpectedPart 'Trazabilidad: PPO=baseline' -Case 'PC trazabilidad estructurada en comentario normalizado'
         Assert-CellContains -Sheet $costSummary -SharedStrings $sharedStrings -Address 'B18' -ExpectedPart 'ADVERTENCIA: PPO contiene anualidades de horas fuera del periodo CORE planificado.' -Case 'PC trazabilidad anualidades fuera de periodo'
 
+        Assert-CellText -Sheet $costPlanning -SharedStrings $sharedStrings -Address 'K5' -Expected '' -Case 'PC warning recursos no falso'
+        Assert-CellText -Sheet $costPlanning -SharedStrings $sharedStrings -Address 'K50' -Expected '' -Case 'PC warning gastos no falso'
+        Assert-CellText -Sheet $costPlanning -SharedStrings $sharedStrings -Address 'K61' -Expected '' -Case 'PC warning compras no falso'
         Assert-CellText -Sheet $costPlanning -SharedStrings $sharedStrings -Address 'B64' -Expected 'Proveedor Test' -Case 'PC compra proveedor'
         Assert-CellText -Sheet $costPlanning -SharedStrings $sharedStrings -Address 'C64' -Expected 'Trabajos on site' -Case 'PC compra descripcion'
         Assert-CellNear -Sheet $costPlanning -SharedStrings $sharedStrings -Address 'R47' -Expected 18375.76 -Tolerance 0.02 -Case 'PC riesgos ultimo mes'
@@ -509,6 +519,8 @@ function Test-CoreAtWorkbook {
         Assert-CellNear -Sheet $projectInfor -SharedStrings $sharedStrings -Address 'C28' -Expected 465000 -Tolerance 0.01 -Case 'AT importe pedido semantico'
         Assert-CellNear -Sheet $projectInfor -SharedStrings $sharedStrings -Address 'C33' -Expected 0 -Tolerance 0.01 -Case 'AT gastos sin datos reales'
         Assert-CellNear -Sheet $projectInfor -SharedStrings $sharedStrings -Address 'C34' -Expected 0 -Tolerance 0.01 -Case 'AT compras sin datos reales'
+        Assert-CellContains -Sheet $projectInfor -SharedStrings $sharedStrings -Address 'C13' -ExpectedPart 'Portfolio: Sin producto' -Case 'AT otras practicas portfolio PPO'
+        Assert-CellContains -Sheet $projectInfor -SharedStrings $sharedStrings -Address 'C13' -ExpectedPart 'Subpractice: Norte' -Case 'AT otras practicas zona PPO'
 
         Assert-CellNear -Sheet $resources -SharedStrings $sharedStrings -Address 'G7' -Expected 32.84 -Tolerance 0.01 -Case 'AT coste hora Susana'
         Assert-CellNear -Sheet $resources -SharedStrings $sharedStrings -Address 'G9' -Expected 15.17 -Tolerance 0.01 -Case 'AT coste hora Jorge'
@@ -528,8 +540,14 @@ function Test-CoreAtWorkbook {
         Assert-CellNear -Sheet $costSummary -SharedStrings $sharedStrings -Address 'D12' -Expected 0 -Tolerance 0.0001 -Case 'AT avance venta sin realizado'
         Assert-CellNear -Sheet $costSummary -SharedStrings $sharedStrings -Address 'E12' -Expected 0 -Tolerance 0.0001 -Case 'AT avance coste sin realizado'
         Assert-CellNear -Sheet $costSummary -SharedStrings $sharedStrings -Address 'F12' -Expected 0 -Tolerance 0.0001 -Case 'AT avance horas sin realizado'
+        Assert-CellNear -Sheet $costSummary -SharedStrings $sharedStrings -Address 'H9' -Expected 0 -Tolerance 0.0001 -Case 'AT diferencia garantia 0/0'
+        Assert-CellNear -Sheet $costSummary -SharedStrings $sharedStrings -Address 'I9' -Expected 0 -Tolerance 0.0001 -Case 'AT diferencia gastos 0/0'
+        Assert-CellNear -Sheet $costSummary -SharedStrings $sharedStrings -Address 'J9' -Expected 0 -Tolerance 0.0001 -Case 'AT diferencia compras 0/0'
         Assert-CellContains -Sheet $costSummary -SharedStrings $sharedStrings -Address 'B18' -ExpectedPart 'Trazabilidad: PPO=baseline' -Case 'AT trazabilidad estructurada en comentario normalizado'
         Assert-CellNear -Sheet $costPlanning -SharedStrings $sharedStrings -Address 'H44' -Expected 9687.5 -Tolerance 0.02 -Case 'AT venta facturable mensual reconciliada'
+        Assert-CellNear -Sheet $costPlanning -SharedStrings $sharedStrings -Address 'J5' -Expected 0 -Tolerance 0.0001 -Case 'AT pendiente recursos redondeado'
+        Assert-CellText -Sheet $costPlanning -SharedStrings $sharedStrings -Address 'L50' -Expected '' -Case 'AT warning gastos no falso'
+        Assert-CellText -Sheet $costPlanning -SharedStrings $sharedStrings -Address 'L64' -Expected '' -Case 'AT warning compras no falso'
 
         $expectedRows = @(
             @{ Row = 10; Sigla = 'AP'; Perfil = 'Susana Matarranz'; Tipo = 'Horas Reales' },
