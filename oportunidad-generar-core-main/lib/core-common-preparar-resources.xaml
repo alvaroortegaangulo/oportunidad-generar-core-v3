@@ -111,6 +111,7 @@
       <Variable x:TypeArguments="x:String" Name="siglaResources" />
       <Variable x:TypeArguments="x:String" Name="perfilResources" />
       <Variable x:TypeArguments="x:String" Name="entidadResources" />
+      <Variable x:TypeArguments="x:String" Name="resourceKeyResources" />
       <Variable x:TypeArguments="x:String" Name="intercompanyResources" />
       <Variable x:TypeArguments="x:String" Name="codigoEmpleadoResources" />
     </Sequence.Variables>
@@ -550,6 +551,14 @@
                   </scg:List>
                 </ui:MultipleAssign.AssignOperations>
               </ui:MultipleAssign>
+              <Assign DisplayName="Leer ResourceKey perfil Resources" sap2010:WorkflowViewState.IdRef="Assign_RES_E03_001">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:String">[resourceKeyResources]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:String">[If(filaPerfilResources IsNot Nothing AndAlso filaPerfilResources.Table.Columns.Contains("ResourceKey") AndAlso filaPerfilResources("ResourceKey") IsNot Nothing AndAlso Not TypeOf filaPerfilResources("ResourceKey") Is DBNull AndAlso Not String.IsNullOrWhiteSpace(Convert.ToString(filaPerfilResources("ResourceKey")).Trim()), Convert.ToString(filaPerfilResources("ResourceKey")).Trim(), siglaResources)]</InArgument>
+                </Assign.Value>
+              </Assign>
               <Assign DisplayName="Normalizar entidad recurso" sap2010:WorkflowViewState.IdRef="Assign_RES_011">
                 <Assign.To>
                   <OutArgument x:TypeArguments="x:String">[entidadRecursoNormalizada]</OutArgument>
@@ -694,7 +703,7 @@
                           <ActivityAction.Argument>
                             <DelegateInArgument x:TypeArguments="sd:DataRow" Name="filaCosteResources" />
                           </ActivityAction.Argument>
-                          <If Condition="[Not costeDisponibleResources AndAlso String.Equals(Convert.ToString(filaCosteResources(&quot;Sigla&quot;)).Trim(), siglaResources, System.StringComparison.OrdinalIgnoreCase)]" DisplayName="El coste corresponde a la sigla" sap2010:WorkflowViewState.IdRef="If_RES_012">
+                          <If Condition="[Not costeDisponibleResources AndAlso If(filaCosteResources.Table.Columns.Contains(&quot;ResourceKey&quot;) AndAlso Not String.IsNullOrWhiteSpace(resourceKeyResources), String.Equals(Convert.ToString(filaCosteResources(&quot;ResourceKey&quot;)).Trim(), resourceKeyResources, System.StringComparison.OrdinalIgnoreCase), String.Equals(Convert.ToString(filaCosteResources(&quot;Sigla&quot;)).Trim(), siglaResources, System.StringComparison.OrdinalIgnoreCase))]" DisplayName="El coste corresponde al recurso" sap2010:WorkflowViewState.IdRef="If_RES_012">
                             <If.Then>
                               <Sequence DisplayName="Evaluar coste por año" sap2010:WorkflowViewState.IdRef="Sequence_RES_011">
                                 <Assign DisplayName="Leer año coste" sap2010:WorkflowViewState.IdRef="Assign_RES_013">
@@ -884,7 +893,7 @@
                           <ActivityAction.Argument>
                             <DelegateInArgument x:TypeArguments="sd:DataRow" Name="filaTarifaResources" />
                           </ActivityAction.Argument>
-                          <If Condition="[Not tarifaDisponibleResources AndAlso String.Equals(Convert.ToString(filaTarifaResources(&quot;Sigla&quot;)).Trim(), siglaResources, System.StringComparison.OrdinalIgnoreCase)]" DisplayName="La tarifa corresponde a la sigla" sap2010:WorkflowViewState.IdRef="If_RES_018">
+                          <If Condition="[Not tarifaDisponibleResources AndAlso If(filaTarifaResources.Table.Columns.Contains(&quot;ResourceKey&quot;) AndAlso Not String.IsNullOrWhiteSpace(resourceKeyResources), String.Equals(Convert.ToString(filaTarifaResources(&quot;ResourceKey&quot;)).Trim(), resourceKeyResources, System.StringComparison.OrdinalIgnoreCase), String.Equals(Convert.ToString(filaTarifaResources(&quot;Sigla&quot;)).Trim(), siglaResources, System.StringComparison.OrdinalIgnoreCase))]" DisplayName="La tarifa corresponde al recurso" sap2010:WorkflowViewState.IdRef="If_RES_018">
                             <If.Then>
                               <Sequence DisplayName="Evaluar tarifa AT por sigla" sap2010:WorkflowViewState.IdRef="Sequence_RES_013">
                                 <Assign DisplayName="Leer tarifa AT agregada" sap2010:WorkflowViewState.IdRef="Assign_RES_022">

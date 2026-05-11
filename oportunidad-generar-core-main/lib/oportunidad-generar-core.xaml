@@ -619,6 +619,132 @@
                 </ActivityAction>
               </ueab:ExcelProcessScopeX.Body>
             </ueab:ExcelProcessScopeX>
+            <ui:InvokeCode ContinueOnError="{x:Null}" DisplayName="Releer rangos PPO por Excel COM si ReadRangeX devuelve vacio" Language="CSharp">
+              <ui:InvokeCode.Code><![CDATA[
+string rutaPPO = arg_RutaPPOTrabajo;
+System.Data.DataTable hojaDatos = arg_dtHojaDatos;
+System.Data.DataTable parametros = arg_dtParametros;
+System.Data.DataTable presupuesto = arg_dtPresupuesto;
+System.Data.DataTable facturacion = arg_dtFacturacion;
+System.Data.DataTable sintesis = arg_dtSintesis;
+
+bool Vacia(System.Data.DataTable tabla)
+{
+    return tabla == null || tabla.Rows.Count == 0 || tabla.Columns.Count == 0;
+}
+
+string Texto(object valor)
+{
+    if (valor == null || valor == System.DBNull.Value) return string.Empty;
+    return System.Convert.ToString(valor).Trim();
+}
+
+System.Data.DataTable LeerRango(dynamic workbook, string hoja, string rango)
+{
+    var tabla = new System.Data.DataTable();
+    dynamic worksheet = null;
+    dynamic celdas = null;
+    try
+    {
+        worksheet = workbook.Worksheets.Item(hoja);
+        celdas = worksheet.Range(rango);
+        int filas = celdas.Rows.Count;
+        int columnas = celdas.Columns.Count;
+        for (int c = 0; c < columnas; c++) tabla.Columns.Add("Column" + c.ToString(System.Globalization.CultureInfo.InvariantCulture), typeof(object));
+
+        for (int r = 1; r <= filas; r++)
+        {
+            var fila = tabla.NewRow();
+            for (int c = 1; c <= columnas; c++)
+            {
+                dynamic celda = celdas.Cells.Item(r, c);
+                object valor = celda.Text;
+                if (string.IsNullOrWhiteSpace(Texto(valor))) valor = celda.Value2;
+                fila[c - 1] = valor ?? System.DBNull.Value;
+                if (celda != null && System.Runtime.InteropServices.Marshal.IsComObject(celda))
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(celda);
+                }
+            }
+            tabla.Rows.Add(fila);
+        }
+
+        while (tabla.Rows.Count > 0)
+        {
+            bool vacia = true;
+            var ultima = tabla.Rows[tabla.Rows.Count - 1];
+            for (int c = 0; c < tabla.Columns.Count; c++)
+            {
+                if (!string.IsNullOrWhiteSpace(Texto(ultima[c])))
+                {
+                    vacia = false;
+                    break;
+                }
+            }
+            if (!vacia) break;
+            tabla.Rows.RemoveAt(tabla.Rows.Count - 1);
+        }
+    }
+    finally
+    {
+        if (celdas != null && System.Runtime.InteropServices.Marshal.IsComObject(celdas)) System.Runtime.InteropServices.Marshal.ReleaseComObject(celdas);
+        if (worksheet != null && System.Runtime.InteropServices.Marshal.IsComObject(worksheet)) System.Runtime.InteropServices.Marshal.ReleaseComObject(worksheet);
+    }
+    return tabla;
+}
+
+bool requiereFallback = Vacia(hojaDatos) || Vacia(parametros) || Vacia(presupuesto) || Vacia(sintesis);
+if (requiereFallback)
+{
+    dynamic excel = null;
+    dynamic workbook = null;
+    try
+    {
+        var tipoExcel = System.Type.GetTypeFromProgID("Excel.Application");
+        if (tipoExcel == null) throw new System.Exception("Excel.Application no esta disponible para relectura COM del PPO.");
+        excel = System.Activator.CreateInstance(tipoExcel);
+        excel.Visible = false;
+        excel.DisplayAlerts = false;
+        workbook = excel.Workbooks.Open(rutaPPO, 0, true);
+
+        hojaDatos = LeerRango(workbook, "Hoja de datos", "A8:D35");
+        parametros = LeerRango(workbook, "Parametros", "B18:J58");
+        presupuesto = LeerRango(workbook, "Presupuesto", "B3:X53");
+        facturacion = LeerRango(workbook, "Facturación y SAP", "A1:E10");
+        sintesis = LeerRango(workbook, "Sintesis Precio", "D12:P80");
+    }
+    finally
+    {
+        if (workbook != null)
+        {
+            workbook.Close(false);
+            if (System.Runtime.InteropServices.Marshal.IsComObject(workbook)) System.Runtime.InteropServices.Marshal.ReleaseComObject(workbook);
+        }
+        if (excel != null)
+        {
+            excel.Quit();
+            if (System.Runtime.InteropServices.Marshal.IsComObject(excel)) System.Runtime.InteropServices.Marshal.ReleaseComObject(excel);
+        }
+    }
+}
+
+arg_dtHojaDatos = hojaDatos;
+arg_dtParametros = parametros;
+arg_dtPresupuesto = presupuesto;
+arg_dtFacturacion = facturacion;
+arg_dtSintesis = sintesis;
+              ]]></ui:InvokeCode.Code>
+              <ui:InvokeCode.Arguments>
+                <scg:Dictionary x:TypeArguments="x:String, Argument">
+                  <InArgument x:TypeArguments="x:String" x:Key="arg_RutaPPOTrabajo">[rutaPPOTrabajo]</InArgument>
+                  <InOutArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtHojaDatos">[dtHojaDatosRawPPO]</InOutArgument>
+                  <InOutArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtParametros">[dtParametrosRawPPO]</InOutArgument>
+                  <InOutArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtPresupuesto">[dtPresupuestoRawPPO]</InOutArgument>
+                  <InOutArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtFacturacion">[dtFacturacionSAPRawPPO]</InOutArgument>
+                  <InOutArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtSintesis">[dtSintesisPrecioRawPPO]</InOutArgument>
+                </scg:Dictionary>
+              </ui:InvokeCode.Arguments>
+            </ui:InvokeCode>
             <ui:LogMessage DisplayName="Registrar lectura PPO por rangos" sap:VirtualizedContainerService.HintSize="434,144.66666666666666" sap2010:WorkflowViewState.IdRef="LogMessage_12" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;PPO leido por rangos estables | HojaDatos=&quot; + dtHojaDatosRawPPO.Rows.Count.ToString() + &quot; filas | Presupuesto=&quot; + dtPresupuestoRawPPO.Rows.Count.ToString() + &quot; filas | Segundos=&quot; + System.Math.Round((System.DateTime.Now - tiempoInicioLecturaPPO).TotalSeconds, 2).ToString()]" />
           </Sequence>
           <Sequence sap2010:Annotation.AnnotationText="Objetivo: transformar los rangos del PPO en tablas de negocio separadas por responsabilidad.&#xA;Entradas: rangos PPO leídos por la secuencia 03.&#xA;Salida: mapa de lectura, tablas de negocio, JSON de apoyo, número de oportunidad y tipo detectado." DisplayName="04 Construir modelo común PPO" sap:VirtualizedContainerService.HintSize="932.6666666666666,1244.6666666666667" sap2010:WorkflowViewState.IdRef="Sequence_E02_04">

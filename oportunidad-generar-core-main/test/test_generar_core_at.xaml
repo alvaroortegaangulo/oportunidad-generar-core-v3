@@ -1,4 +1,4 @@
-<Activity mc:Ignorable="sap sap2010" x:Class="test_generar_core_datos_incompletos" VisualBasic.Settings="{x:Null}" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sap sap2010" x:Class="test_generar_core_at" VisualBasic.Settings="{x:Null}" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
       <x:String>System</x:String>
@@ -41,16 +41,17 @@
       <AssemblyReference>UiPath.Platform</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="test_generar_core_datos_incompletos" sap2010:Annotation.AnnotationText="Wrapper local E06 para validar que los datos SAP/Salesforce incompletos no abortan CORE. Debe generar Excel y dejar textos cortos en rojo donde aplique.">
+  <Sequence DisplayName="test_generar_core_at" sap2010:Annotation.AnnotationText="Wrapper local para validar el submodulo oportunidad-generar-core.xaml con el PPO AT 20251160543. Usa salida controlada bajo data\output\test y no modifica ficheros fuente.">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:String" Name="RutaSalida" />
       <Variable x:TypeArguments="x:String" Name="RutaPPO" />
       <Variable x:TypeArguments="x:String" Name="RutaPlantillaCorePC" />
       <Variable x:TypeArguments="x:String" Name="RutaPlantillaCoreAT" />
       <Variable x:TypeArguments="x:String" Name="RutaCORE" />
+      <Variable x:TypeArguments="x:String" Name="CodigosEmpleadoRecursosJson" />
       <Variable x:TypeArguments="x:String" Name="NumeroSFLeido" />
     </Sequence.Variables>
-    <ui:MultipleAssign DisplayName="00 Preparar rutas de prueba CORE datos incompletos">
+    <ui:MultipleAssign DisplayName="00 Preparar rutas y datos de prueba AT">
       <ui:MultipleAssign.AssignOperations>
         <scg:List x:TypeArguments="ui:AssignOperation" Capacity="8">
           <ui:AssignOperation>
@@ -66,7 +67,7 @@
               <OutArgument x:TypeArguments="x:String">[RutaPPO]</OutArgument>
             </ui:AssignOperation.To>
             <ui:AssignOperation.Value>
-              <InArgument x:TypeArguments="x:String">[Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "data", "input", "20250256445" + New String(" "c, 2) + "PPO_NuevaTerminalPVR v2 1.xlsm"))]</InArgument>
+              <InArgument x:TypeArguments="x:String">[Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "data", "input", "20251160543_PPO_CEducación_AMS_SI_Lote 2_v01.xlsm"))]</InArgument>
             </ui:AssignOperation.Value>
           </ui:AssignOperation>
           <ui:AssignOperation>
@@ -90,43 +91,51 @@
               <OutArgument x:TypeArguments="x:String">[RutaCORE]</OutArgument>
             </ui:AssignOperation.To>
             <ui:AssignOperation.Value>
-              <InArgument x:TypeArguments="x:String">[Path.Combine(RutaSalida, "CORE_PC_20250256445_datos_incompletos.xlsx")]</InArgument>
+              <InArgument x:TypeArguments="x:String">[Path.Combine(RutaSalida, "CORE_AT_20251160543_test.xlsx")]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation>
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="x:String">[CodigosEmpleadoRecursosJson]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="x:String">{"AP":"E92010","PR":"E92011"}</InArgument>
             </ui:AssignOperation.Value>
           </ui:AssignOperation>
         </scg:List>
       </ui:MultipleAssign.AssignOperations>
     </ui:MultipleAssign>
     <ui:CreateDirectory ContinueOnError="{x:Null}" Output="{x:Null}" DisplayName="01 Crear carpeta local de salida" Path="[RutaSalida]" />
-    <ui:LogMessage DisplayName="02 Registrar inicio CORE datos incompletos" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Inicio test CORE datos incompletos | PPO=&quot; + RutaPPO + &quot; | CORE=&quot; + RutaCORE]" />
-    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="03 Invocar CORE PC con SAP SF incompletos" UnSafe="False" WorkflowFileName="lib\oportunidad-generar-core.xaml">
+    <ui:LogMessage DisplayName="02 Registrar inicio de prueba CORE AT" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Inicio test CORE AT | PPO=&quot; + RutaPPO + &quot; | CORE=&quot; + RutaCORE]" />
+    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="03 Invocar oportunidad-generar-core.xaml con datos AT de ejemplo" UnSafe="False" WorkflowFileName="lib\oportunidad-generar-core.xaml">
       <ui:InvokeWorkflowFile.Arguments>
         <InArgument x:TypeArguments="x:String" x:Key="in_RutaPPO">[RutaPPO]</InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_RutaPlantillaCorePC">[RutaPlantillaCorePC]</InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_RutaPlantillaCoreAT">[RutaPlantillaCoreAT]</InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_RutaCORE">[RutaCORE]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_TipoProyecto">PC</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_TipoProyecto">AT</InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_SAP_FechaInicio">[String.Empty]</InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_SAP_FechaFin">[String.Empty]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoPEP_WBS">[String.Empty]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoCliente">[String.Empty]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_PedidoSalesOrder">[String.Empty]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoEmpleadoJefeProyecto">[String.Empty]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_NombreJefeProyecto">[String.Empty]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoEmpleadoPracticeLeader">[String.Empty]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_NombrePracticeLeader">[String.Empty]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_SF_CodigoEmpleadoSalesManager">[String.Empty]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_SF_NombreSalesManager">[String.Empty]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_SF_AccountName">[String.Empty]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_SF_Practica">[String.Empty]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoPEP_WBS">ZEV-ATE0012-1001</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoCliente">CUST-CE-TEST</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_PedidoSalesOrder">SO-TEST-20251160543</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoEmpleadoJefeProyecto">E92001</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_NombreJefeProyecto">PM AT Test</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoEmpleadoPracticeLeader">E92002</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_NombrePracticeLeader">Practice Leader AT Test</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SF_CodigoEmpleadoSalesManager">E92003</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SF_NombreSalesManager">Sales Manager AT Test</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SF_AccountName">Comunidad Educacion</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SF_Practica">AMS</InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_SF_RutaProyecto">[RutaSalida]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_SF_CorreoResponsable">[String.Empty]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_ProveedorCompra">[String.Empty]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_PedidoCompra">[String.Empty]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoAriba">[String.Empty]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigosEmpleadoRecursosJson">[String.Empty]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SF_CorreoResponsable">test.core.at@example.invalid</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_ProveedorCompra">Proveedor AT Test</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_PedidoCompra">PO-TEST-AT-001</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigoAriba">ARIBA-TEST-AT-001</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_SAP_CodigosEmpleadoRecursosJson">[CodigosEmpleadoRecursosJson]</InArgument>
         <OutArgument x:TypeArguments="x:String" x:Key="out_NumeroSFLeido">[NumeroSFLeido]</OutArgument>
       </ui:InvokeWorkflowFile.Arguments>
     </ui:InvokeWorkflowFile>
-    <ui:LogMessage DisplayName="04 Registrar fin CORE datos incompletos" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Fin test CORE datos incompletos | CORE=&quot; + RutaCORE + &quot; | NumeroSFLeido=&quot; + NumeroSFLeido]" />
+    <ui:LogMessage DisplayName="04 Registrar fin de prueba CORE AT" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Fin test CORE AT | CORE=&quot; + RutaCORE + &quot; | NumeroSFLeido=&quot; + NumeroSFLeido]" />
   </Sequence>
 </Activity>

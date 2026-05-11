@@ -130,6 +130,7 @@
       <Variable x:TypeArguments="x:String" Name="claveAgrupacionCostPlanning" />
       <Variable x:TypeArguments="x:String" Name="claveCompraCostPlanning" />
       <Variable x:TypeArguments="x:String" Name="siglaCostPlanning" />
+      <Variable x:TypeArguments="x:String" Name="resourceKeyCostPlanning" />
       <Variable x:TypeArguments="x:String" Name="perfilCostPlanning" />
       <Variable x:TypeArguments="x:String" Name="descripcionCostPlanning" />
       <Variable x:TypeArguments="x:String" Name="etiquetaCostPlanning" />
@@ -472,7 +473,7 @@
                             <OutArgument x:TypeArguments="x:String">[claveAgrupacionCostPlanning]</OutArgument>
                           </Assign.To>
                           <Assign.Value>
-                            <InArgument x:TypeArguments="x:String">[siglaCostPlanning + separadorClaveCostPlanning + anioValorCostPlanning.ToString()]</InArgument>
+                            <InArgument x:TypeArguments="x:String">[If(filaHoraCostPlanning.Table.Columns.Contains("ResourceKey") AndAlso filaHoraCostPlanning("ResourceKey") IsNot Nothing AndAlso Not TypeOf filaHoraCostPlanning("ResourceKey") Is DBNull AndAlso Not String.IsNullOrWhiteSpace(Convert.ToString(filaHoraCostPlanning("ResourceKey")).Trim()), Convert.ToString(filaHoraCostPlanning("ResourceKey")).Trim(), siglaCostPlanning) + separadorClaveCostPlanning + anioValorCostPlanning.ToString()]</InArgument>
                           </Assign.Value>
                         </Assign>
                         <Assign DisplayName="Acumular horas por clave" sap2010:WorkflowViewState.IdRef="Assign_CP_015">
@@ -1091,6 +1092,14 @@
                   </scg:List>
                 </ui:MultipleAssign.AssignOperations>
               </ui:MultipleAssign>
+              <Assign DisplayName="Leer ResourceKey Cost Planning" sap2010:WorkflowViewState.IdRef="Assign_CP_E03_001">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:String">[resourceKeyCostPlanning]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:String">[If(filaPerfilCostPlanning IsNot Nothing AndAlso filaPerfilCostPlanning.Table.Columns.Contains("ResourceKey") AndAlso filaPerfilCostPlanning("ResourceKey") IsNot Nothing AndAlso Not TypeOf filaPerfilCostPlanning("ResourceKey") Is DBNull AndAlso Not String.IsNullOrWhiteSpace(Convert.ToString(filaPerfilCostPlanning("ResourceKey")).Trim()), Convert.ToString(filaPerfilCostPlanning("ResourceKey")).Trim(), siglaCostPlanning)]</InArgument>
+                </Assign.Value>
+              </Assign>
               <Assign DisplayName="Inicializar perfil AT Cost Planning" sap2010:WorkflowViewState.IdRef="Assign_CP_038">
                 <Assign.To>
                   <OutArgument x:TypeArguments="x:Object">[perfilATCostPlanning]</OutArgument>
@@ -1227,7 +1236,7 @@
                           <OutArgument x:TypeArguments="x:String">[claveAgrupacionCostPlanning]</OutArgument>
                         </Assign.To>
                         <Assign.Value>
-                          <InArgument x:TypeArguments="x:String">[siglaCostPlanning + separadorClaveCostPlanning + anioMesCostPlanning.ToString()]</InArgument>
+                          <InArgument x:TypeArguments="x:String">[If(Not String.IsNullOrWhiteSpace(resourceKeyCostPlanning), resourceKeyCostPlanning, siglaCostPlanning) + separadorClaveCostPlanning + anioMesCostPlanning.ToString()]</InArgument>
                         </Assign.Value>
                       </Assign>
                       <Assign DisplayName="Detectar horas del mes" sap2010:WorkflowViewState.IdRef="Assign_CP_041">

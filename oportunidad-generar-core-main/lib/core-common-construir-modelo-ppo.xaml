@@ -490,6 +490,94 @@
           <InArgument x:TypeArguments="x:Int32">[If(numeroValidoPPO, CInt(System.Math.Round(numeroTemporalPPO, 0)), 0)]</InArgument>
         </Assign.Value>
       </Assign>
+      <ui:InvokeCode ContinueOnError="{x:Null}" DisplayName="Reforzar calendario legacy por etiquetas PPO" Language="CSharp">
+        <ui:InvokeCode.Code><![CDATA[
+System.Data.DataTable hojaDatos = arg_HojaDatos;
+int mes = arg_MesInicio;
+int anio = arg_AnioInicio;
+int duracion = arg_Duracion;
+
+string Texto(object valor)
+{
+    if (valor == null || valor == System.DBNull.Value) return string.Empty;
+    return System.Convert.ToString(valor).Trim();
+}
+
+string Normalizar(string texto)
+{
+    string origen = (texto ?? string.Empty).Normalize(System.Text.NormalizationForm.FormD);
+    var sb = new System.Text.StringBuilder();
+    foreach (char c in origen)
+    {
+        if (System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c) == System.Globalization.UnicodeCategory.NonSpacingMark) continue;
+        if (char.IsLetterOrDigit(c)) sb.Append(char.ToLowerInvariant(c));
+    }
+    return sb.ToString();
+}
+
+bool TryNumero(object valor, out int numero)
+{
+    numero = 0;
+    double temporal;
+    string texto = Texto(valor);
+    if (string.IsNullOrWhiteSpace(texto)) return false;
+    if (double.TryParse(texto, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, out temporal)
+        || double.TryParse(texto, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), out temporal)
+        || double.TryParse(texto, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out temporal))
+    {
+        numero = (int)System.Math.Round(temporal, 0);
+        return true;
+    }
+    return false;
+}
+
+object ValorPorEtiqueta(params string[] etiquetas)
+{
+    if (hojaDatos == null) return null;
+    for (int r = 0; r < hojaDatos.Rows.Count; r++)
+    {
+        for (int c = 0; c < hojaDatos.Columns.Count; c++)
+        {
+            string etiqueta = Normalizar(Texto(hojaDatos.Rows[r][c]));
+            if (string.IsNullOrWhiteSpace(etiqueta)) continue;
+            bool coincide = false;
+            foreach (string esperada in etiquetas)
+            {
+                string normalizada = Normalizar(esperada);
+                if (!string.IsNullOrWhiteSpace(normalizada) && etiqueta.Contains(normalizada))
+                {
+                    coincide = true;
+                    break;
+                }
+            }
+            if (!coincide) continue;
+            for (int derecha = c + 1; derecha < hojaDatos.Columns.Count; derecha++)
+            {
+                if (!string.IsNullOrWhiteSpace(Texto(hojaDatos.Rows[r][derecha]))) return hojaDatos.Rows[r][derecha];
+            }
+        }
+    }
+    return null;
+}
+
+int numero;
+if (mes <= 0 && TryNumero(ValorPorEtiqueta("Service Start Month", "Mes Inicio servicio", "Mes Inicio"), out numero)) mes = numero;
+if (anio <= 0 && TryNumero(ValorPorEtiqueta("Service Start Year", "Ano Inicio servicio", "Anio Inicio servicio", "Año Inicio servicio"), out numero)) anio = numero;
+if (duracion <= 0 && TryNumero(ValorPorEtiqueta("Service Duration", "Duracion prevista", "Duración prevista", "Duration"), out numero)) duracion = numero;
+
+arg_MesInicio = mes;
+arg_AnioInicio = anio;
+arg_Duracion = duracion;
+        ]]></ui:InvokeCode.Code>
+        <ui:InvokeCode.Arguments>
+          <scg:Dictionary x:TypeArguments="x:String, Argument">
+            <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_HojaDatos">[in_dt_HojaDatosRawPPO]</InArgument>
+            <InOutArgument x:TypeArguments="x:Int32" x:Key="arg_MesInicio">[mesInicioPPO]</InOutArgument>
+            <InOutArgument x:TypeArguments="x:Int32" x:Key="arg_AnioInicio">[anioInicioPPO]</InOutArgument>
+            <InOutArgument x:TypeArguments="x:Int32" x:Key="arg_Duracion">[duracionMesesPPO]</InOutArgument>
+          </scg:Dictionary>
+        </ui:InvokeCode.Arguments>
+      </ui:InvokeCode>
       <If Condition="[duracionMesesPPO &lt;= 0 AndAlso String.IsNullOrWhiteSpace(in_FechaFinSAP) AndAlso (fechaFinFacturacionPPO Is Nothing OrElse TypeOf fechaFinFacturacionPPO Is DBNull OrElse String.IsNullOrWhiteSpace(Convert.ToString(fechaFinFacturacionPPO)))]" DisplayName="Validar duracion PPO" sap:VirtualizedContainerService.HintSize="434,269.3333333333333" sap2010:WorkflowViewState.IdRef="If_PPO_1037">
         <If.Then>
           <Throw DisplayName="Error duracion PPO" Exception="[New Exception(&quot;La duracion del PPO no esta informada o no es valida en Hoja de datos (etiquetas Service Duration / Duracion prevista).&quot;)]" sap:VirtualizedContainerService.HintSize="334,92" sap2010:WorkflowViewState.IdRef="Throw_PPO_1036" />
@@ -884,7 +972,7 @@
           <OutArgument x:TypeArguments="s:DateTime">[fechaInicioEfectivaPPO]</OutArgument>
         </Assign.To>
         <Assign.Value>
-          <InArgument x:TypeArguments="s:DateTime">[If(fechaInicioSAPParseadaPPO, fechaInicioSAPValorPPO, If(fechaInicioFacturacionParseadaPPO, fechaInicioFacturacionValorPPO, New System.DateTime(anioInicioPPO, mesInicioPPO, 1)))]</InArgument>
+          <InArgument x:TypeArguments="s:DateTime">[If(fechaInicioSAPParseadaPPO, fechaInicioSAPValorPPO, If(fechaInicioFacturacionParseadaPPO, fechaInicioFacturacionValorPPO, New System.DateTime(If(anioInicioPPO &gt; 0, anioInicioPPO, System.DateTime.Now.Year), If(mesInicioPPO &gt;= 1 AndAlso mesInicioPPO &lt;= 12, mesInicioPPO, 1), 1)))]</InArgument>
         </Assign.Value>
       </Assign>
       <Assign DisplayName="Resolver fecha fin efectiva" sap:VirtualizedContainerService.HintSize="434,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_PPO_1095">
@@ -892,7 +980,7 @@
           <OutArgument x:TypeArguments="s:DateTime">[fechaFinEfectivaPPO]</OutArgument>
         </Assign.To>
         <Assign.Value>
-          <InArgument x:TypeArguments="s:DateTime">[If(fechaFinSAPParseadaPPO, fechaFinSAPValorPPO, If(fechaFinFacturacionParseadaPPO, fechaFinFacturacionValorPPO, fechaInicioEfectivaPPO.AddMonths(duracionMesesPPO).AddDays(-1)))]</InArgument>
+          <InArgument x:TypeArguments="s:DateTime">[If(fechaFinSAPParseadaPPO, fechaFinSAPValorPPO, If(fechaFinFacturacionParseadaPPO, fechaFinFacturacionValorPPO, fechaInicioEfectivaPPO.AddMonths(If(duracionMesesPPO &gt; 0, duracionMesesPPO, 1)).AddDays(-1)))]</InArgument>
         </Assign.Value>
       </Assign>
       <If Condition="[fechaFinEfectivaPPO.Date &lt; fechaInicioEfectivaPPO.Date]" DisplayName="Validar coherencia fechas PPO" sap:VirtualizedContainerService.HintSize="434,269.3333333333333" sap2010:WorkflowViewState.IdRef="If_PPO_1097">
@@ -1861,6 +1949,788 @@
           </ActivityAction>
         </ui:ForEach.Body>
       </ui:ForEach>
+    </Sequence>
+    <Sequence sap2010:Annotation.AnnotationText="Objetivo: reconstruir las tablas de negocio de E03 desde etiquetas, cabeceras y bloques reales de Parametros, Presupuesto y Sintesis Precio. Entradas: rangos PPO ya leidos. Salidas: cabecera, perfiles con ResourceKey, costes, horas, gastos, compras y tarifas AT semanticas." DisplayName="Utilidad E03 - lectura semantica PPO" sap:VirtualizedContainerService.HintSize="750,520" sap2010:WorkflowViewState.IdRef="Sequence_PPO_E03_001">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <ui:InvokeCode ContinueOnError="{x:Null}" DisplayName="Reconstruir modelo PPO por semantica E03" Language="CSharp">
+        <ui:InvokeCode.Code><![CDATA[
+System.Data.DataTable dtMapaLecturaPPO = null;
+System.Data.DataTable dtCabeceraPPO = null;
+System.Data.DataTable dtPerfilesPPO = null;
+System.Data.DataTable dtCostesPorAnio = null;
+System.Data.DataTable dtHorasPorAnio = null;
+System.Data.DataTable dtGastos = null;
+System.Data.DataTable dtCompras = null;
+System.Data.DataTable dtTarifasAT = null;
+System.Data.DataTable dtMesesPPO = null;
+
+string Texto(object valor)
+{
+    if (valor == null || valor == System.DBNull.Value) return string.Empty;
+    return System.Convert.ToString(valor).Trim();
+}
+
+string Normalizar(string texto)
+{
+    string origen = (texto ?? string.Empty).Normalize(System.Text.NormalizationForm.FormD);
+    var sb = new System.Text.StringBuilder();
+    foreach (char c in origen)
+    {
+        if (System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c) == System.Globalization.UnicodeCategory.NonSpacingMark) continue;
+        if (char.IsLetterOrDigit(c)) sb.Append(char.ToLowerInvariant(c));
+    }
+    return sb.ToString();
+}
+
+string NormalizarClave(string texto)
+{
+    string origen = (texto ?? string.Empty).Normalize(System.Text.NormalizationForm.FormD);
+    var sb = new System.Text.StringBuilder();
+    bool ultimoEspacio = true;
+    foreach (char c in origen)
+    {
+        if (System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c) == System.Globalization.UnicodeCategory.NonSpacingMark) continue;
+        if (char.IsLetterOrDigit(c))
+        {
+            sb.Append(char.ToUpperInvariant(c));
+            ultimoEspacio = false;
+        }
+        else if (!ultimoEspacio)
+        {
+            sb.Append(' ');
+            ultimoEspacio = true;
+        }
+    }
+    return sb.ToString().Trim();
+}
+
+bool EsVacio(object valor)
+{
+    return string.IsNullOrWhiteSpace(Texto(valor));
+}
+
+object Celda(System.Data.DataTable tabla, int fila, int columna)
+{
+    if (tabla == null || fila < 0 || columna < 0 || fila >= tabla.Rows.Count || columna >= tabla.Columns.Count) return null;
+    return tabla.Rows[fila][columna];
+}
+
+bool TryNumero(object valor, out double numero)
+{
+    numero = 0D;
+    if (valor == null || valor == System.DBNull.Value) return false;
+    if (valor is double || valor is float || valor is int || valor is long || valor is decimal || valor is short)
+    {
+        numero = System.Convert.ToDouble(valor, System.Globalization.CultureInfo.InvariantCulture);
+        return true;
+    }
+
+    string texto = Texto(valor);
+    if (string.IsNullOrWhiteSpace(texto)) return false;
+    texto = texto.Replace("EUR", string.Empty).Replace("eur", string.Empty).Replace("\u20AC", string.Empty).Replace("%", string.Empty).Trim();
+    if (double.TryParse(texto, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), out numero)) return true;
+    if (double.TryParse(texto, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out numero)) return true;
+    string normalizado = texto.Replace(" ", string.Empty);
+    if (normalizado.Contains(",") && normalizado.Contains("."))
+    {
+        normalizado = normalizado.Replace(".", string.Empty).Replace(",", ".");
+        if (double.TryParse(normalizado, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out numero)) return true;
+    }
+    return false;
+}
+
+bool TryAnio(object valor, out int anio)
+{
+    anio = 0;
+    double numero;
+    if (TryNumero(valor, out numero))
+    {
+        int candidato = (int)System.Math.Round(numero, 0);
+        if (candidato >= 2000 && candidato <= 2100)
+        {
+            anio = candidato;
+            return true;
+        }
+    }
+
+    var match = System.Text.RegularExpressions.Regex.Match(Texto(valor), @"20\d{2}");
+    if (match.Success)
+    {
+        anio = int.Parse(match.Value, System.Globalization.CultureInfo.InvariantCulture);
+        return true;
+    }
+    return false;
+}
+
+bool TryFecha(object valor, out System.DateTime fecha)
+{
+    fecha = System.DateTime.MinValue;
+    double numero;
+    if (TryNumero(valor, out numero) && numero > 20000D && numero < 90000D)
+    {
+        fecha = System.DateTime.FromOADate(numero);
+        return true;
+    }
+
+    string texto = Texto(valor);
+    if (string.IsNullOrWhiteSpace(texto)) return false;
+    return System.DateTime.TryParse(texto, System.Globalization.CultureInfo.GetCultureInfo("es-ES"), System.Globalization.DateTimeStyles.None, out fecha)
+        || System.DateTime.TryParse(texto, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out fecha);
+}
+
+System.Data.DataTable Tabla(string nombre, params string[] columnas)
+{
+    var tabla = new System.Data.DataTable(nombre);
+    foreach (string columna in columnas) tabla.Columns.Add(columna, typeof(object));
+    return tabla;
+}
+
+void Add(System.Data.DataTable tabla, params object[] valores)
+{
+    var fila = tabla.NewRow();
+    for (int i = 0; i < tabla.Columns.Count && i < valores.Length; i++) fila[i] = valores[i] ?? System.DBNull.Value;
+    tabla.Rows.Add(fila);
+}
+
+string ColumnaExcel(int indiceUno)
+{
+    string resultado = string.Empty;
+    int n = indiceUno;
+    while (n > 0)
+    {
+        int resto = (n - 1) % 26;
+        resultado = ((char)('A' + resto)).ToString() + resultado;
+        n = (n - resto - 1) / 26;
+    }
+    return resultado;
+}
+
+string CeldaExcel(int filaBase, int columnaBase, int filaRelativa, int columnaRelativa)
+{
+    return ColumnaExcel(columnaBase + columnaRelativa) + (filaBase + filaRelativa).ToString(System.Globalization.CultureInfo.InvariantCulture);
+}
+
+bool EtiquetaCoincide(object valor, params string[] etiquetas)
+{
+    string n = Normalizar(Texto(valor));
+    if (string.IsNullOrWhiteSpace(n)) return false;
+    foreach (string etiqueta in etiquetas)
+    {
+        string e = Normalizar(etiqueta);
+        if (string.IsNullOrWhiteSpace(e)) continue;
+        if (n == e || n.StartsWith(e, System.StringComparison.OrdinalIgnoreCase)) return true;
+    }
+    return false;
+}
+
+bool FilaContiene(System.Data.DataTable tabla, int fila, params string[] etiquetas)
+{
+    if (tabla == null || fila < 0 || fila >= tabla.Rows.Count) return false;
+    for (int c = 0; c < tabla.Columns.Count; c++)
+    {
+        if (EtiquetaCoincide(tabla.Rows[fila][c], etiquetas)) return true;
+    }
+    return false;
+}
+
+string TextoFila(System.Data.DataTable tabla, int fila)
+{
+    if (tabla == null || fila < 0 || fila >= tabla.Rows.Count) return string.Empty;
+    var partes = new System.Collections.Generic.List<string>();
+    for (int c = 0; c < tabla.Columns.Count; c++)
+    {
+        string texto = Texto(tabla.Rows[fila][c]);
+        if (!string.IsNullOrWhiteSpace(texto)) partes.Add(texto);
+    }
+    return string.Join(" ", partes);
+}
+
+object ValorPorEtiqueta(System.Data.DataTable tabla, int filaBase, int colBase, string hoja, out string origen, params string[] etiquetas)
+{
+    origen = hoja + " (no localizado)";
+    if (tabla == null) return null;
+    for (int r = 0; r < tabla.Rows.Count; r++)
+    {
+        for (int c = 0; c < tabla.Columns.Count; c++)
+        {
+            if (!EtiquetaCoincide(tabla.Rows[r][c], etiquetas)) continue;
+            for (int derecha = c + 1; derecha < tabla.Columns.Count; derecha++)
+            {
+                if (!EsVacio(tabla.Rows[r][derecha]))
+                {
+                    origen = hoja + ": " + Texto(tabla.Rows[r][c]) + " (" + CeldaExcel(filaBase, colBase, r, derecha) + ")";
+                    return tabla.Rows[r][derecha];
+                }
+            }
+            origen = hoja + ": " + Texto(tabla.Rows[r][c]) + " (" + CeldaExcel(filaBase, colBase, r, c) + ", sin valor)";
+            return null;
+        }
+    }
+    return null;
+}
+
+void AddCabecera(string campo, object valor, string origen)
+{
+    Add(dtCabeceraPPO, campo, valor ?? System.DBNull.Value, origen);
+}
+
+void AddMapa(string campo, string hoja, string celda, string tipo, bool obligatorio, string origenFuncional)
+{
+    Add(dtMapaLecturaPPO, campo, hoja, celda, tipo, obligatorio, origenFuncional);
+}
+
+string RecursoKey(string sigla, string perfil, string entidad)
+{
+    return NormalizarClave(sigla) + "|" + NormalizarClave(perfil) + "|" + NormalizarClave(entidad);
+}
+
+System.Data.DataRow BuscarFila(System.Data.DataTable tabla, string columna, string valor)
+{
+    if (tabla == null || !tabla.Columns.Contains(columna)) return null;
+    foreach (System.Data.DataRow fila in tabla.Rows)
+    {
+        if (string.Equals(Texto(fila[columna]), valor, System.StringComparison.OrdinalIgnoreCase)) return fila;
+    }
+    return null;
+}
+
+System.Data.DataRow EnsurePerfil(
+    System.Collections.Generic.Dictionary<string, System.Data.DataRow> perfiles,
+    System.Collections.Generic.List<string> orden,
+    string sigla,
+    string perfil,
+    string entidad,
+    string origen)
+{
+    string key = RecursoKey(sigla, perfil, entidad);
+    if (string.IsNullOrWhiteSpace(NormalizarClave(sigla)) || string.IsNullOrWhiteSpace(NormalizarClave(perfil))) return null;
+    System.Data.DataRow fila;
+    if (perfiles.TryGetValue(key, out fila)) return fila;
+
+    fila = dtPerfilesPPO.NewRow();
+    fila["Sigla"] = sigla;
+    fila["Perfil"] = perfil;
+    fila["Entidad"] = entidad;
+    fila["TarifaAT"] = System.DBNull.Value;
+    fila["ResourceKey"] = key;
+    fila["RowSource"] = origen;
+    dtPerfilesPPO.Rows.Add(fila);
+    perfiles[key] = fila;
+    orden.Add(key);
+    return fila;
+}
+
+void AddOrSum(System.Data.DataTable tabla, string keyColumn, string key, string anioColumn, int anio, string valueColumn, double valor, params object[] nuevaFila)
+{
+    if (System.Math.Abs(valor) <= 0.0000001D) return;
+    foreach (System.Data.DataRow fila in tabla.Rows)
+    {
+        double actual;
+        int anioActual;
+        if (string.Equals(Texto(fila[keyColumn]), key, System.StringComparison.OrdinalIgnoreCase)
+            && TryAnio(fila[anioColumn], out anioActual)
+            && anioActual == anio)
+        {
+            TryNumero(fila[valueColumn], out actual);
+            fila[valueColumn] = actual + valor;
+            return;
+        }
+    }
+    Add(tabla, nuevaFila);
+}
+
+int BuscarCabeceraParametros(System.Data.DataTable tabla)
+{
+    if (tabla == null) return -1;
+    for (int r = 0; r < tabla.Rows.Count; r++)
+    {
+        bool perfil = false;
+        bool entidad = false;
+        bool sigla = false;
+        for (int c = 0; c < tabla.Columns.Count; c++)
+        {
+            perfil = perfil || EtiquetaCoincide(tabla.Rows[r][c], "Perfil");
+            entidad = entidad || EtiquetaCoincide(tabla.Rows[r][c], "Entidad");
+            sigla = sigla || EtiquetaCoincide(tabla.Rows[r][c], "Sigla");
+        }
+        if (perfil && entidad && sigla) return r;
+    }
+    return -1;
+}
+
+int ColumnaPorEtiqueta(System.Data.DataTable tabla, int fila, params string[] etiquetas)
+{
+    if (tabla == null || fila < 0 || fila >= tabla.Rows.Count) return -1;
+    for (int c = 0; c < tabla.Columns.Count; c++)
+    {
+        if (EtiquetaCoincide(tabla.Rows[fila][c], etiquetas)) return c;
+    }
+    return -1;
+}
+
+System.Collections.Generic.Dictionary<int, int> ColumnasAnio(System.Data.DataTable tabla, int fila)
+{
+    var resultado = new System.Collections.Generic.Dictionary<int, int>();
+    if (tabla == null || fila < 0 || fila >= tabla.Rows.Count) return resultado;
+    for (int c = 0; c < tabla.Columns.Count; c++)
+    {
+        int anio;
+        if (TryAnio(tabla.Rows[fila][c], out anio) && !resultado.ContainsKey(anio)) resultado[anio] = c;
+    }
+    return resultado;
+}
+
+int ColumnaTotal(System.Data.DataTable tabla, int fila)
+{
+    int col = ColumnaPorEtiqueta(tabla, fila, "TOTAL", "Total");
+    if (col >= 0) return col;
+    return 9;
+}
+
+int BuscarFilaPresupuesto(params string[] etiquetas)
+{
+    if (arg_Presupuesto == null) return -1;
+    for (int r = 0; r < arg_Presupuesto.Rows.Count; r++)
+    {
+        string primero = Texto(Celda(arg_Presupuesto, r, 0));
+        if (EtiquetaCoincide(primero, etiquetas)) return r;
+    }
+    return -1;
+}
+
+int BuscarHeaderAnualPresupuesto(int filaBloque)
+{
+    if (arg_Presupuesto == null) return -1;
+    for (int r = filaBloque; r >= 0 && r >= filaBloque - 8; r--)
+    {
+        if (ColumnasAnio(arg_Presupuesto, r).Count > 0 && ColumnaTotal(arg_Presupuesto, r) >= 0) return r;
+    }
+    for (int r = 0; r < arg_Presupuesto.Rows.Count; r++)
+    {
+        if (ColumnasAnio(arg_Presupuesto, r).Count > 0 && ColumnaTotal(arg_Presupuesto, r) >= 0) return r;
+    }
+    return -1;
+}
+
+int SiguienteBloquePresupuesto(int desde)
+{
+    if (arg_Presupuesto == null) return desde;
+    for (int r = desde + 1; r < arg_Presupuesto.Rows.Count; r++)
+    {
+        string primero = Texto(Celda(arg_Presupuesto, r, 0));
+        if (EtiquetaCoincide(primero, "Gastos", "Compras", "Riesgos", "Riesgos Mano de Obra", "Garantia", "Garantia Mano de Obra")) return r;
+    }
+    return arg_Presupuesto.Rows.Count;
+}
+
+double TotalBloquePresupuesto(int filaBloque)
+{
+    if (filaBloque < 0) return 0D;
+    int header = BuscarHeaderAnualPresupuesto(filaBloque);
+    int totalCol = ColumnaTotal(arg_Presupuesto, header);
+    double total;
+    return TryNumero(Celda(arg_Presupuesto, filaBloque, totalCol), out total) ? total : 0D;
+}
+
+int ColumnaDescripcionPresupuesto(int filaBloque)
+{
+    int header = BuscarHeaderAnualPresupuesto(filaBloque);
+    int col = ColumnaPorEtiqueta(arg_Presupuesto, filaBloque, "Descripcion Gastos", "Descripcion Compras", "Descripcion");
+    if (col >= 0) return col;
+    col = ColumnaPorEtiqueta(arg_Presupuesto, header, "Descripcion del Item", "Descripcion");
+    return col >= 0 ? col : 10;
+}
+
+void LeerLineasBloqueImportes(string tipo, int filaBloque, System.Data.DataTable destino)
+{
+    if (filaBloque < 0 || arg_Presupuesto == null) return;
+    int header = BuscarHeaderAnualPresupuesto(filaBloque);
+    var anios = ColumnasAnio(arg_Presupuesto, header);
+    int totalCol = ColumnaTotal(arg_Presupuesto, header);
+    int descCol = ColumnaDescripcionPresupuesto(filaBloque);
+    int fin = SiguienteBloquePresupuesto(filaBloque);
+    for (int r = filaBloque + 1; r < fin; r++)
+    {
+        string etiqueta = Texto(Celda(arg_Presupuesto, r, 0));
+        string descripcion = Texto(Celda(arg_Presupuesto, r, descCol));
+        if (string.IsNullOrWhiteSpace(descripcion)) descripcion = etiqueta;
+        if (string.IsNullOrWhiteSpace(descripcion) || descripcion == "0") continue;
+
+        double total;
+        bool totalOk = TryNumero(Celda(arg_Presupuesto, r, totalCol), out total);
+        if (!totalOk || System.Math.Abs(total) <= 0.0000001D) continue;
+
+        foreach (var par in anios)
+        {
+            double importe;
+            if (TryNumero(Celda(arg_Presupuesto, r, par.Value), out importe) && System.Math.Abs(importe) > 0.0000001D)
+            {
+                if (destino == dtGastos) Add(destino, descripcion, par.Key, importe, tipo);
+                else Add(destino, etiqueta, descripcion, par.Key, importe);
+            }
+        }
+    }
+}
+
+object TotalSintesis(out string origen)
+{
+    origen = "Sintesis Precio (no localizado)";
+    if (arg_Sintesis == null) return null;
+
+    double numero;
+    for (int r = 0; r < arg_Sintesis.Rows.Count; r++)
+    {
+        for (int c = 0; c < arg_Sintesis.Columns.Count; c++)
+        {
+            if (!EtiquetaCoincide(arg_Sintesis.Rows[r][c], "Total Oferta sin IVA", "Precio Total")) continue;
+            for (int derecha = c + 1; derecha < arg_Sintesis.Columns.Count; derecha++)
+            {
+                if (TryNumero(arg_Sintesis.Rows[r][derecha], out numero))
+                {
+                    origen = "Sintesis Precio!" + CeldaExcel(12, 4, r, derecha) + " por etiqueta " + Texto(arg_Sintesis.Rows[r][c]);
+                    return numero;
+                }
+            }
+            for (int abajo = r + 1; abajo < arg_Sintesis.Rows.Count && abajo <= r + 3; abajo++)
+            {
+                if (TryNumero(arg_Sintesis.Rows[abajo][c], out numero))
+                {
+                    origen = "Sintesis Precio!" + CeldaExcel(12, 4, abajo, c) + " bajo etiqueta " + Texto(arg_Sintesis.Rows[r][c]);
+                    return numero;
+                }
+            }
+        }
+    }
+
+    if (arg_Sintesis.Rows.Count > 0 && arg_Sintesis.Columns.Count > 0 && TextoFila(arg_Sintesis, 0).IndexOf("Precio Total", System.StringComparison.OrdinalIgnoreCase) >= 0 && TryNumero(Celda(arg_Sintesis, 0, 0), out numero))
+    {
+        origen = "Sintesis Precio!D12 confirmado por contexto Precio Total";
+        return numero;
+    }
+
+    if (arg_Sintesis.Rows.Count > 2 && arg_Sintesis.Columns.Count > 7 && TextoFila(arg_Sintesis, 0).IndexOf("Precio Total", System.StringComparison.OrdinalIgnoreCase) >= 0 && TryNumero(Celda(arg_Sintesis, 2, 7), out numero))
+    {
+        origen = "Sintesis Precio!K14 confirmado por cabecera Precio Total";
+        return numero;
+    }
+
+    if (arg_Sintesis.Rows.Count > 6 && arg_Sintesis.Columns.Count > 8 && Normalizar(TextoFila(arg_Sintesis, 6)).Contains("manoobra") && TryNumero(Celda(arg_Sintesis, 6, 7), out numero))
+    {
+        origen = "Sintesis Precio!K18 confirmado por contexto Mano de Obra";
+        return numero;
+    }
+
+    return null;
+}
+
+string TipoNormalizado(object tipoPadre, object pepType, object opportunityType, object serviceType)
+{
+    string textoPadre = Texto(tipoPadre);
+    string texto = !string.IsNullOrWhiteSpace(textoPadre) ? textoPadre : string.Join(" ", new string[] { Texto(pepType), Texto(opportunityType), Texto(serviceType) });
+    string n = Normalizar(texto);
+    if (n == "at" || n.Contains("asistenciatecnica") || n.Contains("serviciosprofesionales") || n.Contains("tiempoymateriales")) return "AT";
+    if (n == "pc" || n.Contains("fixedprice") || n.Contains("preciocerrado")) return "PC";
+    return string.IsNullOrWhiteSpace(textoPadre) ? string.Empty : textoPadre.Trim().ToUpperInvariant();
+}
+
+dtMapaLecturaPPO = Tabla("dtMapaLecturaPPO", "Campo", "Hoja", "Celda", "Tipo", "Obligatorio", "OrigenFuncional");
+dtCabeceraPPO = Tabla("dtCabeceraPPO", "Campo", "Valor", "Origen");
+dtPerfilesPPO = Tabla("dtPerfilesPPO", "Sigla", "Perfil", "Entidad", "TarifaAT", "ResourceKey", "RowSource");
+dtCostesPorAnio = Tabla("dtCostesPorAnio", "Sigla", "Anio", "CosteHora", "ResourceKey");
+dtHorasPorAnio = Tabla("dtHorasPorAnio", "Sigla", "Anio", "Horas", "ResourceKey");
+dtGastos = Tabla("dtGastos", "Descripcion", "Anio", "Importe", "Tipo");
+dtCompras = Tabla("dtCompras", "Etiqueta", "Descripcion", "Anio", "Importe");
+dtTarifasAT = Tabla("dtTarifasAT", "Sigla", "TarifaAT", "ResourceKey", "Origen");
+dtMesesPPO = Tabla("dtMesesPPO", "Indice", "Anio", "Mes", "Fecha");
+
+AddMapa("orderAmount", "Sintesis Precio", "D12/K14/K18 por contexto", "Numero", false, "Importe oferta");
+AddMapa("resourceCost", "Presupuesto", "Bloque Estimacion Mano de Obra / TOTAL", "Numero", false, "Coste recursos");
+AddMapa("hoursEstimated", "Presupuesto", "Cabecera Perfil / TOTAL", "Numero", false, "Horas estimadas");
+AddMapa("expenses", "Presupuesto", "Bloque Gastos / TOTAL", "Numero", false, "Total gastos");
+AddMapa("purchases", "Presupuesto", "Bloque Compras / TOTAL", "Numero", false, "Total compras");
+AddMapa("risks", "Presupuesto", "Bloque Riesgos / TOTAL", "Numero", false, "Riesgos");
+AddMapa("warranty", "Presupuesto", "Bloque Garantia / TOTAL", "Numero", false, "Garantia");
+
+string origen;
+object company = ValorPorEtiqueta(arg_HojaDatos, 8, 1, "Hoja de datos", out origen, "Company", "Entidad Presentadora", "Compania", "Sociedad");
+AddCabecera("company", company, origen);
+object unit = ValorPorEtiqueta(arg_HojaDatos, 8, 1, "Hoja de datos", out origen, "Unidad Negocio", "Business Unit");
+AddCabecera("unit", unit, origen);
+object location = ValorPorEtiqueta(arg_HojaDatos, 8, 1, "Hoja de datos", out origen, "Customer Location", "Oficina", "Localizacion", "Location");
+AddCabecera("location", location, origen);
+object serviceType = ValorPorEtiqueta(arg_HojaDatos, 8, 1, "Hoja de datos", out origen, "Project Service Type", "Project/Service Type", "Tipo Servicio");
+AddCabecera("serviceType", serviceType, origen);
+object pepType = ValorPorEtiqueta(arg_HojaDatos, 8, 1, "Hoja de datos", out origen, "PEP Type", "Tipo de Contratacion", "Tipo Contratacion");
+AddCabecera("pepType", pepType, origen);
+object portfolio = ValorPorEtiqueta(arg_HojaDatos, 8, 1, "Hoja de datos", out origen, "Porfolio", "Portfolio", "Tipo Producto");
+AddCabecera("portfolio", portfolio, origen);
+object practice = ValorPorEtiqueta(arg_HojaDatos, 8, 1, "Hoja de datos", out origen, "Practice", "Sector");
+AddCabecera("practice", practice, origen);
+object subpractice = ValorPorEtiqueta(arg_HojaDatos, 8, 1, "Hoja de datos", out origen, "Subpractice", "Zona");
+AddCabecera("subpractice", subpractice, origen);
+object opportunityType = ValorPorEtiqueta(arg_HojaDatos, 8, 1, "Hoja de datos", out origen, "Opportunity Type", "Tipo de Contratacion", "Tipo Contratacion");
+AddCabecera("opportunityType", opportunityType, origen);
+object accountManager = ValorPorEtiqueta(arg_HojaDatos, 8, 1, "Hoja de datos", out origen, "Account Manager", "Responsable Comercial");
+AddCabecera("accountManager", accountManager, origen);
+object applicant = ValorPorEtiqueta(arg_HojaDatos, 8, 1, "Hoja de datos", out origen, "Applicant", "Responsable Oferta");
+AddCabecera("applicant", applicant, origen);
+object subpracticeOrigin = ValorPorEtiqueta(arg_HojaDatos, 8, 1, "Hoja de datos", out origen, "Subpractice Origin", "CEBE");
+AddCabecera("subpracticeOrigin", subpracticeOrigin, origen);
+object opportunityCode = ValorPorEtiqueta(arg_HojaDatos, 8, 1, "Hoja de datos", out origen, "Opportunity Code", "Opportunity Number", "Codigo Oferta Proyecto", "Codigo Oferta/Proyecto", "Codigo Oportunidad");
+if (EsVacio(opportunityCode))
+{
+    string nombre = string.IsNullOrWhiteSpace(arg_RutaPPOTrabajo) ? string.Empty : System.IO.Path.GetFileNameWithoutExtension(arg_RutaPPOTrabajo);
+    var match = System.Text.RegularExpressions.Regex.Match(nombre, @"\d{10,12}");
+    if (match.Success)
+    {
+        opportunityCode = match.Value;
+        origen = "Nombre de fichero PPO (fallback controlado)";
+    }
+}
+AddCabecera("opportunityCode", opportunityCode, origen);
+object customer = ValorPorEtiqueta(arg_HojaDatos, 8, 1, "Hoja de datos", out origen, "Customer", "Cliente");
+AddCabecera("customer", customer, origen);
+object description = ValorPorEtiqueta(arg_HojaDatos, 8, 1, "Hoja de datos", out origen, "Descripcion Oferta", "Description");
+AddCabecera("description", description, origen);
+object proposalDelivery = ValorPorEtiqueta(arg_HojaDatos, 8, 1, "Hoja de datos", out origen, "Date of Proposal Delivery", "Fecha prevista presentacion al Cliente", "Fecha prevista presentacion");
+AddCabecera("proposalDelivery", proposalDelivery, origen);
+object startMonthObj = ValorPorEtiqueta(arg_HojaDatos, 8, 1, "Hoja de datos", out origen, "Service Start Month", "Mes Inicio servicio");
+AddCabecera("startMonth", startMonthObj, origen);
+object startYearObj = ValorPorEtiqueta(arg_HojaDatos, 8, 1, "Hoja de datos", out origen, "Service Start Year", "Ano Inicio servicio", "Anio Inicio servicio");
+AddCabecera("startYear", startYearObj, origen);
+object durationObj = ValorPorEtiqueta(arg_HojaDatos, 8, 1, "Hoja de datos", out origen, "Service Duration", "Duracion prevista");
+AddCabecera("duration", durationObj, origen);
+
+string tipoDetectado = TipoNormalizado(arg_TipoProyecto, pepType, opportunityType, serviceType);
+arg_NumeroSFExtraido = Texto(opportunityCode);
+arg_TipoProyectoDetectado = tipoDetectado;
+
+double startMonthNum;
+double startYearNum;
+double durationNum;
+int mesInicio = TryNumero(startMonthObj, out startMonthNum) ? (int)System.Math.Round(startMonthNum, 0) : 1;
+int anioInicio = TryNumero(startYearObj, out startYearNum) ? (int)System.Math.Round(startYearNum, 0) : System.DateTime.Now.Year;
+bool duracionInformada = TryNumero(durationObj, out durationNum);
+int duracion = duracionInformada ? (int)System.Math.Round(durationNum, 0) : 0;
+if (mesInicio < 1 || mesInicio > 12) mesInicio = 1;
+if (duracion < 1) throw new System.Exception("La duracion del PPO no esta informada o no es valida en Hoja de datos (etiquetas Service Duration / Duracion prevista).");
+System.DateTime fechaInicio;
+if (!TryFecha(arg_FechaInicioSAP, out fechaInicio)) fechaInicio = new System.DateTime(anioInicio, mesInicio, 1);
+System.DateTime fechaFin;
+if (!TryFecha(arg_FechaFinSAP, out fechaFin)) fechaFin = fechaInicio.AddMonths(duracion).AddDays(-1);
+AddCabecera("startDate", fechaInicio.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), "SAP/Hoja de datos");
+AddCabecera("endDate", fechaFin.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), "SAP/Hoja de datos");
+for (int i = 0; i < duracion; i++)
+{
+    var fechaMes = new System.DateTime(fechaInicio.AddMonths(i).Year, fechaInicio.AddMonths(i).Month, 1);
+    Add(dtMesesPPO, i + 1, fechaMes.Year, fechaMes.Month, fechaMes.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture));
+}
+
+var perfiles = new System.Collections.Generic.Dictionary<string, System.Data.DataRow>(System.StringComparer.OrdinalIgnoreCase);
+var ordenPerfiles = new System.Collections.Generic.List<string>();
+
+int headerParametros = BuscarCabeceraParametros(arg_Parametros);
+if (headerParametros >= 0)
+{
+    int colPerfil = ColumnaPorEtiqueta(arg_Parametros, headerParametros, "Perfil");
+    int colEntidad = ColumnaPorEtiqueta(arg_Parametros, headerParametros, "Entidad");
+    int colSigla = ColumnaPorEtiqueta(arg_Parametros, headerParametros, "Sigla");
+    var costeCols = ColumnasAnio(arg_Parametros, headerParametros);
+    for (int r = headerParametros + 1; r < arg_Parametros.Rows.Count; r++)
+    {
+        string perfil = Texto(Celda(arg_Parametros, r, colPerfil));
+        string entidad = Texto(Celda(arg_Parametros, r, colEntidad));
+        string sigla = Texto(Celda(arg_Parametros, r, colSigla));
+        if (string.IsNullOrWhiteSpace(perfil) || string.IsNullOrWhiteSpace(sigla) || perfil == "0" || sigla == "0") continue;
+        string origenPerfil = "Parametros!" + CeldaExcel(18, 2, r, colSigla);
+        var filaPerfil = EnsurePerfil(perfiles, ordenPerfiles, sigla, perfil, entidad, origenPerfil);
+        if (filaPerfil == null) continue;
+        string key = Texto(filaPerfil["ResourceKey"]);
+        foreach (var par in costeCols)
+        {
+            double coste;
+            if (TryNumero(Celda(arg_Parametros, r, par.Value), out coste))
+            {
+                AddOrSum(dtCostesPorAnio, "ResourceKey", key, "Anio", par.Key, "CosteHora", coste, sigla, par.Key, coste, key);
+            }
+        }
+    }
+}
+
+int filaRecursos = -1;
+if (arg_Presupuesto != null)
+{
+    for (int r = 0; r < arg_Presupuesto.Rows.Count; r++)
+    {
+        if (FilaContiene(arg_Presupuesto, r, "Perfil") && FilaContiene(arg_Presupuesto, r, "Sigla"))
+        {
+            filaRecursos = r;
+            break;
+        }
+    }
+}
+
+double resourceCost = 0D;
+double hoursEstimated = 0D;
+if (arg_Presupuesto != null && filaRecursos >= 0)
+{
+    int headerAnual = BuscarHeaderAnualPresupuesto(filaRecursos);
+    var anios = ColumnasAnio(arg_Presupuesto, headerAnual);
+    int totalCol = ColumnaTotal(arg_Presupuesto, headerAnual);
+    int colPerfil = ColumnaPorEtiqueta(arg_Presupuesto, filaRecursos, "Perfil");
+    int colEntidad = ColumnaPorEtiqueta(arg_Presupuesto, filaRecursos, "Entidad");
+    int colSigla = ColumnaPorEtiqueta(arg_Presupuesto, filaRecursos, "Sigla");
+    TryNumero(Celda(arg_Presupuesto, filaRecursos - 1, totalCol), out resourceCost);
+    TryNumero(Celda(arg_Presupuesto, filaRecursos, totalCol), out hoursEstimated);
+    int finRecursos = SiguienteBloquePresupuesto(filaRecursos);
+    for (int r = filaRecursos + 1; r < finRecursos; r++)
+    {
+        string perfil = Texto(Celda(arg_Presupuesto, r, colPerfil));
+        string entidad = Texto(Celda(arg_Presupuesto, r, colEntidad));
+        string sigla = Texto(Celda(arg_Presupuesto, r, colSigla));
+        if (string.IsNullOrWhiteSpace(perfil) || string.IsNullOrWhiteSpace(sigla) || perfil == "0" || sigla == "0") continue;
+        var filaPerfil = EnsurePerfil(perfiles, ordenPerfiles, sigla, perfil, entidad, "Presupuesto!" + CeldaExcel(3, 2, r, colSigla));
+        if (filaPerfil == null) continue;
+        string key = Texto(filaPerfil["ResourceKey"]);
+        foreach (var par in anios)
+        {
+            double horas;
+            if (TryNumero(Celda(arg_Presupuesto, r, par.Value), out horas))
+            {
+                AddOrSum(dtHorasPorAnio, "ResourceKey", key, "Anio", par.Key, "Horas", horas, sigla, par.Key, horas, key);
+            }
+        }
+    }
+}
+
+int filaGastos = BuscarFilaPresupuesto("Gastos");
+int filaCompras = BuscarFilaPresupuesto("Compras");
+int filaRiesgos = BuscarFilaPresupuesto("Riesgos", "Riesgos Mano de Obra");
+int filaGarantia = BuscarFilaPresupuesto("Garantia", "Garantia Mano de Obra");
+double expenses = TotalBloquePresupuesto(filaGastos);
+double purchases = TotalBloquePresupuesto(filaCompras);
+double risks = TotalBloquePresupuesto(filaRiesgos);
+double warranty = TotalBloquePresupuesto(filaGarantia);
+LeerLineasBloqueImportes("Gastos", filaGastos, dtGastos);
+LeerLineasBloqueImportes("Compras", filaCompras, dtCompras);
+
+object orderAmount = TotalSintesis(out origen);
+AddCabecera("orderAmount", orderAmount, origen);
+AddCabecera("orderAmountFallback", orderAmount, origen);
+AddCabecera("resourceCost", resourceCost, filaRecursos >= 0 ? "Presupuesto: Coste Directo Mano de Obra / TOTAL" : "Presupuesto (no localizado)");
+AddCabecera("hoursEstimated", hoursEstimated, filaRecursos >= 0 ? "Presupuesto: Perfil / TOTAL" : "Presupuesto (no localizado)");
+AddCabecera("expenses", expenses, filaGastos >= 0 ? "Presupuesto: Gastos / TOTAL" : "Presupuesto (no localizado)");
+AddCabecera("purchases", purchases, filaCompras >= 0 ? "Presupuesto: Compras / TOTAL" : "Presupuesto (no localizado)");
+AddCabecera("risks", risks, filaRiesgos >= 0 ? "Presupuesto: Riesgos / TOTAL" : "Presupuesto (no localizado)");
+AddCabecera("warranty", warranty, filaGarantia >= 0 ? "Presupuesto: Garantia / TOTAL" : "Presupuesto (no localizado)");
+
+var colasPorSigla = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.Queue<string>>(System.StringComparer.OrdinalIgnoreCase);
+foreach (string key in ordenPerfiles)
+{
+    var fila = perfiles[key];
+    string sigla = Texto(fila["Sigla"]);
+    if (!colasPorSigla.ContainsKey(sigla)) colasPorSigla[sigla] = new System.Collections.Generic.Queue<string>();
+    colasPorSigla[sigla].Enqueue(key);
+}
+
+if (arg_Sintesis != null)
+{
+    int headerSintesis = -1;
+    for (int r = 0; r < arg_Sintesis.Rows.Count; r++)
+    {
+        if (FilaContiene(arg_Sintesis, r, "Sigla") && (FilaContiene(arg_Sintesis, r, "Tarifa") || FilaContiene(arg_Sintesis, r, "Horas")))
+        {
+            headerSintesis = r;
+            break;
+        }
+    }
+    if (headerSintesis >= 0)
+    {
+        int colSigla = ColumnaPorEtiqueta(arg_Sintesis, headerSintesis, "Sigla");
+        int colHoras = ColumnaPorEtiqueta(arg_Sintesis, headerSintesis, "Horas");
+        int colTarifa = ColumnaPorEtiqueta(arg_Sintesis, headerSintesis, "Tarifa");
+        int colVenta = ColumnaPorEtiqueta(arg_Sintesis, headerSintesis, "Venta");
+        int colPrecio = 7;
+        for (int r = headerSintesis + 1; r < arg_Sintesis.Rows.Count; r++)
+        {
+            if (FilaContiene(arg_Sintesis, r, "Riesgos", "Gastos", "Compras")) break;
+            string sigla = Texto(Celda(arg_Sintesis, r, colSigla));
+            if (string.IsNullOrWhiteSpace(sigla) || sigla == "0") continue;
+            string key = null;
+            System.Collections.Generic.Queue<string> cola;
+            if (colasPorSigla.TryGetValue(sigla, out cola) && cola.Count > 0) key = cola.Dequeue();
+            if (string.IsNullOrWhiteSpace(key)) continue;
+
+            double tarifaDirecta = 0D;
+            double horas = 0D;
+            double venta = 0D;
+            bool tieneTarifa = colTarifa >= 0 && TryNumero(Celda(arg_Sintesis, r, colTarifa), out tarifaDirecta) && System.Math.Abs(tarifaDirecta) > 0.0000001D;
+            bool tieneHoras = colHoras >= 0 && TryNumero(Celda(arg_Sintesis, r, colHoras), out horas) && System.Math.Abs(horas) > 0.0000001D;
+            if (!tieneHoras) tieneHoras = TryNumero(Celda(arg_Sintesis, r, 1), out horas) && System.Math.Abs(horas) > 0.0000001D;
+            bool tieneVenta = colVenta >= 0 && TryNumero(Celda(arg_Sintesis, r, colVenta), out venta) && System.Math.Abs(venta) > 0.0000001D;
+            if (!tieneVenta) tieneVenta = TryNumero(Celda(arg_Sintesis, r, colPrecio), out venta) && System.Math.Abs(venta) > 0.0000001D;
+
+            double tarifa = 0D;
+            string origenTarifa = string.Empty;
+            if (tieneTarifa)
+            {
+                tarifa = tarifaDirecta;
+                origenTarifa = "Sintesis Precio!" + CeldaExcel(12, 4, r, colTarifa) + " tarifa directa";
+            }
+            else if (tieneVenta && tieneHoras)
+            {
+                tarifa = venta / horas;
+                origenTarifa = "Sintesis Precio venta/horas " + CeldaExcel(12, 4, r, colPrecio);
+            }
+
+            if (System.Math.Abs(tarifa) > 0.0000001D)
+            {
+                var filaPerfil = perfiles[key];
+                filaPerfil["TarifaAT"] = tarifa;
+                Add(dtTarifasAT, sigla, tarifa, key, origenTarifa);
+            }
+        }
+    }
+}
+
+arg_dtMapaLecturaPPO = dtMapaLecturaPPO;
+arg_dtCabeceraPPO = dtCabeceraPPO;
+arg_dtPerfilesPPO = dtPerfilesPPO;
+arg_dtCostesPorAnio = dtCostesPorAnio;
+arg_dtHorasPorAnio = dtHorasPorAnio;
+arg_dtGastos = dtGastos;
+arg_dtCompras = dtCompras;
+arg_dtTarifasAT = dtTarifasAT;
+arg_dtMesesPPO = dtMesesPPO;
+        ]]></ui:InvokeCode.Code>
+        <ui:InvokeCode.Arguments>
+          <scg:Dictionary x:TypeArguments="x:String, Argument">
+            <InArgument x:TypeArguments="x:String" x:Key="arg_RutaPPOTrabajo">[in_RutaPPOTrabajo]</InArgument>
+            <InArgument x:TypeArguments="x:String" x:Key="arg_TipoProyecto">[in_TipoProyecto]</InArgument>
+            <InArgument x:TypeArguments="x:String" x:Key="arg_FechaInicioSAP">[in_FechaInicioSAP]</InArgument>
+            <InArgument x:TypeArguments="x:String" x:Key="arg_FechaFinSAP">[in_FechaFinSAP]</InArgument>
+            <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_HojaDatos">[in_dt_HojaDatosRawPPO]</InArgument>
+            <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_Parametros">[in_dt_ParametrosRawPPO]</InArgument>
+            <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_Presupuesto">[in_dt_PresupuestoRawPPO]</InArgument>
+            <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_Sintesis">[in_dt_SintesisPrecioRawPPO]</InArgument>
+            <OutArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtMapaLecturaPPO">[out_dt_MapaLecturaPPO]</OutArgument>
+            <OutArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtCabeceraPPO">[out_dt_CabeceraPPO]</OutArgument>
+            <OutArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtPerfilesPPO">[out_dt_PerfilesPPO]</OutArgument>
+            <OutArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtCostesPorAnio">[out_dt_CostesPorAnio]</OutArgument>
+            <OutArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtHorasPorAnio">[out_dt_HorasPorAnio]</OutArgument>
+            <OutArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtGastos">[out_dt_Gastos]</OutArgument>
+            <OutArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtCompras">[out_dt_Compras]</OutArgument>
+            <OutArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtTarifasAT">[out_dt_TarifasAT]</OutArgument>
+            <OutArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtMesesPPO">[out_dt_MesesPPO]</OutArgument>
+            <OutArgument x:TypeArguments="x:String" x:Key="arg_NumeroSFExtraido">[out_NumeroSFExtraido]</OutArgument>
+            <OutArgument x:TypeArguments="x:String" x:Key="arg_TipoProyectoDetectado">[out_TipoProyectoDetectado]</OutArgument>
+          </scg:Dictionary>
+        </ui:InvokeCode.Arguments>
+      </ui:InvokeCode>
     </Sequence>
     <Sequence sap2010:Annotation.AnnotationText="Objetivo: serializar el modelo PPO comun desde tablas ya construidas. Entradas: cabecera, perfiles, costes, horas, gastos, compras y meses. Salida: ModeloPPOJson. No hace: no relee Excel ni escribe el CORE." DisplayName="Utilidad S04G - serializar modelo PPO" sap:VirtualizedContainerService.HintSize="750,520" sap2010:WorkflowViewState.IdRef="Sequence_PPO_1240">
       <sap:WorkflowViewStateService.ViewState>
