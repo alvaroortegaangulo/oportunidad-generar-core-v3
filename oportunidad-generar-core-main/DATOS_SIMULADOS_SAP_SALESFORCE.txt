@@ -1,0 +1,62 @@
+DATOS SIMULADOS SAP / SALESFORCE USADOS EN Main.xaml
+=====================================================
+
+Estos valores son no productivos. Se usan solo para validar el contrato de
+oportunidad-generar-core.xaml sin consultar SAP ni Salesforce.
+
+Las fechas SAP de inicio y fin se dejan vacias en ambos casos para que el
+calendario del CORE se construya desde el PPO.
+
+
+CORE PC - Opportunity 20250256445
+---------------------------------
+
+Datos SAP simulados:
+- in_SAP_FechaInicio: <vacio>
+- in_SAP_FechaFin: <vacio>
+- in_SAP_CodigoPEP_WBS: ZEV-PCE0012-1001
+- in_SAP_CodigoCliente: 461530
+- in_SAP_PedidoSalesOrder: 714603126
+- in_SAP_CodigoEmpleadoJefeProyecto: 3900331
+- in_SAP_NombreJefeProyecto: LLUIS GUERRA GONZALEZ
+- in_SAP_CodigoEmpleadoPracticeLeader: 3659518
+- in_SAP_NombrePracticeLeader: Carlos Alvarez Gonzalez
+- in_SAP_ProveedorCompra: Proveedor Test
+- in_SAP_PedidoCompra: PVR-OC-0005647
+- in_SAP_CodigoAriba: ARIBA-TEST-001
+- in_SAP_CodigosEmpleadoRecursosJson: {"JP":"E91010","CSS":"E91011","CJSS":"E91012","A":"E91013","II":"E91014","P":"E91015","DG":"E91016"}
+
+Datos Salesforce simulados:
+- in_SF_CodigoEmpleadoSalesManager: 458354
+- in_SF_NombreSalesManager: Joan MARCER
+- in_SF_AccountName: GAP
+- in_SF_Practica: Smart Integration
+- in_SF_RutaProyecto: RutaOutput calculada por Main.xaml (data/output)
+- in_SF_CorreoResponsable: core.pc.no.productivo@example.invalid
+
+
+CORE AT - Opportunity 20251160543
+---------------------------------
+
+Datos SAP simulados:
+- in_SAP_FechaInicio: <vacio>
+- in_SAP_FechaFin: <vacio>
+- in_SAP_CodigoPEP_WBS: ZEV-ATE0012-1001
+- in_SAP_CodigoCliente: CUST-CE-JCYL-TEST
+- in_SAP_PedidoSalesOrder: SO-TEST-20251160543
+- in_SAP_CodigoEmpleadoJefeProyecto: E92001
+- in_SAP_NombreJefeProyecto: PM AT Test No Productivo
+- in_SAP_CodigoEmpleadoPracticeLeader: E92002
+- in_SAP_NombrePracticeLeader: Practice Leader AT Test No Productivo
+- in_SAP_ProveedorCompra: <vacio>
+- in_SAP_PedidoCompra: <vacio>
+- in_SAP_CodigoAriba: <vacio>
+- in_SAP_CodigosEmpleadoRecursosJson: {"AP":"E92010","AP|Susana Matarranz":"E92012","AP|Sopore especializado":"E92013","PR":"E92011"}
+
+Datos Salesforce simulados:
+- in_SF_CodigoEmpleadoSalesManager: E92003
+- in_SF_NombreSalesManager: Sales Manager AT Test No Productivo
+- in_SF_AccountName: Consejeria Educacion JCyL
+- in_SF_Practica: AMS
+- in_SF_RutaProyecto: RutaOutput calculada por Main.xaml (data/output)
+- in_SF_CorreoResponsable: core.at.no.productivo@example.invalid
