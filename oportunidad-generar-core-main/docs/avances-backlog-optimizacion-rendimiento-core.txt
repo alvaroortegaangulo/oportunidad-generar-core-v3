@@ -48,3 +48,25 @@
 - Validador PC 12 meses sobre `data/output/CORE_PC_20250256445.xlsx`: OK, `FormulaCount=3766`, `RefErrors=0`, cabeceras hasta `2026-10`.
 - Proceso Excel residual detectado tras runtime: `EXCEL.EXE /automation -Embedding`, `Workbooks=0`; cerrado limpiamente con COM. Comprobacion final: sin procesos Excel activos.
 - Profile: no se genero un `.uistat` nuevo con `UiRobot execute`; solo sigue disponible el profile inicial `0393b8ac-5727-412a-bf8f-677d5564ab5e.uistat`. La reduccion de eventos queda demostrada estructuralmente por la retirada del `ReadRangeX` y los loops UiPath celda a celda; queda pendiente medir profile antes/despues cuando se ejecute desde Studio con profiling.
+
+2026-05-12 - Epica 2 iniciada: Escritura batch de Project Infor.
+- Alcance aplicado: EP2-T01 y EP2-T02 en `lib/oportunidad-generar-core.xaml`.
+- Baseline funcional disponible y reutilizado de EP1 en `data/baseline`: `CORE_PC_20250256445_baseline.xlsx` y `CORE_AT_20251160543_baseline.xlsx`.
+- EP2-T01: `dtMapaProjectInfor` localizado en el bloque `05 Rellenar Project Infor`, construido con columnas `Bloque`, `Campo`, `Celda`, `Valor`, `AplicarRojo`, `TextoError` y `OrigenFuncional`.
+- Mapa vigente confirmado con 26 filas/escrituras: `C5`, `C6`, `D6`, `C8`, `C9`, `C10`, `C11`, `C12`, `C13`, `C16`, `D16`, `C18`, `C19`, `C22`, `D22`, `C23`, `D23`, `C24`, `D24`, `C28`, `C29`, `C30`, `C31`, `C32`, `C33` y `C34`.
+- EP2-T02: sustituida la sesion `Abrir Excel para Project Infor` con `ForEachRow`, `WriteCellX_1` y `FormatRangeX_1` por el `Invoke Code` `Escribir Project Infor en batch con Excel COM`.
+- El batch mantiene `dtMapaProjectInfor` como fuente logica, abre el CORE por COM, escribe cada fila en su celda exacta, guarda el libro y aplica el mismo formato rojo funcional cuando `AplicarRojo=True`.
+- Decision tecnica: se normalizan `DateTime` y textos `yyyy-MM-dd` a serial Excel al escribir por `Value2`, para preservar la equivalencia observable de las fechas que antes escribia `WriteCellX`.
+- Formato rojo aplicado por COM para equivalencia con `FormatRangeX`: `NumberFormat=General`, fuente `Calibri`, tamano `11`, `Bold=False`, `Italic=False`, `Underline=None`, `Color=255`.
+- Validacion estatica inicial: XAML parseado como XML OK.
+- Validacion del C# embebido: bloque batch extraido del XAML y compilado con `Add-Type` OK.
+- Empaquetado runtime: `UiRobot.exe pack ... -v 1.0.39-ep2` OK. El paquete temporal se elimino tras validar y `project.json` se restauro a su version previa para evitar ruido de empaquetado.
+- Ejecucion runtime: `UiRobot.exe execute --file ...1.0.39-ep2.nupkg --entry Main.xaml` OK, salida `{}` sin stderr; duracion observada aproximada `242 s` entre inicio del robot y ultimo output AT.
+- Los outputs reales de la ejecucion se generaron en la cache NuGet del paquete `1.0.39-ep2` y se copiaron a `data/output` para dejar candidatos validados en el repo.
+- Comparador EP0 PC contra baseline local: OK, valores comparados `3499`, formulas `3010`, posiciones de rojo `21480`, `#REF!` `0`, diferencias `0`.
+- Comparador EP0 AT contra baseline local: OK, valores comparados `4043`, formulas `2979`, posiciones de rojo `21480`, `#REF!` `0`, diferencias `0`.
+- `test/validar_calidad_e06.ps1`: OK.
+- Validador AT 48 meses sobre `data/output/CORE_AT_20251160543.xlsx`: OK, `FormulaCount=3735`, `RefErrors=0`, cabeceras hasta `2029-12`.
+- Validador PC 12 meses sobre `data/output/CORE_PC_20250256445.xlsx`: OK, `FormulaCount=3766`, `RefErrors=0`, cabeceras hasta `2026-10`.
+- Comprobacion final de procesos Excel: sin procesos Excel activos.
+- Profile: no se genero un `.uistat` nuevo con `UiRobot execute`; sigue pendiente medir desde Studio con profiling. La reduccion de eventos queda demostrada estructuralmente por la retirada de 26 `WriteCellX` y del `FormatRangeX` por fila en Project Infor.

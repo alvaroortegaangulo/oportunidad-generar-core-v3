@@ -2234,63 +2234,173 @@ If(dtCabeceraPPO.Select("Campo = 'subpracticeOrigin'").Length > 0 AndAlso Not St
               </Sequence>
             </Sequence>
             <ui:LogMessage DisplayName="Registrar mapa de Project Infor" sap:VirtualizedContainerService.HintSize="679.3333333333334,144.66666666666666" sap2010:WorkflowViewState.IdRef="LogMessage_15" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;E03 Project Infor preparado | Celdas=&quot; + dtMapaProjectInfor.Rows.Count.ToString() + &quot; | ErroresFuncionales=&quot; + dtErroresFuncionales.Rows.Count.ToString()]" />
-            <ueab:ExcelProcessScopeX DisplayAlerts="{x:Null}" ExistingProcessAction="{x:Null}" FileConflictResolution="{x:Null}" LaunchMethod="{x:Null}" LaunchTimeout="{x:Null}" MacroSettings="{x:Null}" ProcessMode="{x:Null}" ShowExcelWindow="{x:Null}" DisplayName="Abrir Excel para Project Infor" sap:VirtualizedContainerService.HintSize="679.3333333333334,1286" sap2010:WorkflowViewState.IdRef="ExcelProcessScopeX_1">
-              <ueab:ExcelProcessScopeX.Body>
-                <ActivityAction x:TypeArguments="ui:IExcelProcess">
-                  <ActivityAction.Argument>
-                    <DelegateInArgument x:TypeArguments="ui:IExcelProcess" Name="ExcelProcessProjectInfor" />
-                  </ActivityAction.Argument>
-                  <ueab:ExcelApplicationCard Password="{x:Null}" ReadFormatting="{x:Null}" DisplayName="Usar CORE para Project Infor" sap:VirtualizedContainerService.HintSize="645.3333333333334,1198.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelApplicationCard_1" ResizeWindow="None" WorkbookPath="[rutaCORETrabajo]">
-                    <ueab:ExcelApplicationCard.Body>
-                      <ActivityAction x:TypeArguments="ue:IWorkbookQuickHandle">
-                        <ActivityAction.Argument>
-                          <DelegateInArgument x:TypeArguments="ue:IWorkbookQuickHandle" Name="ExcelCore" />
-                        </ActivityAction.Argument>
-                        <Sequence sap2010:Annotation.AnnotationText="Objetivo: escribir todas las celdas fijas de Project Infor desde dtMapaProjectInfor.&#xA;Entradas: mapa de Project Infor con Campo, Celda, Valor y AplicarRojo.&#xA;Salida: Project Infor rellena y textos funcionales faltantes marcados en rojo." DisplayName="Escribir Project Infor desde el mapa" sap:VirtualizedContainerService.HintSize="611.3333333333334,918" sap2010:WorkflowViewState.IdRef="Sequence_41">
-                          <sap:WorkflowViewStateService.ViewState>
-                            <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                            </scg:Dictionary>
-                          </sap:WorkflowViewStateService.ViewState>
-                          <ui:ForEachRow ColumnNames="{x:Null}" CurrentIndex="{x:Null}" DataTable="[dtMapaProjectInfor]" DisplayName="Recorrer dtMapaProjectInfor" sap:VirtualizedContainerService.HintSize="549.3333333333334,807.3333333333334" sap2010:WorkflowViewState.IdRef="ForEachRow_2">
-                            <ui:ForEachRow.Body>
-                              <ActivityAction x:TypeArguments="sd:DataRow">
-                                <ActivityAction.Argument>
-                                  <DelegateInArgument x:TypeArguments="sd:DataRow" Name="filaProjectInfor" />
-                                </ActivityAction.Argument>
-                                <Sequence DisplayName="Escribir dato de Project Infor" sap:VirtualizedContainerService.HintSize="515.3333333333334,617.3333333333334" sap2010:WorkflowViewState.IdRef="Sequence_40">
-                                  <sap:WorkflowViewStateService.ViewState>
-                                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                                    </scg:Dictionary>
-                                  </sap:WorkflowViewStateService.ViewState>
-                                  <ueab:WriteCellX Cell="[ExcelCore.Sheet(&quot;Project Infor&quot;).Cell(filaProjectInfor(&quot;Celda&quot;).ToString())]" DisplayName="Escribir celda Project Infor desde mapa" sap:VirtualizedContainerService.HintSize="473.3333333333333,164.66666666666666" sap2010:WorkflowViewState.IdRef="WriteCellX_1" Value="[filaProjectInfor(&quot;Valor&quot;)]" />
-                                  <If Condition="[CBool(filaProjectInfor(&quot;AplicarRojo&quot;))]" DisplayName="Marcar valor Project Infor rojo si falta" sap:VirtualizedContainerService.HintSize="473.3333333333333,325.3333333333333" sap2010:WorkflowViewState.IdRef="If_9">
-                                    <If.Then>
-                                      <ueab:FormatRangeX Alignment="{x:Null}" DisplayName="Aplicar rojo Project Infor desde mapa" sap:VirtualizedContainerService.HintSize="439.3333333333333,141.33333333333334" sap2010:WorkflowViewState.IdRef="FormatRangeX_1" Range="[ExcelCore.Sheet(&quot;Project Infor&quot;).Range(filaProjectInfor(&quot;Celda&quot;).ToString())]">
-                                        <ueab:FormatRangeX.Font>
-                                          <ui:FontOptions Color="Red" FillColor="Transparent" FontFamilyName="Calibri" Size="11" Style="Regular" UnderlineStyle="None" />
-                                        </ueab:FormatRangeX.Font>
-                                        <ueab:FormatRangeX.Format>
-                                          <ueab:GeneralFormat />
-                                        </ueab:FormatRangeX.Format>
-                                      </ueab:FormatRangeX>
-                                    </If.Then>
-                                    <If.Else>
-                                      <Sequence DisplayName="Valor correcto, sin formato rojo" sap2010:WorkflowViewState.IdRef="Sequence_43" />
-                                    </If.Else>
-                                  </If>
-                                </Sequence>
-                              </ActivityAction>
-                            </ui:ForEachRow.Body>
-                          </ui:ForEachRow>
-                        </Sequence>
-                      </ActivityAction>
-                    </ueab:ExcelApplicationCard.Body>
-                  </ueab:ExcelApplicationCard>
-                </ActivityAction>
-              </ueab:ExcelProcessScopeX.Body>
-            </ueab:ExcelProcessScopeX>
+            <ui:InvokeCode ContinueOnError="{x:Null}" DisplayName="Escribir Project Infor en batch con Excel COM" Language="CSharp">
+              <ui:InvokeCode.Code><![CDATA[
+/*
+Objetivo: escribir en batch las celdas Project Infor definidas por dtMapaProjectInfor y aplicar el mismo rojo funcional que el flujo anterior.
+Entradas: arg_RutaCORE y arg_DtMapaProjectInfor con columnas Bloque, Campo, Celda, Valor, AplicarRojo, TextoError y OrigenFuncional.
+Salidas: libro CORE guardado con las mismas celdas Project Infor informadas y marcadas en rojo cuando AplicarRojo=True.
+Regla: escribir cada fila en su Celda exacta sin cambiar nombres de campos, valores funcionales ni destinos.
+No hace: no cambia el mapa, no decide datos de negocio, no reordena celdas ni agrupa por rangos que puedan desplazar contenido.
+*/
+object excel = null;
+object workbooks = null;
+object workbook = null;
+object worksheets = null;
+object worksheetProjectInfor = null;
+System.Type excelType = System.Type.GetTypeFromProgID("Excel.Application");
+if (excelType == null)
+{
+    throw new System.InvalidOperationException("Microsoft Excel no esta disponible para escribir Project Infor.");
+}
+
+const int xlCalculationManual = -4135;
+const int xlUnderlineStyleNone = -4142;
+object missing = System.Type.Missing;
+System.Reflection.BindingFlags getProperty = System.Reflection.BindingFlags.GetProperty;
+System.Reflection.BindingFlags setProperty = System.Reflection.BindingFlags.SetProperty;
+System.Reflection.BindingFlags invokeMethod = System.Reflection.BindingFlags.InvokeMethod;
+
+System.Action<object> releaseComObject = delegate(object comObject)
+{
+    if (comObject != null && System.Runtime.InteropServices.Marshal.IsComObject(comObject))
+    {
+        System.Runtime.InteropServices.Marshal.FinalReleaseComObject(comObject);
+    }
+};
+
+System.Func<object, object> normalizarValorProjectInfor = delegate(object valorOriginal)
+{
+    if (valorOriginal == null || valorOriginal == System.DBNull.Value)
+    {
+        return string.Empty;
+    }
+
+    if (valorOriginal is System.DateTime)
+    {
+        return ((System.DateTime)valorOriginal).ToOADate();
+    }
+
+    string textoOriginal = valorOriginal as string;
+    if (textoOriginal != null)
+    {
+        System.DateTime fechaTexto;
+        if (System.DateTime.TryParseExact(
+            textoOriginal,
+            "yyyy-MM-dd",
+            System.Globalization.CultureInfo.InvariantCulture,
+            System.Globalization.DateTimeStyles.None,
+            out fechaTexto))
+        {
+            return fechaTexto.ToOADate();
+        }
+    }
+
+    return valorOriginal;
+};
+
+if (arg_DtMapaProjectInfor == null)
+{
+    throw new System.InvalidOperationException("dtMapaProjectInfor no esta inicializado para la escritura batch.");
+}
+
+try
+{
+    excel = System.Activator.CreateInstance(excelType);
+    excelType.InvokeMember("DisplayAlerts", setProperty, null, excel, new object[] { false });
+    excelType.InvokeMember("Visible", setProperty, null, excel, new object[] { false });
+    excelType.InvokeMember("EnableEvents", setProperty, null, excel, new object[] { false });
+    try { excelType.InvokeMember("ScreenUpdating", setProperty, null, excel, new object[] { false }); } catch { }
+    try { excelType.InvokeMember("Calculation", setProperty, null, excel, new object[] { xlCalculationManual }); } catch { }
+    try { excelType.InvokeMember("CalculateBeforeSave", setProperty, null, excel, new object[] { false }); } catch { }
+
+    workbooks = excelType.InvokeMember("Workbooks", getProperty, null, excel, null);
+    System.Type workbooksType = workbooks.GetType();
+    workbook = workbooksType.InvokeMember("Open", invokeMethod, null, workbooks, new object[] { arg_RutaCORE, 0, false, missing, missing, missing, true, missing, missing, missing, missing, missing, false, true, missing });
+    System.Type workbookType = workbook.GetType();
+    worksheets = workbookType.InvokeMember("Worksheets", getProperty, null, workbook, null);
+    System.Type worksheetsType = worksheets.GetType();
+    worksheetProjectInfor = worksheetsType.InvokeMember("Item", getProperty, null, worksheets, new object[] { "Project Infor" });
+    System.Type worksheetType = worksheetProjectInfor.GetType();
+
+    System.Action<object> aplicarRojoProjectInfor = delegate(object celdaProjectInfor)
+    {
+        object font = null;
+        try
+        {
+            System.Type celdaType = celdaProjectInfor.GetType();
+            celdaType.InvokeMember("NumberFormat", setProperty, null, celdaProjectInfor, new object[] { "General" });
+            font = celdaType.InvokeMember("Font", getProperty, null, celdaProjectInfor, null);
+            System.Type fontType = font.GetType();
+            fontType.InvokeMember("Name", setProperty, null, font, new object[] { "Calibri" });
+            fontType.InvokeMember("Size", setProperty, null, font, new object[] { 11 });
+            fontType.InvokeMember("Bold", setProperty, null, font, new object[] { false });
+            fontType.InvokeMember("Italic", setProperty, null, font, new object[] { false });
+            fontType.InvokeMember("Underline", setProperty, null, font, new object[] { xlUnderlineStyleNone });
+            fontType.InvokeMember("Color", setProperty, null, font, new object[] { 255 });
+        }
+        finally
+        {
+            releaseComObject(font);
+        }
+    };
+
+    foreach (System.Data.DataRow filaProjectInforBatch in arg_DtMapaProjectInfor.Rows)
+    {
+        string celdaDestino = System.Convert.ToString(filaProjectInforBatch["Celda"], System.Globalization.CultureInfo.InvariantCulture).Trim();
+        if (celdaDestino.Length == 0)
+        {
+            throw new System.InvalidOperationException("dtMapaProjectInfor contiene una fila sin celda destino.");
+        }
+
+        object celdaProjectInfor = null;
+        try
+        {
+            celdaProjectInfor = worksheetType.InvokeMember("Range", getProperty, null, worksheetProjectInfor, new object[] { celdaDestino });
+            System.Type celdaType = celdaProjectInfor.GetType();
+            object valorExcel = normalizarValorProjectInfor(filaProjectInforBatch["Valor"]);
+            celdaType.InvokeMember("Value2", setProperty, null, celdaProjectInfor, new object[] { valorExcel });
+
+            if (System.Convert.ToBoolean(filaProjectInforBatch["AplicarRojo"], System.Globalization.CultureInfo.InvariantCulture))
+            {
+                aplicarRojoProjectInfor(celdaProjectInfor);
+            }
+        }
+        finally
+        {
+            releaseComObject(celdaProjectInfor);
+        }
+    }
+
+    workbookType.InvokeMember("Save", invokeMethod, null, workbook, null);
+}
+finally
+{
+    if (workbook != null)
+    {
+        try { workbook.GetType().InvokeMember("Close", invokeMethod, null, workbook, new object[] { false }); } catch { }
+    }
+    if (excel != null)
+    {
+        try { excelType.InvokeMember("Quit", invokeMethod, null, excel, null); } catch { }
+    }
+
+    releaseComObject(worksheetProjectInfor);
+    releaseComObject(worksheets);
+    releaseComObject(workbook);
+    releaseComObject(workbooks);
+    releaseComObject(excel);
+    System.GC.Collect();
+    System.GC.WaitForPendingFinalizers();
+}
+]]></ui:InvokeCode.Code>
+              <ui:InvokeCode.Arguments>
+                <scg:Dictionary x:TypeArguments="x:String, Argument">
+                  <InArgument x:TypeArguments="x:String" x:Key="arg_RutaCORE">[rutaCORETrabajo]</InArgument>
+                  <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_DtMapaProjectInfor">[dtMapaProjectInfor]</InArgument>
+                </scg:Dictionary>
+              </ui:InvokeCode.Arguments>
+            </ui:InvokeCode>
           </Sequence>
           <Sequence sap2010:Annotation.AnnotationText="Objetivo: mantener el flujo principal ligero y enviar la escritura de Resources y Cost Planning al workflow PC o AT.&#xA;Entradas: modelo PPO común, capacidades de plantilla y datos SAP/Salesforce normalizados.&#xA;Salida: CORE escrito por el workflow del tipo correspondiente." DisplayName="06 Delegar Resources y Cost Planning por tipo" sap:VirtualizedContainerService.HintSize="932.6666666666666,525.3333333333334" sap2010:WorkflowViewState.IdRef="Sequence_42">
             <sap:WorkflowViewStateService.ViewState>
