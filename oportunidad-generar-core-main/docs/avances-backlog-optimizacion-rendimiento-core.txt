@@ -102,3 +102,35 @@
 - Validador PC 12 meses sobre `data/output/CORE_PC_20250256445.xlsx`: OK, `FormulaCount=3766`, `RefErrors=0`, cabeceras hasta `2026-10`.
 - Comprobacion final de procesos Excel: sin procesos Excel activos.
 - Profile: no se genero `.uistat` con `UiRobot execute`; sigue pendiente medir desde Studio. La mejora de EP3 queda demostrada estructuralmente por retirar una reapertura COM y un guardado intermedio del cierre final.
+
+2026-05-12 - Epica 4 iniciada: Escrituras Resources y Cost Planning.
+- Alcance en curso: EP4-T01, EP4-T02 y EP4-T03 sobre `lib/oportunidad-generar-core-pc.xaml` y `lib/oportunidad-generar-core-at.xaml`.
+- Baseline funcional reutilizado de `data/baseline`: `CORE_PC_20250256445_baseline.xlsx` y `CORE_AT_20251160543_baseline.xlsx`.
+- EP4-T01 inventario PC:
+  - Resources PC: limpieza `B7:{columnaFinResourcesMeses}{6+capacidadResourcesFilas}`; escrituras `dt_ResourcesPCFijos` en `B7` (4 columnas x capacidad de filas) y `dt_ResourcesPCMeses` en `F7` (duracion x capacidad de filas). Candidato seguro.
+  - Cost Planning PC horas: limpieza `G10:{columnaFinCostPlanningMeses}{9+capacidadCostPlanningPerfiles}`; escritura `dt_CostPlanningPCHoras` en `G10`. Candidato seguro.
+  - Cost Planning PC riesgos/garantia: limpieza `G47:{columnaFinCostPlanningMeses}48`; escritura `dtCPPCRiesgos` en `G47` (2 filas). Candidato seguro.
+  - Cost Planning PC gastos: limpiezas `B53:D{52+capacidadCostPlanningGastos}` y `G53:{columnaFinCostPlanningMeses}{52+capacidadCostPlanningGastos}`; escrituras `dt_CostPlanningPCGastosFijos` en `B53` y `dt_CostPlanningPCGastosMeses` en `G53`. Candidatos seguros.
+  - Cost Planning PC compras: limpiezas `B64:E{63+capacidadCostPlanningCompras}` y `G64:{columnaFinCostPlanningMeses}{63+capacidadCostPlanningCompras}`; escrituras `dt_CostPlanningPCComprasFijos` en `B64` y `dt_CostPlanningPCComprasMeses` en `G64`. Candidatos seguros.
+- EP4-T01 inventario AT:
+  - Resources AT: limpiezas `B7:E{6+capacidadResourcesFilas}` y `G7:{columnaFinResourcesMeses}{6+capacidadResourcesFilas}`; escrituras `dt_ResourcesATFijos` en `B7` y `dt_ResourcesATMeses` en `G7`. Candidatos seguros.
+  - Cost Planning AT recursos/horas/riesgos/gastos: limpiezas cubiertas por escrituras rectangulares en `B10`, `H10`, `H47`, `B53` y `H53`. Candidatos seguros.
+  - Cost Planning AT compras: limpiezas `B67:G{67+capacidadCostPlanningCompras}` y `H67:{columnaFinCostPlanningMeses}{67+capacidadCostPlanningCompras}`; escrituras empiezan en `B68` y `H68`, por lo que la fila 67 no queda cubierta. No candidatos; se mantienen.
+- EP4-T02: los preparadores comunes ya crean DataTables rectangulares con filas hasta capacidad y blancos explicitos (`""`) en las posiciones sin dato: `core-common-preparar-resources.xaml` y `core-common-preparar-cost-planning.xaml`. No se requiere cambiar preparadores para los pares seguros.
+- EP4-T03 primer intento: eliminados 7 `ClearRangeX` de PC y 7 `ClearRangeX` seguros de AT; se conservaron 2 `ClearRangeX` de compras AT por no estar cubiertos por la escritura.
+- Validacion estatica inicial: `lib/oportunidad-generar-core-pc.xaml`, `lib/oportunidad-generar-core-at.xaml`, `lib/core-common-preparar-resources.xaml` y `lib/core-common-preparar-cost-planning.xaml` parsean como XML OK.
+- Validacion del primer intento: ejecucion runtime `1.0.41-ep4` OK en `231.1 s`, comparador AT OK, pero comparador PC KO por diferencia de fuente roja en `Resources!B38:B43`. Causa: al retirar `Limpiar Resources PC segun capacidad`, las celdas vacias conservaban formato rojo residual; la escritura rectangular con blancos no reproduce el formato final exacto.
+- `validar_calidad_e06.ps1` del primer intento tambien fallo por contrato estatico: esperaba la limpieza mensual de compras PC `Range("G64:" + columnaFinCostPlanningMeses...)`.
+- Decision correctiva: reintroducidos `ClearRangeX_E05_PC_01` (`Resources PC`) y `ClearRangeX_E05_PC_07` (`meses compras PC`). Estos pares quedan clasificados como no seguros en EP4 por formato residual y contrato estatico de limpieza.
+- EP4-T03 final: eliminados 5 `ClearRangeX` de PC y 7 `ClearRangeX` de AT. Permanecen 4 limpiezas justificadas: `ClearRangeX_E05_PC_01`, `ClearRangeX_E05_PC_07`, `ClearRangeX_E05_AT_08` y `ClearRangeX_E05_AT_09`.
+- Validacion estatica final: `lib/oportunidad-generar-core-pc.xaml` y `lib/oportunidad-generar-core-at.xaml` parsean como XML OK.
+- Empaquetado runtime final: `UiRobot.exe pack ... -v 1.0.42-ep4` OK.
+- Ejecucion runtime final: `UiRobot.exe execute --file ...1.0.42-ep4.nupkg --entry Main.xaml` OK, salida `{}`, duracion observada `212 s`.
+- Los outputs reales de la ejecucion `1.0.42-ep4` se copiaron a `data/output`: `CORE_PC_20250256445.xlsx` y `CORE_AT_20251160543.xlsx`.
+- Comparador EP0 PC contra baseline local: OK, valores comparados `3534`, formulas `3010`, posiciones de rojo `21480`, `#REF!` `0`, diferencias `0`.
+- Comparador EP0 AT contra baseline local: OK, valores comparados `4141`, formulas `2979`, posiciones de rojo `21480`, `#REF!` `0`, diferencias `0`.
+- `test/validar_calidad_e06.ps1`: OK.
+- Validador AT 48 meses sobre `data/output/CORE_AT_20251160543.xlsx`: OK, `FormulaCount=3735`, `RefErrors=0`, cabeceras hasta `2029-12`.
+- Validador PC 12 meses sobre `data/output/CORE_PC_20250256445.xlsx`: OK, `FormulaCount=3766`, `RefErrors=0`, cabeceras hasta `2026-10`.
+- Comprobacion final de procesos Excel: sin procesos Excel activos.
+- Profile: no se genero `.uistat` con `UiRobot execute`; sigue pendiente medir desde Studio con profiling. La reduccion de eventos queda demostrada estructuralmente por retirar 12 limpiezas Excel (`ClearRangeX`) sin cambiar outputs CORE.
