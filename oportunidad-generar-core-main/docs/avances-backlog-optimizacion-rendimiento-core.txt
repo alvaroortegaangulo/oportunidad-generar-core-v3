@@ -175,3 +175,22 @@
   - Validador PC 12 meses sobre `data/output/CORE_PC_20250256445.xlsx`: OK, `FormulaCount=3766`, `RefErrors=0`, cabeceras hasta `2026-10`.
   - Comprobacion final de procesos Excel: sin procesos Excel activos.
 - Profile: no se genero `.uistat` con `UiRobot execute`; queda pendiente medicion desde Studio si se necesita evidencia de profiler. La evidencia runtime del bloque EP5 queda trazada en log con segundos por tipo y la reduccion estructural evita leer matrices completas salvo fallback.
+
+2026-05-12 - Epica 6 completada con limitacion documentada de profiler Studio.
+- Alcance aplicado: EP6-T01, EP6-T02 y EP6-T03 sobre documentacion, outputs finales y evidencia de validacion.
+- EP6-T01: se reviso el profile inicial `0393b8ac-5727-412a-bf8f-677d5564ab5e.uistat`; resumen parseado: `TotalWallMs=157242`, `TotalEvents=40000`, `ActivityExecutionLimitReached=True`.
+- Top inicial confirmado desde `.uistat`: `03 Leer PPO por rangos estables` `58995 ms`, `Leer rango para errores CORE` `44440 ms`, `05 Rellenar Project Infor` `13924 ms`, `Abrir Excel para Project Infor` `13870 ms`, `Leer estructura de plantilla CORE` `10976 ms`.
+- Tooling local revisado: `UiRobot.exe execute --help` no ofrece opcion de profiling; `UiPath.Studio.CommandLine.exe` solo expone comandos como `analyze` y `publish`, sin generar `.uistat`.
+- EP6-T01 limitacion: no se genero un profile final `.uistat` desde CLI. Queda documentado que `ActivityExecutionLimitReached=False` solo se puede certificar ejecutando profiling desde UiPath Studio 23.10.4 sobre `Main.xaml`.
+- Evidencia runtime final alternativa: empaquetado `UiRobot.exe pack` version `1.0.56-ep6` OK.
+- Ejecucion runtime final: `UiRobot.exe execute --file ...1.0.56-ep6.nupkg --entry Main.xaml` OK, salida `{}`, duracion observada `208.9 s`, inicio `2026-05-12 04:37:16`, fin `2026-05-12 04:40:45`.
+- Outputs reales de `1.0.56-ep6` copiados a `data/output`: `CORE_PC_20250256445.xlsx` (`201063` bytes, `2026-05-12 04:39:15`) y `CORE_AT_20251160543.xlsx` (`206017` bytes, `2026-05-12 04:40:41`).
+- Durante el cierre de runtime aparecieron dos procesos Excel transitorios sin ventana; una comprobacion posterior confirmo que ya no quedaban procesos Excel activos.
+- EP6-T02: `test/validar_calidad_e06.ps1` OK.
+- EP6-T02: validador AT 48 meses OK sobre `data/output/CORE_AT_20251160543.xlsx`, `FormulaCount=3735`, `RefErrors=0`, cabeceras hasta `2029-12`.
+- EP6-T02: validador PC 12 meses OK sobre `data/output/CORE_PC_20250256445.xlsx`, `FormulaCount=3766`, `RefErrors=0`, cabeceras hasta `2026-10`.
+- EP6-T02: comparador EP0 PC contra baseline local OK, `ValueCellsCompared=3534`, `FormulaCellsCompared=3010`, `RedCellsCompared=21480`, `#REF!=0`, `Differences=0`.
+- EP6-T02: comparador EP0 AT contra baseline local OK, `ValueCellsCompared=4141`, `FormulaCellsCompared=2979`, `RedCellsCompared=21480`, `#REF!=0`, `Differences=0`.
+- EP6-T03: actualizado `docs/backlog-optimizacion-rendimiento-core.md` con estado de cierre EP6, tabla de runtime final, validaciones y procedimiento para obtener el profile final desde Studio.
+- EP6-T03: actualizado `docs/decisiones-tecnicas-core.md` con decisiones D21-D26: comparador como puerta de rendimiento, batches COM acotados, limpiezas residuales justificadas, lectura minima/cache de capacidad, separacion runtime/profile Studio y cierre sin Excel residual.
+- EP6-T03: actualizado `docs/guia-integracion-core.md` para reflejar escritura batch de Project Infor, lectura minima con fallback, marcado de errores en batch, limpiezas conservadas y comandos de comparador.

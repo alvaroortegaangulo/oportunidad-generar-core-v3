@@ -30,7 +30,7 @@ Orden visual en la fachada CORE:
 8. `06 Delegar Resources y Cost Planning por tipo`.
 9. `08 Recalcular, guardar y registrar fin`.
 
-Los `Invoke Code` que quedan son utilidades acotadas: construccion de tablas desde `DataTable`, reglas de normalizacion/prorrateo, mapa `Project Infor`, preparacion IPF y el cierre COM justificado para rojo dinamico y `CalculateFullRebuild`. Los XAML PC/AT no contienen `Invoke Code`.
+Los `Invoke Code` que quedan son utilidades acotadas: construccion de tablas desde `DataTable`, reglas de normalizacion/prorrateo, mapa y escritura batch de `Project Infor`, lectura minima/cache de capacidad, preparacion IPF y cierre COM justificado para rojo dinamico y `CalculateFullRebuild`. Los XAML PC/AT no contienen `Invoke Code`.
 
 ## Ejemplo ejecutable
 
@@ -86,7 +86,8 @@ Responsabilidades del proceso padre:
 - Target framework: Windows.
 - Paquetes: los indicados en `project.json`; no anadir dependencias nuevas salvo decision explicita.
 - Excel debe estar disponible en la maquina de ejecucion.
-- La inspeccion de hojas/capacidad de la plantilla CORE se realiza con actividades `Read Range`; COM queda reservado al cierre final para pintado dinamico de errores y `CalculateFullRebuild`.
+- La inspeccion de hojas/capacidad de la plantilla CORE se realiza con lecturas minimas de marcadores/cabeceras y fallback amplio si la estructura no es concluyente; no se asume capacidad fija.
+- COM queda reservado a batches acotados donde UiPath generaba demasiados eventos: escritura de `Project Infor`, marcado dinamico de errores y recalculo/normalizacion final.
 - La carpeta de `in_RutaCORE` debe existir antes de invocar el modulo.
 - El padre mantiene el control transaccional del bucle de oportunidades. Si el submodulo relanza una excepcion tecnica, el padre decide si reintenta, marca KO o continua con la siguiente oportunidad.
 - No se publica ni empaqueta como parte de este handover; el entregable es el XAML importable.
@@ -148,9 +149,9 @@ La secuencia `05 Rellenar Project Infor` esta dividida en bloques visibles:
 - `05C Responsables`: PM, practice leader y sales manager.
 - `05D Totales economicos`: importe, horas, coste, riesgos, garantia, gastos y compras.
 
-Despues de esos bloques, la utilidad acotada `Utilidad S05 - construir mapa Project Infor` crea `dtMapaProjectInfor` con `Bloque`, `Campo`, `Celda`, `Valor`, `AplicarRojo`, `TextoError` y `OrigenFuncional`. La escritura usa una unica iteracion sobre ese mapa: `WriteCellX` escribe la celda indicada y `FormatRangeX` aplica fuente roja solo cuando `AplicarRojo = True`.
+Despues de esos bloques, la utilidad acotada `Utilidad S05 - construir mapa Project Infor` crea `dtMapaProjectInfor` con `Bloque`, `Campo`, `Celda`, `Valor`, `AplicarRojo`, `TextoError` y `OrigenFuncional`. La escritura se ejecuta en un unico batch COM sobre el mapa: cada fila escribe exactamente su `Valor` en su `Celda`, normaliza fechas a serial Excel cuando procede y aplica fuente roja solo cuando `AplicarRojo = True`.
 
-La escritura dinamica de celda queda aceptada en Studio 23.10 para este caso porque el mapa usa direcciones fijas de plantilla (`C5`, `C8`, `C9`, `C10`, `C11`, `C12`, `C13`, `C16`, `D16`, `C18`, `C19`, `C22`, `D22`, `C23`, `D23`, `C24`, `D24`, `C28:C34`) y el validador estatico protege que no reaparezca el bloque monolitico ni los `WriteCellX` fijos repetidos.
+La escritura dinamica de celda queda aceptada para este caso porque el mapa usa direcciones fijas de plantilla (`C5`, `C6`, `D6`, `C8`, `C9`, `C10`, `C11`, `C12`, `C13`, `C16`, `D16`, `C18`, `C19`, `C22`, `D22`, `C23`, `D23`, `C24`, `D24`, `C28`, `C29`, `C30`, `C31`, `C32`, `C33`, `C34`) y el comparador protege valores, formulas y fuente roja contractual.
 
 ## Resources y Cost Planning
 
@@ -162,18 +163,18 @@ Desde E06, las horas de `Cost Planning` se agrupan por `ResourceKey` cuando el m
 
 Las compras solo nacen de `dtCompras`, construido desde el bloque semantico de compras del PPO. Las filas de riesgos y garantia se leen como bloques separados y se imputan al ultimo mes real del proyecto. Si el PPO AT no trae compras reales, el bloque de compras de `Cost Planning` queda vacio y no se escriben textos SAP de compra.
 
-Los subworkflows `oportunidad-generar-core-pc.xaml` y `oportunidad-generar-core-at.xaml` ya no contienen `Invoke Code`: invocan los common workflows y conservan solo la limpieza/escritura de rangos especificos de cada layout. Desde E05, cada subworkflow prepara primero `Resources` y `Cost Planning` y abre el CORE una sola vez para escribir ambos bloques por `Write Range`.
+Los subworkflows `oportunidad-generar-core-pc.xaml` y `oportunidad-generar-core-at.xaml` ya no contienen `Invoke Code`: invocan los common workflows y conservan solo la limpieza/escritura de rangos especificos de cada layout. Desde E05, cada subworkflow prepara primero `Resources` y `Cost Planning` y abre el CORE una sola vez para escribir ambos bloques por `Write Range`. Tras la optimizacion de rendimiento se retiraron limpiezas cubiertas por escrituras rectangulares con blancos; permanecen solo las limpiezas que evitan formato residual o preservan el contrato estatico.
 
 ## Errores y logs
 
 Errores bloqueantes: PPO inexistente, plantilla inexistente, carpeta destino inexistente, tipo distinto de `PC`/`AT`, hoja obligatoria ausente, libro corrupto, Excel no disponible, duracion invalida o plantilla sin capacidad.
 
-Datos funcionales faltantes: no bloquean la generacion. En `Project Infor`, `dtErroresFuncionales` filtra las filas del mapa con `AplicarRojo = True`; en `Resources` y `Cost Planning`, el pintado dinamico final mantiene la misma politica de texto corto en rojo.
+Datos funcionales faltantes: no bloquean la generacion. En `Project Infor`, `dtErroresFuncionales` filtra las filas del mapa con `AplicarRojo = True`; en `Resources` y `Cost Planning`, el pintado dinamico final escanea en batch los rangos contractuales `Project Infor!A1:J80`, `Resources!A1:CA120` y `Cost Planning!A1:CB140` y mantiene la misma politica de texto corto en rojo.
 
 Logs del submodulo:
 
 - Inicio: PPO, tipo y ruta CORE destino.
-- Rendimiento E05: segundos aproximados para lectura PPO, escritura CORE y recalculo final.
+- Rendimiento: segundos aproximados para lectura PPO, lectura de estructura/capacidad, escritura CORE y recalculo final.
 - Fin OK: ruta CORE generada, `out_NumeroSFLeido` y tipo normalizado.
 - Error: PPO, CORE y detalle de la excepcion, relanzada al proceso padre.
 
@@ -185,6 +186,18 @@ Logs del submodulo:
 4. Ejecutar `test/test_generar_core_datos_incompletos.xaml` desde Studio y validar el resultado con `powershell -ExecutionPolicy Bypass -File .\test\validar_integridad_core_pc.ps1 -CorePath .\data\output\test\CORE_PC_20250256445_datos_incompletos.xlsx -Scenario DatosIncompletos -SkipBaseline`.
 5. Ejecutar `powershell -ExecutionPolicy Bypass -File .\test\validar_calidad_e06.ps1` para cerrar el contrato E06: XML, referencias de workflows, `ResourceKey`, prorrateo anual, AT real/facturable, riesgos en ultimo mes, 48 meses y ausencia de compras falsas.
 6. Abrir visualmente `oportunidad-generar-core.xaml` en Studio antes de integrarlo en el proyecto padre.
+
+Para cerrar cambios de rendimiento, usar ademas el comparador de equivalencia contra baseline:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\test\comparar_outputs_core_equivalencia.ps1 -BaselinePath .\data\baseline\CORE_PC_20250256445_baseline.xlsx -CandidatePath .\data\output\CORE_PC_20250256445.xlsx -Kind PC
+```
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\test\comparar_outputs_core_equivalencia.ps1 -BaselinePath .\data\baseline\CORE_AT_20251160543_baseline.xlsx -CandidatePath .\data\output\CORE_AT_20251160543.xlsx -Kind AT
+```
+
+El runtime empaquetado se puede medir por CLI con `UiRobot.exe pack` y `UiRobot.exe execute`, pero esa ejecucion no genera `.uistat` en la instalacion local validada. Para certificar `ActivityExecutionLimitReached=False`, ejecutar profiling desde Studio 23.10.4 sobre `Main.xaml` y conservar el `.uistat` nuevo junto al resumen de top actividades.
 
 ## Paquete de handover
 

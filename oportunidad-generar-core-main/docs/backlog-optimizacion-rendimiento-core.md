@@ -808,6 +808,41 @@ Evidencia esperada:
 
 Objetivo: cerrar la optimizacion con evidencia objetiva de rendimiento y equivalencia.
 
+### Estado de cierre EP6 - 2026-05-12
+
+La suite funcional final queda cerrada con outputs regenerados desde paquete runtime `1.0.56-ep6` y comparados contra los baselines locales de `data/baseline`.
+
+Resumen de rendimiento disponible:
+
+| Medicion | Evidencia | Resultado |
+| --- | --- | --- |
+| Profile inicial Studio | `0393b8ac-5727-412a-bf8f-677d5564ab5e.uistat` | `TotalWallMs=157242`, `TotalEvents=40000`, `ActivityExecutionLimitReached=True`; el profile se corta antes de capturar el flujo completo PC+AT. |
+| Runtime final empaquetado | `UiRobot.exe pack` version `1.0.56-ep6` y `UiRobot.exe execute --entry Main.xaml` | Ejecucion OK de PC+AT completa en `208.9 s`; outputs copiados a `data/output`. |
+| Profile final Studio | Pendiente de ejecutar desde Studio 23.10.4 con la opcion de profiling | La CLI local (`UiRobot.exe execute` y `UiPath.Studio.CommandLine.exe`) no genera `.uistat`; por tanto `ActivityExecutionLimitReached=False` no puede certificarse desde esta ejecucion CLI. |
+
+Resumen de validacion final:
+
+| Comando | Resultado |
+| --- | --- |
+| `powershell -NoProfile -ExecutionPolicy Bypass -File .\test\validar_calidad_e06.ps1` | OK. |
+| `powershell -NoProfile -ExecutionPolicy Bypass -File .\test\validar_salida_core_at_48_meses_e04.ps1 -WorkbookPath .\data\output\CORE_AT_20251160543.xlsx -Kind AT -ExpectedStart '2026-01-01' -Months 48` | OK, `FormulaCount=3735`, `RefErrors=0`, cabeceras hasta `2029-12`. |
+| `powershell -NoProfile -ExecutionPolicy Bypass -File .\test\validar_salida_core_at_48_meses_e04.ps1 -WorkbookPath .\data\output\CORE_PC_20250256445.xlsx -Kind PC -ExpectedStart '2025-11-01' -Months 12` | OK, `FormulaCount=3766`, `RefErrors=0`, cabeceras hasta `2026-10`. |
+| `powershell -NoProfile -ExecutionPolicy Bypass -File .\test\comparar_outputs_core_equivalencia.ps1 -BaselinePath .\data\baseline\CORE_PC_20250256445_baseline.xlsx -CandidatePath .\data\output\CORE_PC_20250256445.xlsx -Kind PC` | OK, `ValueCellsCompared=3534`, `FormulaCellsCompared=3010`, `RedCellsCompared=21480`, `Differences=0`. |
+| `powershell -NoProfile -ExecutionPolicy Bypass -File .\test\comparar_outputs_core_equivalencia.ps1 -BaselinePath .\data\baseline\CORE_AT_20251160543_baseline.xlsx -CandidatePath .\data\output\CORE_AT_20251160543.xlsx -Kind AT` | OK, `ValueCellsCompared=4141`, `FormulaCellsCompared=2979`, `RedCellsCompared=21480`, `Differences=0`. |
+
+Instruccion para cerrar la evidencia de profiler:
+
+1. Abrir el proyecto en UiPath Studio 23.10.4.
+2. Ejecutar profiling sobre `Main.xaml` sin cambiar entradas ni desactivar funcionalidad.
+3. Guardar/copiar el nuevo `.uistat` en la raiz del proyecto.
+4. Verificar:
+
+```powershell
+Get-ChildItem -Filter *.uistat | Sort-Object LastWriteTime -Descending | Select-Object -First 3 Name,Length,LastWriteTime
+```
+
+5. Confirmar en el `.uistat` nuevo que `ActivityExecutionLimitReached=False` y que la captura incluye `CORE PC` y `CORE AT` completos. Si el profile sigue alcanzando limite, analizar el nuevo top de actividades antes de abrir una nueva epica.
+
 ### EP6-T01 - Ejecutar profile completo tras optimizaciones
 
 Contexto: el profile inicial se corta a los 40000 eventos antes de terminar `CORE PC`. El objetivo minimo es que el profile capture PC y AT completos.
