@@ -190,6 +190,17 @@
       <Variable x:TypeArguments="sd:DataTable" Name="dtPlantillaResourcesRaw" />
       <Variable x:TypeArguments="sd:DataTable" Name="dtPlantillaCostPlanningRaw" />
       <Variable x:TypeArguments="sd:DataTable" Name="dtPlantillaMonthlyViewRaw" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dtPlantillaResourcesHeaderRaw" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dtPlantillaResourcesColBRaw" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dtPlantillaResourcesColFRaw" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dtPlantillaCostPlanningHeaderRaw" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dtPlantillaCostPlanningColBRaw" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dtPlantillaCostPlanningColGRaw" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dtPlantillaMonthlyViewHeaderRaw" />
+      <Variable x:TypeArguments="x:String" Name="capacidadPlantillaModoLectura" />
+      <Variable x:TypeArguments="x:String" Name="capacidadPlantillaDetalleLectura" />
+      <Variable x:TypeArguments="x:Boolean" Name="capacidadPlantillaCacheHit" />
+      <Variable x:TypeArguments="x:Boolean" Name="capacidadPlantillaFallbackRequired" />
       <Variable x:TypeArguments="x:Int32" Name="capacidadResourcesFilas" />
       <Variable x:TypeArguments="x:Int32" Name="capacidadResourcesPerfiles" />
       <Variable x:TypeArguments="x:Int32" Name="capacidadCostPlanningPerfiles" />
@@ -199,6 +210,7 @@
       <Variable x:TypeArguments="x:Int32" Name="capacidadMesesCostPlanning" />
       <Variable x:TypeArguments="x:Int32" Name="capacidadMesesMonthlyView" />
       <Variable x:TypeArguments="x:Int32" Name="capacidadMesesPlantilla" />
+      <Variable x:TypeArguments="s:DateTime" Name="tiempoInicioLecturaPlantilla" />
       <Variable x:TypeArguments="s:DateTime" Name="tiempoInicioLecturaPPO" />
       <Variable x:TypeArguments="s:DateTime" Name="tiempoInicioEscrituraCORE" />
       <Variable x:TypeArguments="s:DateTime" Name="tiempoInicioRecalculoFinal" />
@@ -898,18 +910,452 @@ arg_dtSintesis = sintesis;
                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
-            <Sequence sap2010:Annotation.AnnotationText="Objetivo: comprobar hojas obligatorias y leer los marcadores estructurales de la plantilla con actividades Excel.&#xA;Entradas: CORE copiado.&#xA;Salida: tablas de estructura para medir capacidad sin abrir Excel por COM." DisplayName="Leer estructura de plantilla CORE" sap:VirtualizedContainerService.HintSize="750,838.6666666666666" sap2010:WorkflowViewState.IdRef="Sequence_E05_01">
+            <Sequence sap2010:Annotation.AnnotationText="Objetivo: comprobar hojas obligatorias y leer solo cabeceras/marcadores necesarios de la plantilla.&#xA;Entradas: plantilla seleccionada y CORE copiado.&#xA;Salida: tablas estructurales con la geometria esperada por S08, cacheadas por ruta/timestamp/tamano y con fallback a rangos amplios." DisplayName="Leer estructura de plantilla CORE" sap:VirtualizedContainerService.HintSize="750,2140" sap2010:WorkflowViewState.IdRef="Sequence_E05_01">
               <sap:WorkflowViewStateService.ViewState>
                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
                   <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
-              <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaHojaObligatoriaRaw]" DisplayName="Validar hoja Project Infor" sap:VirtualizedContainerService.HintSize="388,88" sap2010:WorkflowViewState.IdRef="ReadRange_6" Range="A1:A1" SheetName="Project Infor" WorkbookPath="[rutaCORETrabajo]" />
-              <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaHojaObligatoriaRaw]" DisplayName="Validar hoja Cost Overview" sap:VirtualizedContainerService.HintSize="388,88" sap2010:WorkflowViewState.IdRef="ReadRange_7" Range="A1:A1" SheetName="Cost Overview" WorkbookPath="[rutaCORETrabajo]" />
-              <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaResourcesRaw]" DisplayName="Leer estructura Resources A1 CA140" sap:VirtualizedContainerService.HintSize="388,88" sap2010:WorkflowViewState.IdRef="ReadRange_8" Range="A1:CA140" SheetName="Resources" WorkbookPath="[rutaCORETrabajo]" />
-              <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaCostPlanningRaw]" DisplayName="Leer estructura Cost Planning A1 CB160" sap:VirtualizedContainerService.HintSize="388,88" sap2010:WorkflowViewState.IdRef="ReadRange_9" Range="A1:CB160" SheetName="Cost Planning" WorkbookPath="[rutaCORETrabajo]" />
-              <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaMonthlyViewRaw]" DisplayName="Leer estructura Monthly View A1 CB80" sap:VirtualizedContainerService.HintSize="388,88" sap2010:WorkflowViewState.IdRef="ReadRange_10" Range="A1:CB80" SheetName="Monthly View" WorkbookPath="[rutaCORETrabajo]" />
-              <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaHojaObligatoriaRaw]" DisplayName="Validar hoja Cost Summary" sap:VirtualizedContainerService.HintSize="388,88" sap2010:WorkflowViewState.IdRef="ReadRange_11" Range="A1:A1" SheetName="Cost Summary" WorkbookPath="[rutaCORETrabajo]" />
+              <Assign DisplayName="Medir inicio lectura plantilla" sap:VirtualizedContainerService.HintSize="650,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_E05_10">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="s:DateTime">[tiempoInicioLecturaPlantilla]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="s:DateTime">[System.DateTime.Now]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <ui:InvokeCode ContinueOnError="False" DisplayName="Recuperar capacidad de plantilla desde cache" Language="CSharp" sap:VirtualizedContainerService.HintSize="650,197.33333333333334" sap2010:WorkflowViewState.IdRef="InvokeCode_E05_010">
+                <ui:InvokeCode.Code><![CDATA[
+string selectedPath = !string.IsNullOrWhiteSpace(arg_RutaPlantillaSeleccionada) ? arg_RutaPlantillaSeleccionada : arg_RutaCORETrabajo;
+var templateInfo = new System.IO.FileInfo(selectedPath);
+if (!templateInfo.Exists && !string.IsNullOrWhiteSpace(arg_RutaCORETrabajo))
+{
+    templateInfo = new System.IO.FileInfo(arg_RutaCORETrabajo);
+}
+if (!templateInfo.Exists)
+{
+    throw new System.Exception("No existe la plantilla CORE seleccionada para medir capacidad: " + selectedPath);
+}
+
+string cacheSlot = "CORE_EP5_TemplateCapacityCache_v4";
+string cacheKey = (arg_TipoProyectoNormalizado ?? string.Empty).Trim().ToUpperInvariant()
+    + "|" + templateInfo.FullName.ToUpperInvariant()
+    + "|" + templateInfo.Length.ToString(System.Globalization.CultureInfo.InvariantCulture)
+    + "|" + templateInfo.LastWriteTimeUtc.Ticks.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+arg_CacheHit = false;
+arg_FallbackRequired = false;
+arg_DetalleLectura = "Sin cache";
+arg_ModoLectura = string.Empty;
+
+var cache = System.AppDomain.CurrentDomain.GetData(cacheSlot) as System.Collections.Hashtable;
+if (cache != null && cache.ContainsKey(cacheKey))
+{
+    var hit = cache[cacheKey] as System.Collections.Hashtable;
+    if (hit != null && hit["Resources"] is System.Data.DataTable && hit["CostPlanning"] is System.Data.DataTable && hit["MonthlyView"] is System.Data.DataTable)
+    {
+        arg_dtPlantillaResourcesRaw = ((System.Data.DataTable)hit["Resources"]).Copy();
+        arg_dtPlantillaCostPlanningRaw = ((System.Data.DataTable)hit["CostPlanning"]).Copy();
+        arg_dtPlantillaMonthlyViewRaw = ((System.Data.DataTable)hit["MonthlyView"]).Copy();
+        arg_ModoLectura = "Cache:" + System.Convert.ToString(hit["Mode"], System.Globalization.CultureInfo.InvariantCulture);
+        arg_DetalleLectura = "Cache valida por ruta, timestamp y tamano";
+        arg_CacheHit = true;
+    }
+}
+                ]]></ui:InvokeCode.Code>
+                <ui:InvokeCode.Arguments>
+                  <scg:Dictionary x:TypeArguments="x:String, Argument">
+                    <InArgument x:TypeArguments="x:String" x:Key="arg_RutaPlantillaSeleccionada">[RutaPlantillaSeleccionada]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="arg_RutaCORETrabajo">[rutaCORETrabajo]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="arg_TipoProyectoNormalizado">[TipoProyectoNormalizado]</InArgument>
+                    <OutArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtPlantillaResourcesRaw">[dtPlantillaResourcesRaw]</OutArgument>
+                    <OutArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtPlantillaCostPlanningRaw">[dtPlantillaCostPlanningRaw]</OutArgument>
+                    <OutArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtPlantillaMonthlyViewRaw">[dtPlantillaMonthlyViewRaw]</OutArgument>
+                    <OutArgument x:TypeArguments="x:String" x:Key="arg_ModoLectura">[capacidadPlantillaModoLectura]</OutArgument>
+                    <OutArgument x:TypeArguments="x:String" x:Key="arg_DetalleLectura">[capacidadPlantillaDetalleLectura]</OutArgument>
+                    <OutArgument x:TypeArguments="x:Boolean" x:Key="arg_CacheHit">[capacidadPlantillaCacheHit]</OutArgument>
+                    <OutArgument x:TypeArguments="x:Boolean" x:Key="arg_FallbackRequired">[capacidadPlantillaFallbackRequired]</OutArgument>
+                  </scg:Dictionary>
+                </ui:InvokeCode.Arguments>
+              </ui:InvokeCode>
+              <If Condition="[Not capacidadPlantillaCacheHit]" DisplayName="La capacidad no esta en cache" sap:VirtualizedContainerService.HintSize="650,1548" sap2010:WorkflowViewState.IdRef="If_E05_010">
+                <If.Then>
+                  <Sequence DisplayName="Leer capacidad desde plantilla" sap:VirtualizedContainerService.HintSize="616,1358" sap2010:WorkflowViewState.IdRef="Sequence_E05_010">
+                    <sap:WorkflowViewStateService.ViewState>
+                      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                      </scg:Dictionary>
+                    </sap:WorkflowViewStateService.ViewState>
+                    <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaHojaObligatoriaRaw]" DisplayName="Validar hoja Project Infor" sap:VirtualizedContainerService.HintSize="574,88" sap2010:WorkflowViewState.IdRef="ReadRange_E05_010" Range="A1:A1" SheetName="Project Infor" WorkbookPath="[rutaCORETrabajo]" />
+                    <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaHojaObligatoriaRaw]" DisplayName="Validar hoja Cost Overview" sap:VirtualizedContainerService.HintSize="574,88" sap2010:WorkflowViewState.IdRef="ReadRange_E05_011" Range="A1:A1" SheetName="Cost Overview" WorkbookPath="[rutaCORETrabajo]" />
+                    <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaHojaObligatoriaRaw]" DisplayName="Validar hoja Cost Summary" sap:VirtualizedContainerService.HintSize="574,88" sap2010:WorkflowViewState.IdRef="ReadRange_E05_012" Range="A1:A1" SheetName="Cost Summary" WorkbookPath="[rutaCORETrabajo]" />
+                    <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaResourcesHeaderRaw]" DisplayName="Leer cabecera meses Resources" sap:VirtualizedContainerService.HintSize="574,88" sap2010:WorkflowViewState.IdRef="ReadRange_E05_013" Range="A6:CA6" SheetName="Resources" WorkbookPath="[rutaCORETrabajo]" />
+                    <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaResourcesColBRaw]" DisplayName="Leer marcadores Resources B" sap:VirtualizedContainerService.HintSize="574,88" sap2010:WorkflowViewState.IdRef="ReadRange_E05_014" Range="B7:B140" SheetName="Resources" WorkbookPath="[rutaCORETrabajo]" />
+                    <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaResourcesColFRaw]" DisplayName="Leer marcadores Resources F" sap:VirtualizedContainerService.HintSize="574,88" sap2010:WorkflowViewState.IdRef="ReadRange_E05_015" Range="F7:F80" SheetName="Resources" WorkbookPath="[rutaCORETrabajo]" />
+                    <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaCostPlanningHeaderRaw]" DisplayName="Leer cabecera meses Cost Planning" sap:VirtualizedContainerService.HintSize="574,88" sap2010:WorkflowViewState.IdRef="ReadRange_E05_016" Range="A8:CB8" SheetName="Cost Planning" WorkbookPath="[rutaCORETrabajo]" />
+                    <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaCostPlanningColBRaw]" DisplayName="Leer marcadores Cost Planning B" sap:VirtualizedContainerService.HintSize="574,88" sap2010:WorkflowViewState.IdRef="ReadRange_E05_017" Range="B10:B140" SheetName="Cost Planning" WorkbookPath="[rutaCORETrabajo]" />
+                    <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaCostPlanningColGRaw]" DisplayName="Leer marcadores Cost Planning G" sap:VirtualizedContainerService.HintSize="574,88" sap2010:WorkflowViewState.IdRef="ReadRange_E05_018" Range="G10:G80" SheetName="Cost Planning" WorkbookPath="[rutaCORETrabajo]" />
+                    <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaMonthlyViewHeaderRaw]" DisplayName="Leer cabecera meses Monthly View" sap:VirtualizedContainerService.HintSize="574,88" sap2010:WorkflowViewState.IdRef="ReadRange_E05_019" Range="A5:CB5" SheetName="Monthly View" WorkbookPath="[rutaCORETrabajo]" />
+                    <ui:InvokeCode ContinueOnError="False" DisplayName="Ensamblar tablas minimas de capacidad" Language="CSharp" sap:VirtualizedContainerService.HintSize="574,197.33333333333334" sap2010:WorkflowViewState.IdRef="InvokeCode_E05_011">
+                      <ui:InvokeCode.Code><![CDATA[
+System.Data.DataTable resources = new System.Data.DataTable();
+for (int column = 0; column < 79; column++) resources.Columns.Add("Column" + column.ToString(System.Globalization.CultureInfo.InvariantCulture), typeof(object));
+for (int row = 0; row < 140; row++) resources.Rows.Add(resources.NewRow());
+
+System.Data.DataTable costPlanning = new System.Data.DataTable();
+for (int column = 0; column < 80; column++) costPlanning.Columns.Add("Column" + column.ToString(System.Globalization.CultureInfo.InvariantCulture), typeof(object));
+for (int row = 0; row < 160; row++) costPlanning.Rows.Add(costPlanning.NewRow());
+
+System.Data.DataTable monthlyView = new System.Data.DataTable();
+for (int column = 0; column < 80; column++) monthlyView.Columns.Add("Column" + column.ToString(System.Globalization.CultureInfo.InvariantCulture), typeof(object));
+for (int row = 0; row < 80; row++) monthlyView.Rows.Add(monthlyView.NewRow());
+
+if (arg_dtResourcesHeaderRaw != null && arg_dtResourcesHeaderRaw.Rows.Count > 0)
+{
+    int maxColumns = System.Math.Min(resources.Columns.Count, arg_dtResourcesHeaderRaw.Columns.Count);
+    for (int column = 0; column < maxColumns; column++) resources.Rows[5][column] = arg_dtResourcesHeaderRaw.Rows[0][column];
+}
+if (arg_dtResourcesColBRaw != null)
+{
+    int maxRows = System.Math.Min(134, arg_dtResourcesColBRaw.Rows.Count);
+    for (int row = 0; row < maxRows; row++) resources.Rows[row + 6][1] = arg_dtResourcesColBRaw.Rows[row][0];
+}
+if (arg_dtResourcesColFRaw != null)
+{
+    int maxRows = System.Math.Min(74, arg_dtResourcesColFRaw.Rows.Count);
+    for (int row = 0; row < maxRows; row++) resources.Rows[row + 6][5] = arg_dtResourcesColFRaw.Rows[row][0];
+}
+
+if (arg_dtCostPlanningHeaderRaw != null && arg_dtCostPlanningHeaderRaw.Rows.Count > 0)
+{
+    int maxColumns = System.Math.Min(costPlanning.Columns.Count, arg_dtCostPlanningHeaderRaw.Columns.Count);
+    for (int column = 0; column < maxColumns; column++) costPlanning.Rows[7][column] = arg_dtCostPlanningHeaderRaw.Rows[0][column];
+}
+if (arg_dtCostPlanningColBRaw != null)
+{
+    int maxRows = System.Math.Min(131, arg_dtCostPlanningColBRaw.Rows.Count);
+    for (int row = 0; row < maxRows; row++) costPlanning.Rows[row + 9][1] = arg_dtCostPlanningColBRaw.Rows[row][0];
+}
+if (arg_dtCostPlanningColGRaw != null)
+{
+    int maxRows = System.Math.Min(71, arg_dtCostPlanningColGRaw.Rows.Count);
+    for (int row = 0; row < maxRows; row++) costPlanning.Rows[row + 9][6] = arg_dtCostPlanningColGRaw.Rows[row][0];
+}
+
+if (arg_dtMonthlyViewHeaderRaw != null && arg_dtMonthlyViewHeaderRaw.Rows.Count > 0)
+{
+    int maxColumns = System.Math.Min(monthlyView.Columns.Count, arg_dtMonthlyViewHeaderRaw.Columns.Count);
+    for (int column = 0; column < maxColumns; column++) monthlyView.Rows[4][column] = arg_dtMonthlyViewHeaderRaw.Rows[0][column];
+}
+
+arg_dtPlantillaResourcesRaw = resources;
+arg_dtPlantillaCostPlanningRaw = costPlanning;
+arg_dtPlantillaMonthlyViewRaw = monthlyView;
+arg_ModoLectura = "ReadRange-minima";
+arg_DetalleLectura = "Tablas minimas ensambladas desde cabeceras y marcadores";
+                      ]]></ui:InvokeCode.Code>
+                      <ui:InvokeCode.Arguments>
+                        <scg:Dictionary x:TypeArguments="x:String, Argument">
+                          <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtResourcesHeaderRaw">[dtPlantillaResourcesHeaderRaw]</InArgument>
+                          <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtResourcesColBRaw">[dtPlantillaResourcesColBRaw]</InArgument>
+                          <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtResourcesColFRaw">[dtPlantillaResourcesColFRaw]</InArgument>
+                          <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtCostPlanningHeaderRaw">[dtPlantillaCostPlanningHeaderRaw]</InArgument>
+                          <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtCostPlanningColBRaw">[dtPlantillaCostPlanningColBRaw]</InArgument>
+                          <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtCostPlanningColGRaw">[dtPlantillaCostPlanningColGRaw]</InArgument>
+                          <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtMonthlyViewHeaderRaw">[dtPlantillaMonthlyViewHeaderRaw]</InArgument>
+                          <OutArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtPlantillaResourcesRaw">[dtPlantillaResourcesRaw]</OutArgument>
+                          <OutArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtPlantillaCostPlanningRaw">[dtPlantillaCostPlanningRaw]</OutArgument>
+                          <OutArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtPlantillaMonthlyViewRaw">[dtPlantillaMonthlyViewRaw]</OutArgument>
+                          <OutArgument x:TypeArguments="x:String" x:Key="arg_ModoLectura">[capacidadPlantillaModoLectura]</OutArgument>
+                          <OutArgument x:TypeArguments="x:String" x:Key="arg_DetalleLectura">[capacidadPlantillaDetalleLectura]</OutArgument>
+                        </scg:Dictionary>
+                      </ui:InvokeCode.Arguments>
+                    </ui:InvokeCode>
+                    <ui:InvokeCode ContinueOnError="False" DisplayName="Validar lectura minima de capacidad" Language="CSharp" sap:VirtualizedContainerService.HintSize="574,197.33333333333334" sap2010:WorkflowViewState.IdRef="InvokeCode_E05_012">
+                      <ui:InvokeCode.Code><![CDATA[
+string TextValue(object value)
+{
+    if (value == null || value == System.DBNull.Value) return string.Empty;
+    return System.Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture).Trim();
+}
+
+int MeasureMonths(System.Data.DataTable table, int oneBasedRow, int oneBasedStartColumn)
+{
+    if (table == null || table.Rows.Count < oneBasedRow || table.Columns.Count < oneBasedStartColumn) return 0;
+    int lastNonEmptyColumn = oneBasedStartColumn - 1;
+    System.Data.DataRow sourceRow = table.Rows[oneBasedRow - 1];
+    for (int columnIndex = oneBasedStartColumn - 1; columnIndex < table.Columns.Count; columnIndex++)
+    {
+        if (!string.IsNullOrWhiteSpace(TextValue(sourceRow[columnIndex]))) lastNonEmptyColumn = columnIndex + 1;
+    }
+    return System.Math.Max(0, lastNonEmptyColumn - oneBasedStartColumn + 1);
+}
+
+int CountMarker(System.Data.DataTable table, int firstRow, int lastRow, int column, string marker, out int firstMarkerRow)
+{
+    firstMarkerRow = 0;
+    int count = 0;
+    if (table == null || column <= 0 || column > table.Columns.Count) return 0;
+    int last = System.Math.Min(lastRow, table.Rows.Count);
+    for (int row = System.Math.Max(1, firstRow); row <= last; row++)
+    {
+        string text = TextValue(table.Rows[row - 1][column - 1]);
+        if (text.IndexOf(marker, System.StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            count++;
+            if (firstMarkerRow == 0) firstMarkerRow = row;
+        }
+    }
+    return count;
+}
+
+void RequireUntil(System.Collections.Generic.List<string> issues, string name, System.Data.DataTable table, int start, int end, int column, string marker, int adjustment)
+{
+    int markerRow;
+    int matches = CountMarker(table, start, end, column, marker, out markerRow);
+    if (matches == 0)
+    {
+        issues.Add(name + " sin marcador '" + marker + "'");
+        return;
+    }
+    int capacity = markerRow <= start ? 0 : markerRow - start - adjustment;
+    if (capacity <= 0) issues.Add(name + " sin capacidad util");
+}
+
+void RequireCount(System.Collections.Generic.List<string> issues, string name, System.Data.DataTable table, int start, int end, int column, string marker)
+{
+    int markerRow;
+    int matches = CountMarker(table, start, end, column, marker, out markerRow);
+    if (matches <= 0) issues.Add(name + " sin marcador '" + marker + "'");
+}
+
+bool isAT = System.String.Equals(arg_TipoProyectoNormalizado, "AT", System.StringComparison.OrdinalIgnoreCase);
+var validationIssues = new System.Collections.Generic.List<string>();
+
+int monthsResources = MeasureMonths(arg_dtPlantillaResourcesRaw, 6, isAT ? 7 : 6);
+int monthsCostPlanning = MeasureMonths(arg_dtPlantillaCostPlanningRaw, 8, isAT ? 8 : 7);
+int monthsMonthlyView = MeasureMonths(arg_dtPlantillaMonthlyViewRaw, 5, 5);
+if (monthsResources <= 0) validationIssues.Add("Meses Resources no detectado");
+if (monthsCostPlanning <= 0) validationIssues.Add("Meses Cost Planning no detectado");
+if (monthsMonthlyView <= 0) validationIssues.Add("Meses Monthly View no detectado");
+
+if (isAT)
+{
+    RequireCount(validationIssues, "Resources perfiles", arg_dtPlantillaResourcesRaw, 7, 80, 6, "Coste/hora");
+    RequireCount(validationIssues, "Cost Planning perfiles", arg_dtPlantillaCostPlanningRaw, 10, 80, 7, "Horas Reales");
+    RequireUntil(validationIssues, "Cost Planning gastos", arg_dtPlantillaCostPlanningRaw, 53, 140, 2, "TOTAL GASTOS", 0);
+    RequireUntil(validationIssues, "Cost Planning compras", arg_dtPlantillaCostPlanningRaw, 68, 140, 2, "TOTAL COMPRAS", 0);
+}
+else
+{
+    RequireUntil(validationIssues, "Resources filas", arg_dtPlantillaResourcesRaw, 7, 140, 2, "Tipo de Roles", 1);
+    RequireUntil(validationIssues, "Cost Planning perfiles", arg_dtPlantillaCostPlanningRaw, 10, 140, 2, "COSTE TOTAL RECURSOS", 0);
+    RequireUntil(validationIssues, "Cost Planning gastos", arg_dtPlantillaCostPlanningRaw, 53, 140, 2, "TOTAL GASTOS", 0);
+    RequireUntil(validationIssues, "Cost Planning compras", arg_dtPlantillaCostPlanningRaw, 64, 140, 2, "TOTAL COMPRAS", 0);
+}
+
+arg_FallbackRequired = validationIssues.Count > 0;
+arg_DetalleLectura = validationIssues.Count == 0 ? "OK" : string.Join("; ", validationIssues.ToArray());
+                      ]]></ui:InvokeCode.Code>
+                      <ui:InvokeCode.Arguments>
+                        <scg:Dictionary x:TypeArguments="x:String, Argument">
+                          <InArgument x:TypeArguments="x:String" x:Key="arg_TipoProyectoNormalizado">[TipoProyectoNormalizado]</InArgument>
+                          <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtPlantillaResourcesRaw">[dtPlantillaResourcesRaw]</InArgument>
+                          <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtPlantillaCostPlanningRaw">[dtPlantillaCostPlanningRaw]</InArgument>
+                          <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtPlantillaMonthlyViewRaw">[dtPlantillaMonthlyViewRaw]</InArgument>
+                          <OutArgument x:TypeArguments="x:Boolean" x:Key="arg_FallbackRequired">[capacidadPlantillaFallbackRequired]</OutArgument>
+                          <OutArgument x:TypeArguments="x:String" x:Key="arg_DetalleLectura">[capacidadPlantillaDetalleLectura]</OutArgument>
+                        </scg:Dictionary>
+                      </ui:InvokeCode.Arguments>
+                    </ui:InvokeCode>
+                    <If Condition="[capacidadPlantillaFallbackRequired]" DisplayName="Lectura minima requiere fallback" sap:VirtualizedContainerService.HintSize="574,879.3333333333334" sap2010:WorkflowViewState.IdRef="If_E05_011">
+                      <If.Then>
+                        <Sequence DisplayName="Fallback lectura amplia plantilla" sap:VirtualizedContainerService.HintSize="540,689.3333333333334" sap2010:WorkflowViewState.IdRef="Sequence_E05_011">
+                          <sap:WorkflowViewStateService.ViewState>
+                            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                            </scg:Dictionary>
+                          </sap:WorkflowViewStateService.ViewState>
+                          <ui:LogMessage DisplayName="Registrar fallback lectura plantilla" Level="[UiPath.Core.Activities.LogLevel.Warn]" Message="[&quot;EP5 fallback lectura amplia plantilla | Tipo=&quot; + TipoProyectoNormalizado + &quot; | Motivo=&quot; + capacidadPlantillaDetalleLectura]" sap:VirtualizedContainerService.HintSize="498,144.66666666666666" sap2010:WorkflowViewState.IdRef="LogMessage_E05_010" />
+                          <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaResourcesRaw]" DisplayName="Fallback Resources A1 CA140" sap:VirtualizedContainerService.HintSize="498,88" sap2010:WorkflowViewState.IdRef="ReadRange_E05_020" Range="A1:CA140" SheetName="Resources" WorkbookPath="[rutaCORETrabajo]" />
+                          <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaCostPlanningRaw]" DisplayName="Fallback Cost Planning A1 CB160" sap:VirtualizedContainerService.HintSize="498,88" sap2010:WorkflowViewState.IdRef="ReadRange_E05_021" Range="A1:CB160" SheetName="Cost Planning" WorkbookPath="[rutaCORETrabajo]" />
+                          <ui:ReadRange AddHeaders="False" DataTable="[dtPlantillaMonthlyViewRaw]" DisplayName="Fallback Monthly View A1 CB80" sap:VirtualizedContainerService.HintSize="498,88" sap2010:WorkflowViewState.IdRef="ReadRange_E05_022" Range="A1:CB80" SheetName="Monthly View" WorkbookPath="[rutaCORETrabajo]" />
+                          <Assign DisplayName="Informar modo fallback plantilla" sap:VirtualizedContainerService.HintSize="498,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_E05_011">
+                            <Assign.To>
+                              <OutArgument x:TypeArguments="x:String">[capacidadPlantillaModoLectura]</OutArgument>
+                            </Assign.To>
+                            <Assign.Value>
+                              <InArgument x:TypeArguments="x:String">["ReadRange-amplia tras " + capacidadPlantillaDetalleLectura]</InArgument>
+                            </Assign.Value>
+                          </Assign>
+                          <ui:InvokeCode ContinueOnError="False" DisplayName="Validar fallback amplio de capacidad" Language="CSharp" sap:VirtualizedContainerService.HintSize="498,197.33333333333334" sap2010:WorkflowViewState.IdRef="InvokeCode_E05_013">
+                            <ui:InvokeCode.Code><![CDATA[
+string TextValue(object value)
+{
+    if (value == null || value == System.DBNull.Value) return string.Empty;
+    return System.Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture).Trim();
+}
+
+int MeasureMonths(System.Data.DataTable table, int oneBasedRow, int oneBasedStartColumn)
+{
+    if (table == null || table.Rows.Count < oneBasedRow || table.Columns.Count < oneBasedStartColumn) return 0;
+    int lastNonEmptyColumn = oneBasedStartColumn - 1;
+    System.Data.DataRow sourceRow = table.Rows[oneBasedRow - 1];
+    for (int columnIndex = oneBasedStartColumn - 1; columnIndex < table.Columns.Count; columnIndex++)
+    {
+        if (!string.IsNullOrWhiteSpace(TextValue(sourceRow[columnIndex]))) lastNonEmptyColumn = columnIndex + 1;
+    }
+    return System.Math.Max(0, lastNonEmptyColumn - oneBasedStartColumn + 1);
+}
+
+int CountMarker(System.Data.DataTable table, int firstRow, int lastRow, int column, string marker, out int firstMarkerRow)
+{
+    firstMarkerRow = 0;
+    int count = 0;
+    if (table == null || column <= 0 || column > table.Columns.Count) return 0;
+    int last = System.Math.Min(lastRow, table.Rows.Count);
+    for (int row = System.Math.Max(1, firstRow); row <= last; row++)
+    {
+        string text = TextValue(table.Rows[row - 1][column - 1]);
+        if (text.IndexOf(marker, System.StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            count++;
+            if (firstMarkerRow == 0) firstMarkerRow = row;
+        }
+    }
+    return count;
+}
+
+void RequireUntil(System.Collections.Generic.List<string> issues, string name, System.Data.DataTable table, int start, int end, int column, string marker, int adjustment)
+{
+    int markerRow;
+    int matches = CountMarker(table, start, end, column, marker, out markerRow);
+    if (matches == 0)
+    {
+        issues.Add(name + " sin marcador '" + marker + "'");
+        return;
+    }
+    int capacity = markerRow <= start ? 0 : markerRow - start - adjustment;
+    if (capacity <= 0) issues.Add(name + " sin capacidad util");
+}
+
+void RequireCount(System.Collections.Generic.List<string> issues, string name, System.Data.DataTable table, int start, int end, int column, string marker)
+{
+    int markerRow;
+    int matches = CountMarker(table, start, end, column, marker, out markerRow);
+    if (matches <= 0) issues.Add(name + " sin marcador '" + marker + "'");
+}
+
+bool isAT = System.String.Equals(arg_TipoProyectoNormalizado, "AT", System.StringComparison.OrdinalIgnoreCase);
+var validationIssues = new System.Collections.Generic.List<string>();
+
+int monthsResources = MeasureMonths(arg_dtPlantillaResourcesRaw, 6, isAT ? 7 : 6);
+int monthsCostPlanning = MeasureMonths(arg_dtPlantillaCostPlanningRaw, 8, isAT ? 8 : 7);
+int monthsMonthlyView = MeasureMonths(arg_dtPlantillaMonthlyViewRaw, 5, 5);
+if (monthsResources <= 0) validationIssues.Add("Meses Resources no detectado");
+if (monthsCostPlanning <= 0) validationIssues.Add("Meses Cost Planning no detectado");
+if (monthsMonthlyView <= 0) validationIssues.Add("Meses Monthly View no detectado");
+
+if (isAT)
+{
+    RequireCount(validationIssues, "Resources perfiles", arg_dtPlantillaResourcesRaw, 7, 80, 6, "Coste/hora");
+    RequireCount(validationIssues, "Cost Planning perfiles", arg_dtPlantillaCostPlanningRaw, 10, 80, 7, "Horas Reales");
+    RequireUntil(validationIssues, "Cost Planning gastos", arg_dtPlantillaCostPlanningRaw, 53, 140, 2, "TOTAL GASTOS", 0);
+    RequireUntil(validationIssues, "Cost Planning compras", arg_dtPlantillaCostPlanningRaw, 68, 140, 2, "TOTAL COMPRAS", 0);
+}
+else
+{
+    RequireUntil(validationIssues, "Resources filas", arg_dtPlantillaResourcesRaw, 7, 140, 2, "Tipo de Roles", 1);
+    RequireUntil(validationIssues, "Cost Planning perfiles", arg_dtPlantillaCostPlanningRaw, 10, 140, 2, "COSTE TOTAL RECURSOS", 0);
+    RequireUntil(validationIssues, "Cost Planning gastos", arg_dtPlantillaCostPlanningRaw, 53, 140, 2, "TOTAL GASTOS", 0);
+    RequireUntil(validationIssues, "Cost Planning compras", arg_dtPlantillaCostPlanningRaw, 64, 140, 2, "TOTAL COMPRAS", 0);
+}
+
+arg_FallbackRequired = validationIssues.Count > 0;
+arg_DetalleLectura = validationIssues.Count == 0 ? "OK" : string.Join("; ", validationIssues.ToArray());
+                            ]]></ui:InvokeCode.Code>
+                            <ui:InvokeCode.Arguments>
+                              <scg:Dictionary x:TypeArguments="x:String, Argument">
+                                <InArgument x:TypeArguments="x:String" x:Key="arg_TipoProyectoNormalizado">[TipoProyectoNormalizado]</InArgument>
+                                <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtPlantillaResourcesRaw">[dtPlantillaResourcesRaw]</InArgument>
+                                <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtPlantillaCostPlanningRaw">[dtPlantillaCostPlanningRaw]</InArgument>
+                                <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtPlantillaMonthlyViewRaw">[dtPlantillaMonthlyViewRaw]</InArgument>
+                                <OutArgument x:TypeArguments="x:Boolean" x:Key="arg_FallbackRequired">[capacidadPlantillaFallbackRequired]</OutArgument>
+                                <OutArgument x:TypeArguments="x:String" x:Key="arg_DetalleLectura">[capacidadPlantillaDetalleLectura]</OutArgument>
+                              </scg:Dictionary>
+                            </ui:InvokeCode.Arguments>
+                          </ui:InvokeCode>
+                          <If Condition="[capacidadPlantillaFallbackRequired]" DisplayName="Fallback amplio no valido" sap:VirtualizedContainerService.HintSize="498,276" sap2010:WorkflowViewState.IdRef="If_E05_012">
+                            <If.Then>
+                              <Throw DisplayName="Error capacidad plantilla tras fallback" Exception="[New Exception(&quot;No se ha podido detectar capacidad valida en plantilla CORE. Fallback amplio: &quot; + capacidadPlantillaDetalleLectura + &quot;.&quot;)]" sap:VirtualizedContainerService.HintSize="334,92" sap2010:WorkflowViewState.IdRef="Throw_E05_010" />
+                            </If.Then>
+                            <If.Else>
+                              <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_E05_012" />
+                            </If.Else>
+                          </If>
+                        </Sequence>
+                      </If.Then>
+                      <If.Else>
+                        <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_E05_013" />
+                      </If.Else>
+                    </If>
+                    <ui:InvokeCode ContinueOnError="False" DisplayName="Guardar capacidad de plantilla en cache" Language="CSharp" sap:VirtualizedContainerService.HintSize="574,197.33333333333334" sap2010:WorkflowViewState.IdRef="InvokeCode_E05_014">
+                      <ui:InvokeCode.Code><![CDATA[
+if (arg_dtPlantillaResourcesRaw == null || arg_dtPlantillaCostPlanningRaw == null || arg_dtPlantillaMonthlyViewRaw == null)
+{
+    throw new System.Exception("No se puede cachear capacidad de plantilla porque falta una tabla estructural.");
+}
+
+string selectedPath = !string.IsNullOrWhiteSpace(arg_RutaPlantillaSeleccionada) ? arg_RutaPlantillaSeleccionada : arg_RutaCORETrabajo;
+var templateInfo = new System.IO.FileInfo(selectedPath);
+if (!templateInfo.Exists && !string.IsNullOrWhiteSpace(arg_RutaCORETrabajo))
+{
+    templateInfo = new System.IO.FileInfo(arg_RutaCORETrabajo);
+}
+if (!templateInfo.Exists)
+{
+    throw new System.Exception("No existe la plantilla CORE seleccionada para cachear capacidad: " + selectedPath);
+}
+
+string cacheSlot = "CORE_EP5_TemplateCapacityCache_v4";
+string cacheKey = (arg_TipoProyectoNormalizado ?? string.Empty).Trim().ToUpperInvariant()
+    + "|" + templateInfo.FullName.ToUpperInvariant()
+    + "|" + templateInfo.Length.ToString(System.Globalization.CultureInfo.InvariantCulture)
+    + "|" + templateInfo.LastWriteTimeUtc.Ticks.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+var cache = System.AppDomain.CurrentDomain.GetData(cacheSlot) as System.Collections.Hashtable;
+if (cache == null)
+{
+    cache = new System.Collections.Hashtable();
+    System.AppDomain.CurrentDomain.SetData(cacheSlot, cache);
+}
+
+var cacheEntry = new System.Collections.Hashtable();
+cacheEntry["Resources"] = arg_dtPlantillaResourcesRaw.Copy();
+cacheEntry["CostPlanning"] = arg_dtPlantillaCostPlanningRaw.Copy();
+cacheEntry["MonthlyView"] = arg_dtPlantillaMonthlyViewRaw.Copy();
+cacheEntry["Mode"] = string.IsNullOrWhiteSpace(arg_ModoLectura) ? "ReadRange-minima" : arg_ModoLectura;
+cache[cacheKey] = cacheEntry;
+                      ]]></ui:InvokeCode.Code>
+                      <ui:InvokeCode.Arguments>
+                        <scg:Dictionary x:TypeArguments="x:String, Argument">
+                          <InArgument x:TypeArguments="x:String" x:Key="arg_RutaPlantillaSeleccionada">[RutaPlantillaSeleccionada]</InArgument>
+                          <InArgument x:TypeArguments="x:String" x:Key="arg_RutaCORETrabajo">[rutaCORETrabajo]</InArgument>
+                          <InArgument x:TypeArguments="x:String" x:Key="arg_TipoProyectoNormalizado">[TipoProyectoNormalizado]</InArgument>
+                          <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtPlantillaResourcesRaw">[dtPlantillaResourcesRaw]</InArgument>
+                          <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtPlantillaCostPlanningRaw">[dtPlantillaCostPlanningRaw]</InArgument>
+                          <InArgument x:TypeArguments="sd:DataTable" x:Key="arg_dtPlantillaMonthlyViewRaw">[dtPlantillaMonthlyViewRaw]</InArgument>
+                          <InArgument x:TypeArguments="x:String" x:Key="arg_ModoLectura">[capacidadPlantillaModoLectura]</InArgument>
+                        </scg:Dictionary>
+                      </ui:InvokeCode.Arguments>
+                    </ui:InvokeCode>
+                  </Sequence>
+                </If.Then>
+                <If.Else>
+                  <Sequence DisplayName="" sap2010:WorkflowViewState.IdRef="Sequence_E05_014" />
+                </If.Else>
+              </If>
+              <ui:LogMessage DisplayName="Registrar lectura plantilla CORE" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;EP5 lectura plantilla | Tipo=&quot; + TipoProyectoNormalizado + &quot; | Modo=&quot; + If(String.IsNullOrWhiteSpace(capacidadPlantillaModoLectura), &quot;vacio&quot;, capacidadPlantillaModoLectura) + &quot; | Detalle=&quot; + If(String.IsNullOrWhiteSpace(capacidadPlantillaDetalleLectura), &quot;sin detalle&quot;, capacidadPlantillaDetalleLectura) + &quot; | Segundos=&quot; + System.Math.Round((System.DateTime.Now - tiempoInicioLecturaPlantilla).TotalSeconds, 2).ToString()]" sap:VirtualizedContainerService.HintSize="650,144.66666666666666" sap2010:WorkflowViewState.IdRef="LogMessage_E05_011" />
             </Sequence>
             <Sequence sap2010:Annotation.AnnotationText="Objetivo: crear la matriz ICT/Connectis vs Global Rosetta y detectar filas útiles en la plantilla copiada desde rangos leídos por actividades Excel. Entradas: tipo PC/AT y tablas leídas desde Excel de Resources/Cost Planning. Salidas: tabla de matriz y capacidades reales. No hace: no usa COM, no escribe datos de negocio en el CORE ni selecciona plantillas alternativas." DisplayName="Utilidad S08 - preparar matriz intercompany y capacidad plantilla" sap:VirtualizedContainerService.HintSize="750,7176" sap2010:WorkflowViewState.IdRef="Sequence_80">
               <sap:WorkflowViewStateService.ViewState>
@@ -1618,7 +2064,7 @@ arg_CapacidadMesesPlantilla = System.Math.Min(arg_CapacidadMesesResources, Syste
                 </If.Else>
               </If>
             </Sequence>
-            <ui:LogMessage DisplayName="Registrar capacidad de plantilla detectada" sap:VirtualizedContainerService.HintSize="750,144.66666666666666" sap2010:WorkflowViewState.IdRef="LogMessage_7" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;S08 capacidad plantilla | Tipo=&quot; + TipoProyectoNormalizado + &quot; | Meses=&quot; + capacidadMesesPlantilla.ToString() + &quot; (Resources=&quot; + capacidadMesesResources.ToString() + &quot;, CP=&quot; + capacidadMesesCostPlanning.ToString() + &quot;, Monthly=&quot; + capacidadMesesMonthlyView.ToString() + &quot;) | ResourcesFilas=&quot; + capacidadResourcesFilas.ToString() + &quot; | ResourcesPerfiles=&quot; + capacidadResourcesPerfiles.ToString() + &quot; | CPPerfiles=&quot; + capacidadCostPlanningPerfiles.ToString() + &quot; | Gastos=&quot; + capacidadCostPlanningGastos.ToString() + &quot; | Compras=&quot; + capacidadCostPlanningCompras.ToString()]" />
+            <ui:LogMessage DisplayName="Registrar capacidad de plantilla detectada" sap:VirtualizedContainerService.HintSize="750,144.66666666666666" sap2010:WorkflowViewState.IdRef="LogMessage_7" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;S08 capacidad plantilla | Tipo=&quot; + TipoProyectoNormalizado + &quot; | Lectura=&quot; + If(String.IsNullOrWhiteSpace(capacidadPlantillaModoLectura), &quot;no informada&quot;, capacidadPlantillaModoLectura) + &quot; | Meses=&quot; + capacidadMesesPlantilla.ToString() + &quot; (Resources=&quot; + capacidadMesesResources.ToString() + &quot;, CP=&quot; + capacidadMesesCostPlanning.ToString() + &quot;, Monthly=&quot; + capacidadMesesMonthlyView.ToString() + &quot;) | ResourcesFilas=&quot; + capacidadResourcesFilas.ToString() + &quot; | ResourcesPerfiles=&quot; + capacidadResourcesPerfiles.ToString() + &quot; | CPPerfiles=&quot; + capacidadCostPlanningPerfiles.ToString() + &quot; | Gastos=&quot; + capacidadCostPlanningGastos.ToString() + &quot; | Compras=&quot; + capacidadCostPlanningCompras.ToString()]" />
           </Sequence>
           <Assign DisplayName="Medir inicio escritura CORE" sap:VirtualizedContainerService.HintSize="932.6666666666666,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_E05_02">
             <Assign.To>

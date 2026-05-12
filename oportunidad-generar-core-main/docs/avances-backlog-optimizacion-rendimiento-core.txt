@@ -134,3 +134,44 @@
 - Validador PC 12 meses sobre `data/output/CORE_PC_20250256445.xlsx`: OK, `FormulaCount=3766`, `RefErrors=0`, cabeceras hasta `2026-10`.
 - Comprobacion final de procesos Excel: sin procesos Excel activos.
 - Profile: no se genero `.uistat` con `UiRobot execute`; sigue pendiente medir desde Studio con profiling. La reduccion de eventos queda demostrada estructuralmente por retirar 12 limpiezas Excel (`ClearRangeX`) sin cambiar outputs CORE.
+
+2026-05-12 - Epica 5 completada: Lectura de capacidades de plantilla.
+- Alcance aplicado: EP5-T01, EP5-T02 y EP5-T03 sobre `lib/oportunidad-generar-core.xaml`.
+- EP5-T01 inventario del algoritmo vigente:
+  - Meses `Resources`: fila 6, inicio F para PC y G para AT; capacidad esperada actual 60.
+  - Meses `Cost Planning`: fila 8, inicio G para PC y H para AT; capacidad esperada actual 60.
+  - Meses `Monthly View`: fila 5, inicio E; capacidad esperada actual 60.
+  - PC `Resources filas`: busca `Tipo de Roles` en `Resources!B7:B140`, operacion hasta marcador con ajuste 1.
+  - PC `Cost Planning perfiles`: busca `COSTE TOTAL RECURSOS` en `Cost Planning!B10:B140`, usando el primer marcador como hacia el algoritmo historico.
+  - PC `Cost Planning gastos`: busca `TOTAL GASTOS` en `Cost Planning!B53:B140`.
+  - PC `Cost Planning compras`: busca `TOTAL COMPRAS` en `Cost Planning!B64:B140`.
+  - AT `Resources perfiles`: cuenta `Coste/hora` en `Resources!F7:F80`.
+  - AT `Cost Planning perfiles`: cuenta `Horas Reales` en `Cost Planning!G10:G80`.
+  - AT `Cost Planning gastos`: busca `TOTAL GASTOS` en `Cost Planning!B53:B140`.
+  - AT `Cost Planning compras`: busca `TOTAL COMPRAS` en `Cost Planning!B68:B140`.
+- EP5-T02 implementacion final:
+  - Sustituidas las lecturas amplias iniciales `Resources A1:CA140`, `Cost Planning A1:CB160` y `Monthly View A1:CB80` por lecturas minimas de cortes estructurales.
+  - Se mantienen validaciones de hojas obligatorias con `A1:A1` para `Project Infor`, `Cost Overview` y `Cost Summary`; `Resources`, `Cost Planning` y `Monthly View` quedan validadas por sus propios cortes.
+  - Cortes minimos leidos: `Resources!A6:CA6`, `Resources!B7:B140`, `Resources!F7:F80`, `Cost Planning!A8:CB8`, `Cost Planning!B10:B140`, `Cost Planning!G10:G80` y `Monthly View!A5:CB5`.
+  - Los cortes se ensamblan en `DataTable` con la misma geometria que esperaba S08: `Resources` 140x79, `Cost Planning` 160x80 y `Monthly View` 80x80.
+  - Si la lectura minima no detecta meses o marcadores utiles, se registra warning y se ejecuta fallback amplio con los rangos historicos.
+  - Decision tecnica: no se trata como fallo que exista mas de una coincidencia textual posterior de `COSTE TOTAL RECURSOS`; el algoritmo vigente siempre toma el primer marcador encontrado, y endurecerlo cambiaria el contrato de una plantilla ya valida.
+- EP5-T03 cache:
+  - Cache en memoria con `AppDomain.CurrentDomain` (`CORE_EP5_TemplateCapacityCache_v4`).
+  - Clave de cache por tipo de proyecto, ruta de plantilla seleccionada (o CORE de trabajo si no existe), longitud y `LastWriteTimeUtc.Ticks`.
+  - La cache guarda copias de las tres tablas estructurales y el modo de lectura; no se persiste entre ejecuciones del robot.
+- Evidencia runtime:
+  - Validacion estatica: XAML parseado como XML OK.
+  - `test/validar_plantillas_core_60_meses.ps1`: OK; PC y AT con 60 meses utiles en `Resources`, `Cost Planning` y `Monthly View`.
+  - Empaquetado runtime final: `UiRobot.exe pack ... -v 1.0.55-ep5` OK.
+  - Ejecucion runtime final: `UiRobot.exe execute --file ...1.0.55-ep5.nupkg --entry Main.xaml` OK, salida `{}`, duracion observada `224.9 s`.
+  - Logs EP5: PC `ReadRange-minima`, detalle `OK`, `9.62 s`; AT `ReadRange-minima`, detalle `OK`, `3.69 s`.
+  - Logs S08: PC `Meses=60 (Resources=60, CP=60, Monthly=60)`, `ResourcesFilas=37`, `ResourcesPerfiles=30`, `CPPerfiles=30`, `Gastos=6`, `Compras=10`; AT `Meses=60`, `ResourcesFilas=30`, `ResourcesPerfiles=15`, `CPPerfiles=15`, `Gastos=8`, `Compras=9`.
+  - Outputs reales de `1.0.55-ep5` copiados a `data/output`: `CORE_PC_20250256445.xlsx` y `CORE_AT_20251160543.xlsx`.
+  - Comparador EP0 PC contra baseline local: OK, valores comparados `3534`, formulas `3010`, posiciones de rojo `21480`, `#REF!` `0`, diferencias `0`.
+  - Comparador EP0 AT contra baseline local: OK, valores comparados `4141`, formulas `2979`, posiciones de rojo `21480`, `#REF!` `0`, diferencias `0`.
+  - `test/validar_calidad_e06.ps1`: OK.
+  - Validador AT 48 meses sobre `data/output/CORE_AT_20251160543.xlsx`: OK, `FormulaCount=3735`, `RefErrors=0`, cabeceras hasta `2029-12`.
+  - Validador PC 12 meses sobre `data/output/CORE_PC_20250256445.xlsx`: OK, `FormulaCount=3766`, `RefErrors=0`, cabeceras hasta `2026-10`.
+  - Comprobacion final de procesos Excel: sin procesos Excel activos.
+- Profile: no se genero `.uistat` con `UiRobot execute`; queda pendiente medicion desde Studio si se necesita evidencia de profiler. La evidencia runtime del bloque EP5 queda trazada en log con segundos por tipo y la reduccion estructural evita leer matrices completas salvo fallback.
