@@ -2767,15 +2767,15 @@ finally
                 </scg:Dictionary>
               </ui:InvokeCode.Arguments>
             </ui:InvokeCode>
-            <ui:InvokeCode ContinueOnError="{x:Null}" DisplayName="Recalcular y guardar CORE con Excel COM" Language="CSharp" Code="object excel = null;&#xD;&#xA;object workbooks = null;&#xD;&#xA;object workbook = null;&#xD;&#xA;object worksheets = null;&#xD;&#xA;System.Type excelType = System.Type.GetTypeFromProgID(&quot;Excel.Application&quot;);&#xD;&#xA;if (excelType == null)&#xD;&#xA;{&#xD;&#xA;    throw new System.InvalidOperationException(&quot;Microsoft Excel no esta disponible para recalcular el CORE.&quot;);&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;const int xlCalculationAutomatic = -4105;&#xD;&#xA;object missing = System.Type.Missing;&#xD;&#xA;System.Reflection.BindingFlags getProperty = System.Reflection.BindingFlags.GetProperty;&#xD;&#xA;System.Reflection.BindingFlags setProperty = System.Reflection.BindingFlags.SetProperty;&#xD;&#xA;System.Reflection.BindingFlags invokeMethod = System.Reflection.BindingFlags.InvokeMethod;&#xD;&#xA;&#xD;&#xA;try&#xD;&#xA;{&#xD;&#xA;    excel = System.Activator.CreateInstance(excelType);&#xD;&#xA;    excelType.InvokeMember(&quot;DisplayAlerts&quot;, setProperty, null, excel, new object[] { false });&#xD;&#xA;    excelType.InvokeMember(&quot;Visible&quot;, setProperty, null, excel, new object[] { false });&#xD;&#xA;    excelType.InvokeMember(&quot;EnableEvents&quot;, setProperty, null, excel, new object[] { false });&#xD;&#xA;&#xD;&#xA;    workbooks = excelType.InvokeMember(&quot;Workbooks&quot;, getProperty, null, excel, null);&#xD;&#xA;    System.Type workbooksType = workbooks.GetType();&#xD;&#xA;    workbook = workbooksType.InvokeMember(&quot;Open&quot;, invokeMethod, null, workbooks, new object[] { arg_RutaCORE, 0, false, missing, missing, missing, true, missing, missing, missing, missing, missing, false, true, missing });&#xD;&#xA;    System.Type workbookType = workbook.GetType();&#xD;&#xA;&#xD;&#xA;    try { excelType.InvokeMember(&quot;Calculation&quot;, setProperty, null, excel, new object[] { xlCalculationAutomatic }); } catch { }&#xD;&#xA;    try { workbookType.InvokeMember(&quot;ForceFullCalculation&quot;, setProperty, null, workbook, new object[] { true }); } catch { }&#xD;&#xA;    try { excelType.InvokeMember(&quot;CalculateFullRebuild&quot;, invokeMethod, null, excel, null); }&#xD;&#xA;    catch { excelType.InvokeMember(&quot;Calculate&quot;, invokeMethod, null, excel, null); }&#xD;&#xA;&#xD;&#xA;    worksheets = workbookType.InvokeMember(&quot;Worksheets&quot;, getProperty, null, workbook, null);&#xD;&#xA;    System.Type worksheetsType = worksheets.GetType();&#xD;&#xA;    int worksheetCount = System.Convert.ToInt32(worksheetsType.InvokeMember(&quot;Count&quot;, getProperty, null, worksheets, null));&#xD;&#xA;    for (int i = 1; i &lt;= worksheetCount; i++)&#xD;&#xA;    {&#xD;&#xA;        object worksheet = null;&#xD;&#xA;        try&#xD;&#xA;        {&#xD;&#xA;            worksheet = worksheetsType.InvokeMember(&quot;Item&quot;, getProperty, null, worksheets, new object[] { i });&#xD;&#xA;            worksheet.GetType().InvokeMember(&quot;Calculate&quot;, invokeMethod, null, worksheet, null);&#xD;&#xA;        }&#xD;&#xA;        finally&#xD;&#xA;        {&#xD;&#xA;            if (worksheet != null) System.Runtime.InteropServices.Marshal.FinalReleaseComObject(worksheet);&#xD;&#xA;        }&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    workbookType.InvokeMember(&quot;Save&quot;, invokeMethod, null, workbook, null);&#xD;&#xA;}&#xD;&#xA;finally&#xD;&#xA;{&#xD;&#xA;    if (workbook != null)&#xD;&#xA;    {&#xD;&#xA;        try { workbook.GetType().InvokeMember(&quot;Close&quot;, invokeMethod, null, workbook, new object[] { false }); } catch { }&#xD;&#xA;    }&#xD;&#xA;    if (excel != null)&#xD;&#xA;    {&#xD;&#xA;        try { excelType.InvokeMember(&quot;Quit&quot;, invokeMethod, null, excel, null); } catch { }&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    if (worksheets != null) System.Runtime.InteropServices.Marshal.FinalReleaseComObject(worksheets);&#xD;&#xA;    if (workbook != null) System.Runtime.InteropServices.Marshal.FinalReleaseComObject(workbook);&#xD;&#xA;    if (workbooks != null) System.Runtime.InteropServices.Marshal.FinalReleaseComObject(workbooks);&#xD;&#xA;    if (excel != null) System.Runtime.InteropServices.Marshal.FinalReleaseComObject(excel);&#xD;&#xA;    System.GC.Collect();&#xD;&#xA;    System.GC.WaitForPendingFinalizers();&#xD;&#xA;}">
-              <ui:InvokeCode.Arguments>
-                <scg:Dictionary x:TypeArguments="x:String, Argument">
-                  <InArgument x:TypeArguments="x:String" x:Key="arg_RutaCORE">[rutaCORETrabajo]</InArgument>
-                </scg:Dictionary>
-              </ui:InvokeCode.Arguments>
-            </ui:InvokeCode>
-            <ui:InvokeCode ContinueOnError="{x:Null}" DisplayName="Normalizar resumen y auditoria CORE" Language="CSharp">
+            <ui:InvokeCode ContinueOnError="{x:Null}" DisplayName="Recalcular y normalizar CORE en batch COM" Language="CSharp">
               <ui:InvokeCode.Code><![CDATA[
+/*
+Objetivo: recalcular el CORE y normalizar trazabilidad/auditoria en la misma reapertura COM de cierre.
+Entradas: ruta CORE, ruta PPO, tipo, NumeroSF, indicadores funcionales y tablas auxiliares para auditoria.
+Salidas: formulas finales, Cost Summary!B18 normalizado, libro recalculado y guardado.
+Regla: ejecutar CalculateFullRebuild antes de leer importes para trazabilidad y de nuevo tras escribir formulas/auditoria.
+No hace: no cambia datos de negocio, rangos escritos por PC/AT, textos funcionales ni contratos publicos.
+*/
 object excel = null;
 object workbooks = null;
 object workbook = null;
@@ -2938,7 +2938,26 @@ try
     workbook = workbooksType.InvokeMember("Open", invokeMethod, null, workbooks, new object[] { arg_RutaCORE, 0, false, missing, missing, missing, true, missing, missing, missing, missing, missing, false, true, missing });
     System.Type workbookType = workbook.GetType();
     worksheets = workbookType.InvokeMember("Worksheets", getProperty, null, workbook, null);
-
+    const int xlCalculationAutomatic = -4105;
+    try { excelType.InvokeMember("Calculation", setProperty, null, excel, new object[] { xlCalculationAutomatic }); } catch { }
+    try { workbookType.InvokeMember("ForceFullCalculation", setProperty, null, workbook, new object[] { true }); } catch { }
+    try { excelType.InvokeMember("CalculateFullRebuild", invokeMethod, null, excel, null); }
+    catch { excelType.InvokeMember("Calculate", invokeMethod, null, excel, null); }
+    System.Type worksheetsType = worksheets.GetType();
+    int worksheetCount = System.Convert.ToInt32(worksheetsType.InvokeMember("Count", getProperty, null, worksheets, null));
+    for (int i = 1; i <= worksheetCount; i++)
+    {
+        object worksheet = null;
+        try
+        {
+            worksheet = worksheetsType.InvokeMember("Item", getProperty, null, worksheets, new object[] { i });
+            worksheet.GetType().InvokeMember("Calculate", invokeMethod, null, worksheet, null);
+        }
+        finally
+        {
+            if (worksheet != null) System.Runtime.InteropServices.Marshal.FinalReleaseComObject(worksheet);
+        }
+    }
     object summary = GetWorksheet(worksheets, "Cost Summary");
     if (summary != null)
     {

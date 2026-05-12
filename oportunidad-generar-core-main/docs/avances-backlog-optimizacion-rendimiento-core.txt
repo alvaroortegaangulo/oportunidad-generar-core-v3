@@ -70,3 +70,35 @@
 - Validador PC 12 meses sobre `data/output/CORE_PC_20250256445.xlsx`: OK, `FormulaCount=3766`, `RefErrors=0`, cabeceras hasta `2026-10`.
 - Comprobacion final de procesos Excel: sin procesos Excel activos.
 - Profile: no se genero un `.uistat` nuevo con `UiRobot execute`; sigue pendiente medir desde Studio con profiling. La reduccion de eventos queda demostrada estructuralmente por la retirada de 26 `WriteCellX` y del `FormatRangeX` por fila en Project Infor.
+
+2026-05-12 - Epica 3 iniciada y completada: Consolidacion de sesiones Excel.
+- Alcance aplicado: EP3-T01, EP3-T02 y EP3-T03.
+- Baseline funcional reutilizado de `data/baseline`: `CORE_PC_20250256445_baseline.xlsx` y `CORE_AT_20251160543_baseline.xlsx`.
+- EP3-T01 inventario de aperturas/guardados:
+  - `lib/oportunidad-generar-core.xaml`: `Abrir Excel para leer PPO` / `Usar PPO para lectura` para lectura por rangos estables; coste de profile base `58995 ms`.
+  - `lib/oportunidad-generar-core.xaml`: `Leer estructura de plantilla CORE` usa `ReadRange` legacy sobre el CORE copiado (`Resources A1:CA140`, `Cost Planning A1:CB160`, `Monthly View A1:CB80` y hojas obligatorias); coste de profile base `10976 ms`.
+  - `lib/oportunidad-generar-core.xaml`: `Escribir Project Infor en batch con Excel COM`, ya optimizado en EP2, abre y guarda el CORE por COM para 26 celdas.
+  - `lib/oportunidad-generar-core-pc.xaml`: `Abrir Excel para escribir CORE PC` / `Guardar CORE PC`; una apertura para cabeceras, limpiezas y escrituras PC.
+  - `lib/oportunidad-generar-core-at.xaml`: `Abrir Excel para escribir CORE AT` / `Guardar CORE AT`; una apertura para cabeceras, limpiezas y escrituras AT.
+  - `lib/oportunidad-generar-core.xaml`: `Abrir Excel para cierre final CORE` / `Guardar CORE tras formato final`; apertura moderna para limpiar billing real y escribir avisos/trazabilidad intermedia.
+  - `lib/oportunidad-generar-core.xaml`: `Marcar errores CORE en batch con Excel COM`; apertura COM de EP1 para marcar rojo leyendo valores cached antes del recalculo final.
+  - `lib/oportunidad-generar-core.xaml`: `Recalcular y guardar CORE con Excel COM`; apertura COM independiente eliminada en EP3.
+  - `lib/oportunidad-generar-core.xaml`: `Recalcular y normalizar CORE en batch COM`; apertura COM final conservada y ampliada.
+- EP3-T02: eliminado el `Invoke Code` independiente `Recalcular y guardar CORE con Excel COM`.
+- EP3-T02: el recalculo completo previo (`Calculation=Automatic`, `ForceFullCalculation=True`, `CalculateFullRebuild` con fallback a `Calculate` y calculo por hoja) se integro dentro de `Recalcular y normalizar CORE en batch COM`, antes de leer importes para la trazabilidad de `Cost Summary!B18`.
+- EP3-T02: se mantiene un segundo `CalculateFullRebuild` al final del bloque de normalizacion, despues de reescribir formulas/auditoria, para preservar el comportamiento final existente.
+- Decision tecnica: no se fusiono aun `Marcar errores CORE en batch con Excel COM` con la normalizacion porque el marcado rojo debe leer valores cached antes del recalculo final; consolidarlo en una unica apertura COM es viable, pero requiere revalidar cuidadosamente el orden manual/automatico de calculo. Queda como posible micro-optimizacion futura si EP6 profile demuestra que sigue siendo relevante.
+- EP3-T03: no se consolido la apertura entre fachada y subworkflows PC/AT. Motivo: PC y AT ya concentran su escritura en una sola sesion cada uno; compartir `IWorkbookQuickHandle` o COM entre fachada y subworkflow cambiaria contrato interno, aumentaria acoplamiento y dificultaria revisabilidad Studio sin una mejora demostrada por profile. Decision: posponer hasta tener profile post-EP3/EP4.
+- Archivos funcionales tocados: `lib/oportunidad-generar-core.xaml`.
+- Outputs candidatos actualizados tras ejecucion runtime: `data/output/CORE_PC_20250256445.xlsx` y `data/output/CORE_AT_20251160543.xlsx`.
+- Validacion estatica: XAML parseado como XML OK.
+- Empaquetado runtime: `UiRobot.exe pack ... -v 1.0.40-ep3` OK. `project.json` y metadatos locales generados por el empaquetado se restauraron para evitar ruido; paquetes temporales de `%TEMP%` eliminados.
+- Ejecucion runtime: `UiRobot.exe execute --file ...1.0.40-ep3.nupkg --entry Main.xaml` OK, salida `{}`, duracion observada `270 s`.
+- Los outputs reales de la ejecucion se generaron en la cache NuGet del paquete `1.0.40-ep3` y se copiaron a `data/output` para dejar candidatos validados en el repo.
+- Comparador EP0 PC contra baseline local: OK, valores comparados `3499`, formulas `3010`, posiciones de rojo `21480`, `#REF!` `0`, diferencias `0`.
+- Comparador EP0 AT contra baseline local: OK, valores comparados `4043`, formulas `2979`, posiciones de rojo `21480`, `#REF!` `0`, diferencias `0`.
+- `test/validar_calidad_e06.ps1`: OK.
+- Validador AT 48 meses sobre `data/output/CORE_AT_20251160543.xlsx`: OK, `FormulaCount=3735`, `RefErrors=0`, cabeceras hasta `2029-12`.
+- Validador PC 12 meses sobre `data/output/CORE_PC_20250256445.xlsx`: OK, `FormulaCount=3766`, `RefErrors=0`, cabeceras hasta `2026-10`.
+- Comprobacion final de procesos Excel: sin procesos Excel activos.
+- Profile: no se genero `.uistat` con `UiRobot execute`; sigue pendiente medir desde Studio. La mejora de EP3 queda demostrada estructuralmente por retirar una reapertura COM y un guardado intermedio del cierre final.
