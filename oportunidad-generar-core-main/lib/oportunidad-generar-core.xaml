@@ -2372,17 +2372,6 @@ If(dtCabeceraPPO.Select("Campo = 'subpracticeOrigin'").Length > 0 AndAlso Not St
             <Sequence.Variables>
               <Variable x:TypeArguments="scg:HashSet(x:String)" Name="erroresFormatoCore" />
               <Variable x:TypeArguments="scg:List(s:Object[])" Name="rangosFormatoCore" />
-              <Variable x:TypeArguments="sd:DataTable" Name="dtRangoFormatoCore" />
-              <Variable x:TypeArguments="x:String" Name="hojaFormatoCore" />
-              <Variable x:TypeArguments="x:String" Name="rangoFormatoCore" />
-              <Variable x:TypeArguments="x:Int32" Name="filaInicioFormatoCore" />
-              <Variable x:TypeArguments="x:Int32" Name="columnaInicioFormatoCore" />
-              <Variable x:TypeArguments="x:Int32" Name="filaRelativaFormatoCore" />
-              <Variable x:TypeArguments="x:Int32" Name="columnaRelativaFormatoCore" />
-              <Variable x:TypeArguments="x:Int32" Name="filaAbsolutaFormatoCore" />
-              <Variable x:TypeArguments="x:Int32" Name="columnaAbsolutaFormatoCore" />
-              <Variable x:TypeArguments="x:String" Name="textoCeldaFormatoCore" />
-              <Variable x:TypeArguments="x:String" Name="celdaFormatoCore" />
             </Sequence.Variables>
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -2466,146 +2455,6 @@ If(dtCabeceraPPO.Select("Campo = 'subpracticeOrigin'").Length > 0 AndAlso Not St
                           </Assign>
                           <ueab:ClearRangeX DisplayName="Vaciar billing real Cost Overview G17" HasHeaders="False" sap:VirtualizedContainerService.HintSize="740.6666666666666,120" sap2010:WorkflowViewState.IdRef="ClearRangeX_19" TargetRange="[ExcelCoreCierreFinal.Sheet(&quot;Cost Overview&quot;).Range(&quot;G17&quot;)]" />
                           <ueab:ClearRangeX DisplayName="Vaciar billing real Cost Overview I17" HasHeaders="False" sap:VirtualizedContainerService.HintSize="740.6666666666666,120" sap2010:WorkflowViewState.IdRef="ClearRangeX_20" TargetRange="[ExcelCoreCierreFinal.Sheet(&quot;Cost Overview&quot;).Range(&quot;I17&quot;)]" />
-                          <ui:ForEach x:TypeArguments="s:Object[]" CurrentIndex="{x:Null}" DisplayName="Recorrer rangos con errores CORE" sap:VirtualizedContainerService.HintSize="740.6666666666666,1965.3333333333333" sap2010:WorkflowViewState.IdRef="ForEach`1_30" Values="[rangosFormatoCore]">
-                            <ui:ForEach.Body>
-                              <ActivityAction x:TypeArguments="s:Object[]">
-                                <ActivityAction.Argument>
-                                  <DelegateInArgument x:TypeArguments="s:Object[]" Name="rangoFormatoDefinicion" />
-                                </ActivityAction.Argument>
-                                <Sequence DisplayName="Revisar rango de errores CORE" sap:VirtualizedContainerService.HintSize="706.6666666666666,1775.3333333333333" sap2010:WorkflowViewState.IdRef="Sequence_91">
-                                  <sap:WorkflowViewStateService.ViewState>
-                                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                                    </scg:Dictionary>
-                                  </sap:WorkflowViewStateService.ViewState>
-                                  <ui:MultipleAssign DisplayName="Preparar rango de errores CORE" sap:VirtualizedContainerService.HintSize="664.6666666666666,209.33333333333334" sap2010:WorkflowViewState.IdRef="MultipleAssign_30">
-                                    <ui:MultipleAssign.AssignOperations>
-                                      <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
-                                        <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_300">
-                                          <ui:AssignOperation.To>
-                                            <OutArgument x:TypeArguments="x:String">[hojaFormatoCore]</OutArgument>
-                                          </ui:AssignOperation.To>
-                                          <ui:AssignOperation.Value>
-                                            <InArgument x:TypeArguments="x:String">[CStr(rangoFormatoDefinicion(0))]</InArgument>
-                                          </ui:AssignOperation.Value>
-                                        </ui:AssignOperation>
-                                        <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_301">
-                                          <ui:AssignOperation.To>
-                                            <OutArgument x:TypeArguments="x:String">[rangoFormatoCore]</OutArgument>
-                                          </ui:AssignOperation.To>
-                                          <ui:AssignOperation.Value>
-                                            <InArgument x:TypeArguments="x:String">[CStr(rangoFormatoDefinicion(1))]</InArgument>
-                                          </ui:AssignOperation.Value>
-                                        </ui:AssignOperation>
-                                        <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_302">
-                                          <ui:AssignOperation.To>
-                                            <OutArgument x:TypeArguments="x:Int32">[filaInicioFormatoCore]</OutArgument>
-                                          </ui:AssignOperation.To>
-                                          <ui:AssignOperation.Value>
-                                            <InArgument x:TypeArguments="x:Int32">[CInt(rangoFormatoDefinicion(2))]</InArgument>
-                                          </ui:AssignOperation.Value>
-                                        </ui:AssignOperation>
-                                        <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_303">
-                                          <ui:AssignOperation.To>
-                                            <OutArgument x:TypeArguments="x:Int32">[columnaInicioFormatoCore]</OutArgument>
-                                          </ui:AssignOperation.To>
-                                          <ui:AssignOperation.Value>
-                                            <InArgument x:TypeArguments="x:Int32">[CInt(rangoFormatoDefinicion(3))]</InArgument>
-                                          </ui:AssignOperation.Value>
-                                        </ui:AssignOperation>
-                                      </scg:List>
-                                    </ui:MultipleAssign.AssignOperations>
-                                  </ui:MultipleAssign>
-                                  <ueab:ReadRangeX DisplayName="Leer rango para errores CORE" HasHeaders="False" sap:VirtualizedContainerService.HintSize="664.6666666666666,174.66666666666666" sap2010:WorkflowViewState.IdRef="ReadRangeX_1" Range="[ExcelCoreCierreFinal.Sheet(hojaFormatoCore).Range(rangoFormatoCore)]" ReadFormatting="DisplayValue" SaveTo="[dtRangoFormatoCore]" />
-                                  <ui:ForEach x:TypeArguments="x:Int32" CurrentIndex="{x:Null}" DisplayName="Recorrer filas rango CORE" sap:VirtualizedContainerService.HintSize="664.6666666666666,1224" sap2010:WorkflowViewState.IdRef="ForEach`1_31" Values="[System.Linq.Enumerable.Range(0, If(dtRangoFormatoCore Is Nothing, 0, dtRangoFormatoCore.Rows.Count))]">
-                                    <ui:ForEach.Body>
-                                      <ActivityAction x:TypeArguments="x:Int32">
-                                        <ActivityAction.Argument>
-                                          <DelegateInArgument x:TypeArguments="x:Int32" Name="filaRelativaFormatoCore" />
-                                        </ActivityAction.Argument>
-                                        <ui:ForEach x:TypeArguments="x:Int32" CurrentIndex="{x:Null}" DisplayName="Recorrer columnas rango CORE" sap:VirtualizedContainerService.HintSize="630.6666666666666,1034" sap2010:WorkflowViewState.IdRef="ForEach`1_32" Values="[System.Linq.Enumerable.Range(0, If(dtRangoFormatoCore Is Nothing, 0, dtRangoFormatoCore.Columns.Count))]">
-                                          <ui:ForEach.Body>
-                                            <ActivityAction x:TypeArguments="x:Int32">
-                                              <ActivityAction.Argument>
-                                                <DelegateInArgument x:TypeArguments="x:Int32" Name="columnaRelativaFormatoCore" />
-                                              </ActivityAction.Argument>
-                                              <Sequence DisplayName="Evaluar celda CORE" sap:VirtualizedContainerService.HintSize="596.6666666666666,844" sap2010:WorkflowViewState.IdRef="Sequence_92">
-                                                <sap:WorkflowViewStateService.ViewState>
-                                                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                                                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                                                  </scg:Dictionary>
-                                                </sap:WorkflowViewStateService.ViewState>
-                                                <Assign DisplayName="Normalizar texto celda CORE" sap:VirtualizedContainerService.HintSize="554.6666666666666,85.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_52">
-                                                  <Assign.To>
-                                                    <OutArgument x:TypeArguments="x:String">[textoCeldaFormatoCore]</OutArgument>
-                                                  </Assign.To>
-                                                  <Assign.Value>
-                                                    <InArgument x:TypeArguments="x:String">[Convert.ToString(dtRangoFormatoCore.Rows(filaRelativaFormatoCore)(columnaRelativaFormatoCore)).Trim()]</InArgument>
-                                                  </Assign.Value>
-                                                </Assign>
-                                                <If Condition="[erroresFormatoCore.Contains(textoCeldaFormatoCore)]" DisplayName="La celda contiene error funcional" sap:VirtualizedContainerService.HintSize="554.6666666666666,631.3333333333334" sap2010:WorkflowViewState.IdRef="If_60">
-                                                  <If.Then>
-                                                    <Sequence DisplayName="Marcar celda CORE en rojo" sap:VirtualizedContainerService.HintSize="520.6666666666666,447.3333333333333" sap2010:WorkflowViewState.IdRef="Sequence_93">
-                                                      <sap:WorkflowViewStateService.ViewState>
-                                                        <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                                                          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                                                        </scg:Dictionary>
-                                                      </sap:WorkflowViewStateService.ViewState>
-                                                      <ui:MultipleAssign DisplayName="Preparar celda roja CORE" sap:VirtualizedContainerService.HintSize="478.6666666666667,178.66666666666666" sap2010:WorkflowViewState.IdRef="MultipleAssign_31">
-                                                        <ui:MultipleAssign.AssignOperations>
-                                                          <scg:List x:TypeArguments="ui:AssignOperation" Capacity="3">
-                                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_304">
-                                                              <ui:AssignOperation.To>
-                                                                <OutArgument x:TypeArguments="x:Int32">[filaAbsolutaFormatoCore]</OutArgument>
-                                                              </ui:AssignOperation.To>
-                                                              <ui:AssignOperation.Value>
-                                                                <InArgument x:TypeArguments="x:Int32">[filaInicioFormatoCore + filaRelativaFormatoCore]</InArgument>
-                                                              </ui:AssignOperation.Value>
-                                                            </ui:AssignOperation>
-                                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_305">
-                                                              <ui:AssignOperation.To>
-                                                                <OutArgument x:TypeArguments="x:Int32">[columnaAbsolutaFormatoCore]</OutArgument>
-                                                              </ui:AssignOperation.To>
-                                                              <ui:AssignOperation.Value>
-                                                                <InArgument x:TypeArguments="x:Int32">[columnaInicioFormatoCore + columnaRelativaFormatoCore]</InArgument>
-                                                              </ui:AssignOperation.Value>
-                                                            </ui:AssignOperation>
-                                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_306">
-                                                              <ui:AssignOperation.To>
-                                                                <OutArgument x:TypeArguments="x:String">[celdaFormatoCore]</OutArgument>
-                                                              </ui:AssignOperation.To>
-                                                              <ui:AssignOperation.Value>
-                                                                <InArgument x:TypeArguments="x:String">[If(columnaAbsolutaFormatoCore &lt;= 26, Microsoft.VisualBasic.ChrW(64 + columnaAbsolutaFormatoCore).ToString(), Microsoft.VisualBasic.ChrW(64 + ((columnaAbsolutaFormatoCore - 1) \ 26)).ToString() + Microsoft.VisualBasic.ChrW(65 + ((columnaAbsolutaFormatoCore - 1) Mod 26)).ToString()) + filaAbsolutaFormatoCore.ToString()]</InArgument>
-                                                              </ui:AssignOperation.Value>
-                                                            </ui:AssignOperation>
-                                                          </scg:List>
-                                                        </ui:MultipleAssign.AssignOperations>
-                                                      </ui:MultipleAssign>
-                                                      <ueab:FormatRangeX Alignment="{x:Null}" DisplayName="Aplicar rojo funcional CORE" sap:VirtualizedContainerService.HintSize="478.6666666666667,141.33333333333334" sap2010:WorkflowViewState.IdRef="FormatRangeX_2" Range="[ExcelCoreCierreFinal.Sheet(hojaFormatoCore).Range(celdaFormatoCore)]">
-                                                        <ueab:FormatRangeX.Font>
-                                                          <ui:FontOptions Color="Red" FillColor="Transparent" FontFamilyName="Calibri" Size="11" Style="Regular" UnderlineStyle="None" />
-                                                        </ueab:FormatRangeX.Font>
-                                                        <ueab:FormatRangeX.Format>
-                                                          <ueab:GeneralFormat />
-                                                        </ueab:FormatRangeX.Format>
-                                                      </ueab:FormatRangeX>
-                                                    </Sequence>
-                                                  </If.Then>
-                                                  <If.Else>
-                                                    <Sequence DisplayName="Celda sin error funcional" sap2010:WorkflowViewState.IdRef="Sequence_94" />
-                                                  </If.Else>
-                                                </If>
-                                              </Sequence>
-                                            </ActivityAction>
-                                          </ui:ForEach.Body>
-                                        </ui:ForEach>
-                                      </ActivityAction>
-                                    </ui:ForEach.Body>
-                                  </ui:ForEach>
-                                </Sequence>
-                              </ActivityAction>
-                            </ui:ForEach.Body>
-                          </ui:ForEach>
                           <ueab:WriteCellX Cell="[ExcelCoreCierreFinal.Sheet(&quot;Cost Summary&quot;).Cell(&quot;B14&quot;)]" DisplayName="Actualizar warning venta AT" sap2010:WorkflowViewState.IdRef="WriteCellX_TRACE_000" Value="[If(String.Equals(TipoProyectoNormalizado, &quot;AT&quot;, System.StringComparison.OrdinalIgnoreCase) AndAlso (dtTarifasAT Is Nothing OrElse dtTarifasAT.Rows.Count = 0), &quot;(!) Tarifa de venta AT no informada; venta facturable planificada = 0; importe total de venta pendiente de distribuir.&quot;, String.Empty)]" />
                           <ueab:WriteCellX Cell="[ExcelCoreCierreFinal.Sheet(&quot;Cost Summary&quot;).Cell(&quot;F14&quot;)]" DisplayName="Limpiar delta warning venta AT" sap2010:WorkflowViewState.IdRef="WriteCellX_TRACE_000B" Value="[String.Empty]" />
                           <ueab:WriteCellX Cell="[ExcelCoreCierreFinal.Sheet(&quot;Cost Summary&quot;).Cell(&quot;B18&quot;)]" DisplayName="Escribir trazabilidad visible Cost Summary" sap2010:WorkflowViewState.IdRef="WriteCellX_TRACE_001" Value="[&quot;Generado por RPA: &quot; + System.DateTime.Now.ToString(&quot;yyyy-MM-dd HH:mm:ss&quot;) + &quot; | PPO=&quot; + System.IO.Path.GetFileName(rutaPPOTrabajo) + &quot; | NumeroSF=&quot; + NumeroSFExtraido + &quot; | Tipo=&quot; + TipoProyectoNormalizado + &quot; | Campos PPO=&quot; + If(dtMapaLecturaPPO Is Nothing, &quot;0&quot;, dtMapaLecturaPPO.Rows.Count.ToString()) + &quot; | Datos SAP/SF del ejemplo: valores de prueba hardcodeados para validacion. | Revisar: campos externos, intercompany y planificacion.&quot; + If(dtHorasPorAnio IsNot Nothing AndAlso dtMesesPPO IsNot Nothing AndAlso dtHorasPorAnio.Rows.Cast(Of System.Data.DataRow)().Any(Function(filaHora) Not dtMesesPPO.Rows.Cast(Of System.Data.DataRow)().Select(Function(filaMes) CInt(filaMes(&quot;Anio&quot;))).Contains(CInt(filaHora(&quot;Anio&quot;)))), &quot; | ADVERTENCIA: PPO contiene anualidades de horas fuera del periodo CORE planificado.&quot;, &quot;&quot;) + If(String.Equals(TipoProyectoNormalizado, &quot;AT&quot;, System.StringComparison.OrdinalIgnoreCase) AndAlso (dtTarifasAT Is Nothing OrElse dtTarifasAT.Rows.Count = 0), &quot; | ADVERTENCIA: tarifa de venta AT no informada.&quot;, &quot;&quot;)]" />
@@ -2617,6 +2466,197 @@ If(dtCabeceraPPO.Select("Campo = 'subpracticeOrigin'").Length > 0 AndAlso Not St
                 </ActivityAction>
               </ueab:ExcelProcessScopeX.Body>
             </ueab:ExcelProcessScopeX>
+            <ui:InvokeCode ContinueOnError="{x:Null}" DisplayName="Marcar errores CORE en batch con Excel COM" Language="CSharp">
+              <ui:InvokeCode.Code><![CDATA[
+/*
+Objetivo: escanear en batch los rangos contractuales de errores funcionales CORE y marcar en rojo las mismas celdas que el barrido UiPath anterior.
+Entradas: arg_RutaCORE, arg_ErroresFormatoCore y arg_RangosFormatoCore.
+Salidas: libro CORE guardado con fuente roja en las celdas cuyo texto visible/cached coincide.
+Regla: mantener Trim y comparacion OrdinalIgnoreCase sobre los mismos textos y rangos.
+No hace: no cambia datos de negocio, formulas, rangos revisados ni textos funcionales.
+*/
+object excel = null;
+object workbooks = null;
+object workbook = null;
+object worksheets = null;
+System.Type excelType = System.Type.GetTypeFromProgID("Excel.Application");
+if (excelType == null)
+{
+    throw new System.InvalidOperationException("Microsoft Excel no esta disponible para marcar errores CORE.");
+}
+
+const int xlCalculationManual = -4135;
+const int xlUnderlineStyleNone = -4142;
+object missing = System.Type.Missing;
+System.Reflection.BindingFlags getProperty = System.Reflection.BindingFlags.GetProperty;
+System.Reflection.BindingFlags setProperty = System.Reflection.BindingFlags.SetProperty;
+System.Reflection.BindingFlags invokeMethod = System.Reflection.BindingFlags.InvokeMethod;
+
+System.Action<object> releaseComObject = delegate(object comObject)
+{
+    if (comObject != null && System.Runtime.InteropServices.Marshal.IsComObject(comObject))
+    {
+        System.Runtime.InteropServices.Marshal.FinalReleaseComObject(comObject);
+    }
+};
+
+System.Collections.Generic.HashSet<string> erroresBatchCore = new System.Collections.Generic.HashSet<string>(System.StringComparer.OrdinalIgnoreCase);
+if (arg_ErroresFormatoCore != null)
+{
+    foreach (string errorCore in arg_ErroresFormatoCore)
+    {
+        string textoErrorCore = System.Convert.ToString(errorCore, System.Globalization.CultureInfo.InvariantCulture).Trim();
+        if (textoErrorCore.Length > 0)
+        {
+            erroresBatchCore.Add(textoErrorCore);
+        }
+    }
+}
+
+if (erroresBatchCore.Count == 0)
+{
+    throw new System.InvalidOperationException("No hay textos funcionales CORE configurados para el marcado rojo batch.");
+}
+
+if (arg_RangosFormatoCore == null || arg_RangosFormatoCore.Count == 0)
+{
+    throw new System.InvalidOperationException("No hay rangos CORE configurados para el marcado rojo batch.");
+}
+
+try
+{
+    excel = System.Activator.CreateInstance(excelType);
+    excelType.InvokeMember("DisplayAlerts", setProperty, null, excel, new object[] { false });
+    excelType.InvokeMember("Visible", setProperty, null, excel, new object[] { false });
+    excelType.InvokeMember("EnableEvents", setProperty, null, excel, new object[] { false });
+    try { excelType.InvokeMember("ScreenUpdating", setProperty, null, excel, new object[] { false }); } catch { }
+    try { excelType.InvokeMember("Calculation", setProperty, null, excel, new object[] { xlCalculationManual }); } catch { }
+    try { excelType.InvokeMember("CalculateBeforeSave", setProperty, null, excel, new object[] { false }); } catch { }
+
+    workbooks = excelType.InvokeMember("Workbooks", getProperty, null, excel, null);
+    System.Type workbooksType = workbooks.GetType();
+    workbook = workbooksType.InvokeMember("Open", invokeMethod, null, workbooks, new object[] { arg_RutaCORE, 0, false, missing, missing, missing, true, missing, missing, missing, missing, missing, false, true, missing });
+    System.Type workbookType = workbook.GetType();
+    worksheets = workbookType.InvokeMember("Worksheets", getProperty, null, workbook, null);
+    System.Type worksheetsType = worksheets.GetType();
+
+    System.Action<object> aplicarRojoCore = delegate(object celdaCore)
+    {
+        object font = null;
+        try
+        {
+            System.Type celdaType = celdaCore.GetType();
+            celdaType.InvokeMember("NumberFormat", setProperty, null, celdaCore, new object[] { "General" });
+            font = celdaType.InvokeMember("Font", getProperty, null, celdaCore, null);
+            System.Type fontType = font.GetType();
+            fontType.InvokeMember("Name", setProperty, null, font, new object[] { "Calibri" });
+            fontType.InvokeMember("Size", setProperty, null, font, new object[] { 11 });
+            fontType.InvokeMember("Bold", setProperty, null, font, new object[] { false });
+            fontType.InvokeMember("Italic", setProperty, null, font, new object[] { false });
+            fontType.InvokeMember("Underline", setProperty, null, font, new object[] { xlUnderlineStyleNone });
+            fontType.InvokeMember("Color", setProperty, null, font, new object[] { 255 });
+        }
+        finally
+        {
+            releaseComObject(font);
+        }
+    };
+
+    foreach (object[] rangoDefinicionBatchCore in arg_RangosFormatoCore)
+    {
+        if (rangoDefinicionBatchCore == null || rangoDefinicionBatchCore.Length < 2)
+        {
+            throw new System.InvalidOperationException("Definicion de rango CORE invalida para marcado rojo batch.");
+        }
+
+        string hojaBatchCore = System.Convert.ToString(rangoDefinicionBatchCore[0], System.Globalization.CultureInfo.InvariantCulture);
+        string rangoBatchCore = System.Convert.ToString(rangoDefinicionBatchCore[1], System.Globalization.CultureInfo.InvariantCulture);
+        object worksheet = null;
+        object range = null;
+        try
+        {
+            worksheet = worksheetsType.InvokeMember("Item", getProperty, null, worksheets, new object[] { hojaBatchCore });
+            System.Type worksheetType = worksheet.GetType();
+            range = worksheetType.InvokeMember("Range", getProperty, null, worksheet, new object[] { rangoBatchCore });
+            System.Type rangeType = range.GetType();
+            object valoresRango = rangeType.InvokeMember("Value2", getProperty, null, range, null);
+            System.Array matrizValores = valoresRango as System.Array;
+
+            if (matrizValores != null && matrizValores.Rank == 2)
+            {
+                int filaMinima = matrizValores.GetLowerBound(0);
+                int filaMaxima = matrizValores.GetUpperBound(0);
+                int columnaMinima = matrizValores.GetLowerBound(1);
+                int columnaMaxima = matrizValores.GetUpperBound(1);
+
+                for (int fila = filaMinima; fila <= filaMaxima; fila++)
+                {
+                    for (int columna = columnaMinima; columna <= columnaMaxima; columna++)
+                    {
+                        string textoCeldaCore = System.Convert.ToString(matrizValores.GetValue(fila, columna), System.Globalization.CultureInfo.InvariantCulture).Trim();
+                        if (erroresBatchCore.Contains(textoCeldaCore))
+                        {
+                            object celdaCore = null;
+                            try
+                            {
+                                int filaRelativa = fila - filaMinima + 1;
+                                int columnaRelativa = columna - columnaMinima + 1;
+                                celdaCore = rangeType.InvokeMember("Cells", getProperty, null, range, new object[] { filaRelativa, columnaRelativa });
+                                aplicarRojoCore(celdaCore);
+                            }
+                            finally
+                            {
+                                releaseComObject(celdaCore);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                string textoCeldaCore = System.Convert.ToString(valoresRango, System.Globalization.CultureInfo.InvariantCulture).Trim();
+                if (erroresBatchCore.Contains(textoCeldaCore))
+                {
+                    aplicarRojoCore(range);
+                }
+            }
+        }
+        finally
+        {
+            releaseComObject(range);
+            releaseComObject(worksheet);
+        }
+    }
+
+    workbookType.InvokeMember("Save", invokeMethod, null, workbook, null);
+}
+finally
+{
+    if (workbook != null)
+    {
+        try { workbook.GetType().InvokeMember("Close", invokeMethod, null, workbook, new object[] { false }); } catch { }
+    }
+    if (excel != null)
+    {
+        try { excelType.InvokeMember("Quit", invokeMethod, null, excel, null); } catch { }
+    }
+
+    releaseComObject(worksheets);
+    releaseComObject(workbook);
+    releaseComObject(workbooks);
+    releaseComObject(excel);
+    System.GC.Collect();
+    System.GC.WaitForPendingFinalizers();
+}
+]]></ui:InvokeCode.Code>
+              <ui:InvokeCode.Arguments>
+                <scg:Dictionary x:TypeArguments="x:String, Argument">
+                  <InArgument x:TypeArguments="x:String" x:Key="arg_RutaCORE">[rutaCORETrabajo]</InArgument>
+                  <InArgument x:TypeArguments="scg:HashSet(x:String)" x:Key="arg_ErroresFormatoCore">[erroresFormatoCore]</InArgument>
+                  <InArgument x:TypeArguments="scg:List(s:Object[])" x:Key="arg_RangosFormatoCore">[rangosFormatoCore]</InArgument>
+                </scg:Dictionary>
+              </ui:InvokeCode.Arguments>
+            </ui:InvokeCode>
             <ui:InvokeCode ContinueOnError="{x:Null}" DisplayName="Recalcular y guardar CORE con Excel COM" Language="CSharp" Code="object excel = null;&#xD;&#xA;object workbooks = null;&#xD;&#xA;object workbook = null;&#xD;&#xA;object worksheets = null;&#xD;&#xA;System.Type excelType = System.Type.GetTypeFromProgID(&quot;Excel.Application&quot;);&#xD;&#xA;if (excelType == null)&#xD;&#xA;{&#xD;&#xA;    throw new System.InvalidOperationException(&quot;Microsoft Excel no esta disponible para recalcular el CORE.&quot;);&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;const int xlCalculationAutomatic = -4105;&#xD;&#xA;object missing = System.Type.Missing;&#xD;&#xA;System.Reflection.BindingFlags getProperty = System.Reflection.BindingFlags.GetProperty;&#xD;&#xA;System.Reflection.BindingFlags setProperty = System.Reflection.BindingFlags.SetProperty;&#xD;&#xA;System.Reflection.BindingFlags invokeMethod = System.Reflection.BindingFlags.InvokeMethod;&#xD;&#xA;&#xD;&#xA;try&#xD;&#xA;{&#xD;&#xA;    excel = System.Activator.CreateInstance(excelType);&#xD;&#xA;    excelType.InvokeMember(&quot;DisplayAlerts&quot;, setProperty, null, excel, new object[] { false });&#xD;&#xA;    excelType.InvokeMember(&quot;Visible&quot;, setProperty, null, excel, new object[] { false });&#xD;&#xA;    excelType.InvokeMember(&quot;EnableEvents&quot;, setProperty, null, excel, new object[] { false });&#xD;&#xA;&#xD;&#xA;    workbooks = excelType.InvokeMember(&quot;Workbooks&quot;, getProperty, null, excel, null);&#xD;&#xA;    System.Type workbooksType = workbooks.GetType();&#xD;&#xA;    workbook = workbooksType.InvokeMember(&quot;Open&quot;, invokeMethod, null, workbooks, new object[] { arg_RutaCORE, 0, false, missing, missing, missing, true, missing, missing, missing, missing, missing, false, true, missing });&#xD;&#xA;    System.Type workbookType = workbook.GetType();&#xD;&#xA;&#xD;&#xA;    try { excelType.InvokeMember(&quot;Calculation&quot;, setProperty, null, excel, new object[] { xlCalculationAutomatic }); } catch { }&#xD;&#xA;    try { workbookType.InvokeMember(&quot;ForceFullCalculation&quot;, setProperty, null, workbook, new object[] { true }); } catch { }&#xD;&#xA;    try { excelType.InvokeMember(&quot;CalculateFullRebuild&quot;, invokeMethod, null, excel, null); }&#xD;&#xA;    catch { excelType.InvokeMember(&quot;Calculate&quot;, invokeMethod, null, excel, null); }&#xD;&#xA;&#xD;&#xA;    worksheets = workbookType.InvokeMember(&quot;Worksheets&quot;, getProperty, null, workbook, null);&#xD;&#xA;    System.Type worksheetsType = worksheets.GetType();&#xD;&#xA;    int worksheetCount = System.Convert.ToInt32(worksheetsType.InvokeMember(&quot;Count&quot;, getProperty, null, worksheets, null));&#xD;&#xA;    for (int i = 1; i &lt;= worksheetCount; i++)&#xD;&#xA;    {&#xD;&#xA;        object worksheet = null;&#xD;&#xA;        try&#xD;&#xA;        {&#xD;&#xA;            worksheet = worksheetsType.InvokeMember(&quot;Item&quot;, getProperty, null, worksheets, new object[] { i });&#xD;&#xA;            worksheet.GetType().InvokeMember(&quot;Calculate&quot;, invokeMethod, null, worksheet, null);&#xD;&#xA;        }&#xD;&#xA;        finally&#xD;&#xA;        {&#xD;&#xA;            if (worksheet != null) System.Runtime.InteropServices.Marshal.FinalReleaseComObject(worksheet);&#xD;&#xA;        }&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    workbookType.InvokeMember(&quot;Save&quot;, invokeMethod, null, workbook, null);&#xD;&#xA;}&#xD;&#xA;finally&#xD;&#xA;{&#xD;&#xA;    if (workbook != null)&#xD;&#xA;    {&#xD;&#xA;        try { workbook.GetType().InvokeMember(&quot;Close&quot;, invokeMethod, null, workbook, new object[] { false }); } catch { }&#xD;&#xA;    }&#xD;&#xA;    if (excel != null)&#xD;&#xA;    {&#xD;&#xA;        try { excelType.InvokeMember(&quot;Quit&quot;, invokeMethod, null, excel, null); } catch { }&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    if (worksheets != null) System.Runtime.InteropServices.Marshal.FinalReleaseComObject(worksheets);&#xD;&#xA;    if (workbook != null) System.Runtime.InteropServices.Marshal.FinalReleaseComObject(workbook);&#xD;&#xA;    if (workbooks != null) System.Runtime.InteropServices.Marshal.FinalReleaseComObject(workbooks);&#xD;&#xA;    if (excel != null) System.Runtime.InteropServices.Marshal.FinalReleaseComObject(excel);&#xD;&#xA;    System.GC.Collect();&#xD;&#xA;    System.GC.WaitForPendingFinalizers();&#xD;&#xA;}">
               <ui:InvokeCode.Arguments>
                 <scg:Dictionary x:TypeArguments="x:String, Argument">

@@ -22,3 +22,29 @@
 - Prueba negativa fuente roja: KO controlado en `Project Infor!D4`.
 - Prueba timestamp: OK al cambiar solo la fecha/hora normalizada de `Cost Summary!B18`.
 - Temporales usados para validacion eliminados de `data/output`.
+
+2026-05-12 - Epica 1 iniciada y completada: Escaneo final de errores en batch.
+- Alcance aplicado: EP1-T01, EP1-T02 y EP1-T03 en `lib/oportunidad-generar-core.xaml`.
+- Baseline pre-cambio creado localmente en `data/baseline`: `CORE_PC_20250256445_baseline.xlsx` y `CORE_AT_20251160543_baseline.xlsx`.
+- EP1-T01: bloque original localizado en `08 Recalcular, guardar y registrar fin`, dentro de `Abrir Excel para cierre final CORE`.
+- Textos funcionales vigentes mantenidos sin cambios: `Intercompany no determinable`, `Entidad recurso no disponible`, `Codigo empleado no disponible`, `Codigo empleado no disponible` con acento en la plantilla, `Coste no disponible`, `Tarifa AT no disponible`, `Proveedor no disponible`, `PO compra no disponible`, `Ariba no disponible`, `WBS no disponible`, `Cliente SAP no disponible`, `Sales Order no disponible`, `PM cod no disponible`, `PM no disponible`, `PL cod no disponible`, `Practice leader no disponible`, `Sales manager cod no disponible`, `Sales manager no disponible`, `Importe no disponible en PPO`, `Horas no disponibles en PPO`, `Coste recursos no disponible`, `Riesgos no disponibles en PPO`, `Garantia no disponible en PPO`, `Gastos no disponibles en PPO`, `Compras no disponibles en PPO`, `Descripcion no disponible en PPO`, `Practica no disponible`, `Cliente no disponible`.
+- Rangos contractuales mantenidos sin cambios: `Project Infor!A1:J80`, `Resources!A1:CA120`, `Cost Planning!A1:CB140`.
+- Actividades antiguas retiradas: `ReadRangeX_1` (`Leer rango para errores CORE`), `ForEach_30` (`Recorrer rangos con errores CORE`), `ForEach_31` (`Recorrer filas rango CORE`), `ForEach_32` (`Recorrer columnas rango CORE`) y `FormatRangeX_2` (`Aplicar rojo funcional CORE`).
+- Variables auxiliares del recorrido celda a celda retiradas: `dtRangoFormatoCore`, `hojaFormatoCore`, `rangoFormatoCore`, `filaInicioFormatoCore`, `columnaInicioFormatoCore`, `filaRelativaFormatoCore`, `columnaRelativaFormatoCore`, `filaAbsolutaFormatoCore`, `columnaAbsolutaFormatoCore`, `textoCeldaFormatoCore`, `celdaFormatoCore`.
+- EP1-T02: anadido `Invoke Code` `Marcar errores CORE en batch con Excel COM`.
+- El batch abre el CORE por COM tras el guardado de cierre UiPath, pone Excel en calculo manual para leer los valores cached/visibles previos al recalculo final, carga cada rango como matriz `Value2`, aplica `Trim` y comparacion `OrdinalIgnoreCase`, y solo formatea las celdas coincidentes.
+- Formato aplicado por COM para equivalencia con el `FormatRangeX` anterior: `NumberFormat=General`, fuente `Calibri`, tamano `11`, `Bold=False`, `Italic=False`, `Underline=None`, `Color=255` rojo.
+- Decision tecnica: no se fusiono este batch con `Recalcular y guardar CORE con Excel COM` para no mezclar EP1 con EP3; la consolidacion de aperturas COM queda como candidato natural de EP3.
+- EP1-T03: `rg` confirma que ya no quedan `Leer rango para errores CORE`, `Recorrer filas rango CORE`, `Recorrer columnas rango CORE` ni `Aplicar rojo funcional CORE`; solo queda `Marcar errores CORE en batch con Excel COM`.
+- Validacion estatica: XAML parseado como XML OK.
+- Validacion del C# embebido: bloque batch extraido del XAML y compilado con `Add-Type` OK.
+- Empaquetado runtime: `UiRobot.exe pack ... -v 1.0.38-ep1` OK. El paquete temporal se elimino tras validar y `project.json` se restauro a su version previa para evitar ruido de empaquetado.
+- Ejecucion runtime: `UiRobot.exe execute --file ...1.0.38-ep1.nupkg --entry Main.xaml` OK, duracion observada por comando `277.6 s`.
+- Los outputs reales de la ejecucion se generaron en la cache NuGet del paquete `1.0.38-ep1` y se copiaron a `data/output` para dejar los candidatos validados en el repo.
+- Comparador EP0 PC contra baseline local: OK, valores comparados `3499`, formulas `3010`, posiciones de rojo `21480`, `#REF!` `0`, diferencias `0`.
+- Comparador EP0 AT contra baseline local: OK, valores comparados `4043`, formulas `2979`, posiciones de rojo `21480`, `#REF!` `0`, diferencias `0`.
+- `test/validar_calidad_e06.ps1`: OK.
+- Validador AT 48 meses sobre `data/output/CORE_AT_20251160543.xlsx`: OK, `FormulaCount=3735`, `RefErrors=0`, cabeceras hasta `2029-12`.
+- Validador PC 12 meses sobre `data/output/CORE_PC_20250256445.xlsx`: OK, `FormulaCount=3766`, `RefErrors=0`, cabeceras hasta `2026-10`.
+- Proceso Excel residual detectado tras runtime: `EXCEL.EXE /automation -Embedding`, `Workbooks=0`; cerrado limpiamente con COM. Comprobacion final: sin procesos Excel activos.
+- Profile: no se genero un `.uistat` nuevo con `UiRobot execute`; solo sigue disponible el profile inicial `0393b8ac-5727-412a-bf8f-677d5564ab5e.uistat`. La reduccion de eventos queda demostrada estructuralmente por la retirada del `ReadRangeX` y los loops UiPath celda a celda; queda pendiente medir profile antes/despues cuando se ejecute desde Studio con profiling.
